@@ -1,5 +1,5 @@
 {
-    "name": "e2221/nettegrid",
+    "name": "e2221/nette-grid",
     "description": "Datagrid for Nette Framework",
     "type": "library",
     "require": {
@@ -9,8 +9,14 @@
         "nette/utils": "^3.1",
         "latte/latte": "^2.8",
         "nittro/nette-bridges": "^2.1",
-        "e2221/html-element": "^1.7",
+        "e2221/html-element": "dev-master",
         "contributte/application": "^0.4.1"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "require-dev": {
+        "phpstan/phpstan-nette": "^0.12"
+    },
+    "scripts": {
+        "phpstan": "phpstan analyse --level 5 --configuration phpstan.neon src"
+    }
 }
