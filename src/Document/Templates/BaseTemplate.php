@@ -6,7 +6,6 @@ namespace e2221\NetteGrid\Document\Templates;
 
 
 use e2221\HtmElement\BaseElement;
-use e2221\NetteGrid\NetteGrid;
 
 class BaseTemplate extends BaseElement
 {

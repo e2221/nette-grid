@@ -18,5 +18,8 @@
     },
     "scripts": {
         "phpstan": "phpstan analyse --level 5 --configuration phpstan.neon src"
+    },
+    "autoload": {
+        "classmap": ["src/"]
     }
 }
