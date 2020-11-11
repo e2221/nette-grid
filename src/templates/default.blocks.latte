@@ -1,6 +1,11 @@
-
+{templateType e2221\NetteGrid\NetteGridTemplate}
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
+    {$tableTemplate->renderStartTag()|noescape}
+{/define}
 
+{* Table end tag </table> *}
+{define table-close-tag}
+    {$tableTemplate->renderEndTag()|noescape}
 {/define}
