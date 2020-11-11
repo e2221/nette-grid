@@ -50,7 +50,7 @@ class NetteGrid extends Control
 
         $this->template->tableTemplate = $this->documentTemplate->getTableTemplate();
 
-        $this->template->setFile(__DIR__ . '/default.latte');
+        $this->template->setFile(__DIR__ . '/templates/default.latte');
         $this->template->render();
     }
 
