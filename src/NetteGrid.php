@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace e2221\NetteGrid;
 
+use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Column\Column;
@@ -11,6 +12,7 @@ use e2221\NetteGrid\Column\ColumnText;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 
 class NetteGrid extends Control
 {
@@ -85,6 +87,17 @@ class NetteGrid extends Control
         $this->template->render();
     }
 
+    /**
+     * The main form
+     * @return Form
+     */
+    protected function createComponentForm(): Form
+    {
+        $form = new BootstrapForm();
+
+        return $form;
+    }
+    
     /**
      * Add template
      * @param string $templatePath
