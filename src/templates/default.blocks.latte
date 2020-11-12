@@ -9,3 +9,23 @@
 {define table-close-tag}
     {$tableTemplate->renderEndTag()|noescape}
 {/define}
+
+{* Thead open tag <thead> *}
+{define table-thead-open-tag}
+    {$theadTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Thead close tag </thead> *}
+{define thead-close-tag}
+    {$theadTemplate->renderEndTag()|noescape}
+{/define}
+
+{* Thead - titles row start tag <tr> *}
+{define thead-titles-row-open-tag}
+    {$theadTitlesRowTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Thead - titles row end tag </tr> *}
+{define thead-titles-row-end-tag}
+    {$theadTitlesRowTemplate->renderEndTag()|noescape}
+{/define}

@@ -2,11 +2,39 @@
 
 {snippet gridContent}
     {import default.blocks.latte}
+    {foreach $templates as $templateKey => $template}
+        {import $template}
+    {/foreach}
 
-    {include #table-open-tag}
+    {form form}
 
-    in table
+        {* <table> *}
+        {include #table-open-tag}
 
-    {include #table-close-tag}
+            {* <thead> *}
+            {include #thead-open-tag}
+
+                {* <tr> *}
+                {include #thead-titles-row-open-tag}
+
+                    {* columns cols <td>Column title</td> *}
+                    {foreach $columns as $columnName => $column}
+                        {ifset #title-col-$columnName}
+                            {include #title-col-$columnName}
+                        {else}
+                            {$column->getTitleColTemplate()|noescape}
+                        {/ifset}
+                    {/foreach}
+
+                {* </tr> *}
+                {include #thead-titles-row-close-tag}
+
+            {* </thead> *}
+            {include #thead-close-tag}
+
+        {* </table> *}
+        {include #table-close-tag}
+
+    {/form}
 
 {/snippet}

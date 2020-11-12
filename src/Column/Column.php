@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Column;
 
 
+use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
+use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use e2221\NetteGrid\NetteGrid;
 use Nette\SmartObject;
 
-class BaseColumn
+class Column
 {
     use SmartObject;
 
@@ -36,21 +38,55 @@ class BaseColumn
     /** @var bool is column hidden */
     protected bool $hidden=false;
 
-
     /** @var NetteGrid Nette grid */
     protected NetteGrid $netteGrid;
+
+    /** @var TitleColTemplate Title col to style */
+    protected TitleColTemplate $titleColTemplate;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
         $this->netteGrid = $netteGrid;
         $this->name = $name;
         $this->label = $label ?? ucfirst($this->name);
+        $this->titleColTemplate = $this->defaultTitleColTemplate();
+    }
+
+    /**
+     * Default title col template
+     * @return TitleColTemplate
+     */
+    protected function defaultTitleColTemplate(): TitleColTemplate
+    {
+        $titleCol = new TitleColTemplate();
+        $titleCol->setTextContent($this->label);
+        return $titleCol;
+    }
+
+    /**
+     * Get title col template for styling
+     * @return TitleColTemplate
+     */
+    public function getTitleColTemplate(): TitleColTemplate
+    {
+        return $this->titleColTemplate;
+    }
+
+    /**
+     * Set this column as primary
+     * @return Column
+     * @throws ColumnNotFoundException
+     */
+    public function setAsPrimaryColumn(): self
+    {
+        $this->netteGrid->setPrimaryColumn($this->name);
+        return $this;
     }
 
     /**
      * @param bool $sortable
      */
-    public function setSortable(bool $sortable): void
+    public function setSortable(bool $sortable=true): void
     {
         $this->sortable = $sortable;
     }
@@ -58,7 +94,7 @@ class BaseColumn
     /**
      * @param bool $filterable
      */
-    public function setFilterable(bool $filterable): void
+    public function setFilterable(bool $filterable=true): void
     {
         $this->filterable = $filterable;
     }
@@ -66,7 +102,7 @@ class BaseColumn
     /**
      * @param bool $multipleFilterable
      */
-    public function setMultipleFilterable(bool $multipleFilterable): void
+    public function setMultipleFilterable(bool $multipleFilterable=true): void
     {
         $this->multipleFilterable = $multipleFilterable;
     }
@@ -74,7 +110,7 @@ class BaseColumn
     /**
      * @param bool $editable
      */
-    public function setEditable(bool $editable): void
+    public function setEditable(bool $editable=true): void
     {
         $this->editable = $editable;
     }
@@ -82,7 +118,7 @@ class BaseColumn
     /**
      * @param bool $required
      */
-    public function setRequired(bool $required): void
+    public function setRequired(bool $required=true): void
     {
         $this->required = $required;
     }
@@ -90,7 +126,7 @@ class BaseColumn
     /**
      * @param bool $hidden
      */
-    public function setHidden(bool $hidden): void
+    public function setHidden(bool $hidden=true): void
     {
         $this->hidden = $hidden;
     }
