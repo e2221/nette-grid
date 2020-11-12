@@ -9,6 +9,7 @@ use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
 use e2221\NetteGrid\Document\Templates\DataRowTemplate;
 use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
+use e2221\NetteGrid\Document\Templates\TbodyTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
 use e2221\NetteGrid\NetteGrid;
@@ -28,6 +29,7 @@ class DocumentTemplate
     protected EmptyDataColTemplate $emptyDataColTemplate;
     protected EmptyDataRowTemplate $emptyDataRowTemplate;
     protected ?DataRowTemplate $dataRowTemplate=null;
+    protected TbodyTemplate $tbodyTemplate;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -35,9 +37,9 @@ class DocumentTemplate
         $this->tableTemplate = new TableTemplate();
         $this->theadTemplate = new TheadTemplate();
         $this->theadTitlesRowTemplate = new TitlesRowTemplate();
+        $this->tbodyTemplate = new TbodyTemplate();
         $this->emptyDataRowTemplate = new EmptyDataRowTemplate();
         $this->emptyDataColTemplate = new EmptyDataColTemplate();
-
     }
 
     /**
@@ -52,11 +54,22 @@ class DocumentTemplate
     }
 
     /**
-     * Get data row template
-     * @param null $row
+     * Get data row template (only for style all rows - don´t combine with setDataRowCallback()!!!)
      * @return DataRowTemplate
      */
-    public function getDataRowTemplate($row=null): DataRowTemplate
+    public function getDataRowTemplate(): DataRowTemplate
+    {
+        return $this->dataRowTemplate = new DataRowTemplate();
+    }
+
+    /**
+     * @internal
+     *
+     * Get data row template for rendering - internal
+     * @param mixed $row
+     * @return DataRowTemplate
+     */
+    public function getDataRowTemplateForRendering($row): DataRowTemplate
     {
         $template = $this->dataRowTemplate instanceof DataRowTemplate ? $this->dataRowTemplate : new DataRowTemplate();
         if(is_callable($this->dataRowCallback))
@@ -64,7 +77,16 @@ class DocumentTemplate
             $fn = $this->dataRowCallback;
             $template = $fn($row, $template);
         }
-        return $template;
+        return $this->dataRowTemplate = $template;
+    }
+
+    /**
+     * Get tbody template <tbody>
+     * @return TbodyTemplate
+     */
+    public function getTbodyTemplate(): TbodyTemplate
+    {
+        return $this->tbodyTemplate;
     }
 
     /**

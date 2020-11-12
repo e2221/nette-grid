@@ -1,5 +1,7 @@
 {templateType e2221\NetteGrid\NetteGridTemplate}
 
+{varType e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate}
+
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
     {$tableTemplate->renderStartTag()|noescape}
@@ -30,6 +32,16 @@
     {$theadTitlesRowTemplate->renderEndTag()|noescape}
 {/define}
 
+{* Tbody open tag <tbody> *}
+{define tbody-open-tag}
+    {$tbodyTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Tbody end tag </tbody> *}
+{define tbody-end-tag}
+    {$tbodyTemplate->renderEndTag()|noescape}
+{/define}
+
 {* Empty data row <tr> *}
 {define emptyData-row-open-tag}
     {$emptyDataRowTemplate->renderStartTag()|noescape}
@@ -45,12 +57,13 @@
     {$emptyDataColTemplate->render()|noescape}
 {/define}
 
-{* Data Row start tag <tr> *}
-{define dataRow-open-tag}
+{* Data Row start tag <tr> - expecting parameter $row *}
+{define data-row-open-tag}
     {$dataRowTemplate->renderStartTag()|noescape}
 {/define}
 
 {* Data Row end tag </tr> *}
-{define dataRow-end-tag}
+{define data-row-end-tag}
     {$dataRowTemplate->renderEndTag()|noescape}
 {/define}
+

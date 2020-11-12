@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Column;
 
 
+use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use e2221\NetteGrid\NetteGrid;
@@ -44,6 +45,15 @@ class Column
     /** @var TitleColTemplate Title col to style */
     protected TitleColTemplate $titleColTemplate;
 
+    /** @var null|callable Change cell value with callback function($rowData) */
+    protected $cellValueCallback=null;
+
+    /** @var DataColTemplate|null Data col template */
+    protected ?DataColTemplate $dataColTemplate=null;
+
+    /** @var null|callable  */
+    protected $dataColTemplateCallback=null;
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
         $this->netteGrid = $netteGrid;
@@ -53,10 +63,60 @@ class Column
     }
 
     /**
+     * Set data col template (use only for styling all cols the same)
+     * @return DataColTemplate
+     */
+    public function getDataColTemplate(): DataColTemplate
+    {
+        return $this->dataColTemplate = new DataColTemplate();
+    }
+
+
+    /**
+     * Set data col template callback (use only in not used $column->getDataColTemplate)
+     * @param callable|null $callback
+     * @return Column
+     */
+    public function setDataColTemplateCallback(?callable $callback): self
+    {
+        $this->dataColTemplateCallback = $callback;
+        return $this;
+    }
+
+    /**
+     * @internal
+     *
+     * Get data col template - only for rendering internal
+     * @param mixed $row
+     * @return DataColTemplate|null
+     */
+    public function getDataColTemplateForRendering($row)
+    {
+        $template = is_null($this->dataColTemplate) ? new DataColTemplate() : $this->dataColTemplate;
+        if(is_callable($this->dataColTemplateCallback))
+        {
+            $fn = $this->dataColTemplateCallback;
+            $template = $fn($row, $template);
+        }
+        return $template;
+    }
+
+    /**
+     * Set cell value callback
+     * @param callable|null $cellValueCallback
+     * @return Column
+     */
+    public function setCellValueCallback(?callable $cellValueCallback): self
+    {
+        $this->cellValueCallback = $cellValueCallback;
+        return $this;
+    }
+
+    /**
      * Default title col template
      * @return TitleColTemplate
      */
-    protected function defaultTitleColTemplate(): TitleColTemplate
+    private function defaultTitleColTemplate(): TitleColTemplate
     {
         $titleCol = new TitleColTemplate();
         $titleCol->setTextContent($this->label);

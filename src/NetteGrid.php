@@ -76,17 +76,19 @@ class NetteGrid extends Control
         $this->template->uniqueID = $this->getUniqueId();
 
         //templates
+        $this->template->documentTemplate = $this->documentTemplate;
         $this->template->tableTemplate = $this->documentTemplate->getTableTemplate();
         $this->template->theadTemplate = $this->documentTemplate->getTheadTemplate();
         $this->template->theadTitlesRowTemplate = $this->documentTemplate->getTheadTitlesRowTemplate();
+        $this->template->tbodyTemplate = $this->documentTemplate->getTbodyTemplate();
         $this->template->emptyDataRowTemplate = $this->documentTemplate->getEmptyDataRowTemplate();
         $this->template->emptyDataColTemplate = $this->documentTemplate->getEmptyDataColTemplate();
-        $this->template->dataRowTemplate = $this->documentTemplate->getDataRowTemplate();
+
 
         $data = $this->getDataFromSource();
         $this->template->columns = $this->columns;
         $this->template->data = $data;
-        $this->template->showEmptyResult = (bool)$data;
+        $this->template->showEmptyResult = !((bool)$data);
         $this->template->templates = $this->templates;
 
         $this->template->setFile(__DIR__ . '/templates/default.latte');
@@ -169,7 +171,7 @@ class NetteGrid extends Control
 
     /**
      * Get data from source
-     * @return array|null
+     * @return mixed[]|null
      */
     protected function getDataFromSource(): ?array
     {

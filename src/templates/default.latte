@@ -32,32 +32,41 @@
             {* </thead> *}
             {include #thead-close-tag}
 
+            {* <tbody> *}
+            {include #tbody-open-tag}
 
-            {if $showEmptyResult === true}
 
-                {* <tr> *}
-                {include #emptyData-row-open-tag}
-
-                    {* <td> </td> *}
-                    {include #emptyData}
-
-                {* </tr> *}
-                {include #emptyData-row-end-tag}
-
-            {else}
-
-                {foreach $data as $dataKey => $dataValues}
+                {if $showEmptyResult === true}
 
                     {* <tr> *}
-                    {include #data-row-open-tag}
+                    {include #emptyData-row-open-tag}
+
+                        {* <td> </td> *}
+                        {include #emptyData}
 
                     {* </tr> *}
-                    {include #data-row-close-tag}
+                    {include #emptyData-row-end-tag}
 
-                {/foreach}
+                {else}
+
+                    {foreach $data as $dataKey => $row}
+                        {var $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
+
+                        {* <tr> *}
+                        {include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate}
 
 
-            {/if}
+
+                        {* </tr> *}
+                        {include #data-row-end-tag row => $row, dataRowTemplate => $dataRowTemplate}
+
+                    {/foreach}
+
+
+                {/if}
+
+            {* </tbody> *}
+            {include #tbody-end-tag}
 
         {* </table> *}
         {include #table-close-tag}
