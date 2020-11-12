@@ -15,7 +15,7 @@
             {include #thead-open-tag}
 
                 {* <tr> *}
-                {include #thead-titles-row-open-tag}
+                {include #titles-row-open-tag}
 
                     {* columns cols <td>Column title</td> *}
                     {foreach $columns as $columnName => $column}
@@ -27,10 +27,37 @@
                     {/foreach}
 
                 {* </tr> *}
-                {include #thead-titles-row-close-tag}
+                {include #titles-row-end-tag}
 
             {* </thead> *}
             {include #thead-close-tag}
+
+
+            {if $showEmptyResult === true}
+
+                {* <tr> *}
+                {include #emptyData-row-open-tag}
+
+                    {* <td> </td> *}
+                    {include #emptyData}
+
+                {* </tr> *}
+                {include #emptyData-row-end-tag}
+
+            {else}
+
+                {foreach $data as $dataKey => $dataValues}
+
+                    {* <tr> *}
+                    {include #data-row-open-tag}
+
+                    {* </tr> *}
+                    {include #data-row-close-tag}
+
+                {/foreach}
+
+
+            {/if}
 
         {* </table> *}
         {include #table-close-tag}

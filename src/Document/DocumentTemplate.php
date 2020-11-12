@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Document;
 
 
+use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
+use e2221\NetteGrid\Document\Templates\DataRowTemplate;
+use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
@@ -15,10 +18,16 @@ class DocumentTemplate
 {
     use SmartObject;
 
+    /** @var null|callable function($row, DataRowTemplate $dataRowTemplate) */
+    protected $dataRowCallback=null;
+
     private NetteGrid $netteGrid;
     protected TableTemplate $tableTemplate;
     protected TheadTemplate $theadTemplate;
     protected TitlesRowTemplate $theadTitlesRowTemplate;
+    protected EmptyDataColTemplate $emptyDataColTemplate;
+    protected EmptyDataRowTemplate $emptyDataRowTemplate;
+    protected ?DataRowTemplate $dataRowTemplate=null;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -26,6 +35,55 @@ class DocumentTemplate
         $this->tableTemplate = new TableTemplate();
         $this->theadTemplate = new TheadTemplate();
         $this->theadTitlesRowTemplate = new TitlesRowTemplate();
+        $this->emptyDataRowTemplate = new EmptyDataRowTemplate();
+        $this->emptyDataColTemplate = new EmptyDataColTemplate();
+
+    }
+
+    /**
+     * Set data row callback
+     * @param callable|null $dataRowCallback
+     * @return DocumentTemplate
+     */
+    public function setDataRowCallback(?callable $dataRowCallback): self
+    {
+        $this->dataRowCallback = $dataRowCallback;
+        return $this;
+    }
+
+    /**
+     * Get data row template
+     * @param null $row
+     * @return DataRowTemplate
+     */
+    public function getDataRowTemplate($row=null): DataRowTemplate
+    {
+        $template = $this->dataRowTemplate instanceof DataRowTemplate ? $this->dataRowTemplate : new DataRowTemplate();
+        if(is_callable($this->dataRowCallback))
+        {
+            $fn = $this->dataRowCallback;
+            $template = $fn($row, $template);
+        }
+        return $template;
+    }
+
+    /**
+     * Get empty data col template <td>
+     * @return EmptyDataColTemplate
+     */
+    public function getEmptyDataColTemplate(): EmptyDataColTemplate
+    {
+        return $this->emptyDataColTemplate
+            ->setAttribute('colspan', (string)$this->netteGrid->getCountOfPrintableColumns());
+    }
+
+    /**
+     * Get empty data row template <tr>
+     * @return EmptyDataRowTemplate
+     */
+    public function getEmptyDataRowTemplate(): EmptyDataRowTemplate
+    {
+        return $this->emptyDataRowTemplate;
     }
 
     /**

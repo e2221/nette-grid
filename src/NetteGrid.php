@@ -31,7 +31,7 @@ class NetteGrid extends Control
     /** @var string Primary column name */
     protected string $primaryColumn='id';
 
-    /** @var null|callable  */
+    /** @var null|callable function(?array $filter=null, ?array $multipleFilter=null, ?array $orderBy=null, ?Paginator $paginator=null){} */
     protected $dataSourceCallback=null;
 
     /** @var DocumentTemplate include all document template */
@@ -79,8 +79,14 @@ class NetteGrid extends Control
         $this->template->tableTemplate = $this->documentTemplate->getTableTemplate();
         $this->template->theadTemplate = $this->documentTemplate->getTheadTemplate();
         $this->template->theadTitlesRowTemplate = $this->documentTemplate->getTheadTitlesRowTemplate();
+        $this->template->emptyDataRowTemplate = $this->documentTemplate->getEmptyDataRowTemplate();
+        $this->template->emptyDataColTemplate = $this->documentTemplate->getEmptyDataColTemplate();
+        $this->template->dataRowTemplate = $this->documentTemplate->getDataRowTemplate();
 
+        $data = $this->getDataFromSource();
         $this->template->columns = $this->columns;
+        $this->template->data = $data;
+        $this->template->showEmptyResult = (bool)$data;
         $this->template->templates = $this->templates;
 
         $this->template->setFile(__DIR__ . '/templates/default.latte');
@@ -146,5 +152,35 @@ class NetteGrid extends Control
         if($exists === false && $throw === true)
             throw new ColumnNotFoundException(sprintf("Column %s does not exist.", $columnName));
         return $exists;
+    }
+
+    /**
+     * Get count of printable (non-hidden) columns
+     * @return int
+     */
+    public function getCountOfPrintableColumns(): int
+    {
+        $count = 0;
+        foreach($this->columns as $columnName => $column)
+            if($column->isHidden() === false)
+                $count++;
+        return $count;
+    }
+
+    /**
+     * Get data from source
+     * @return array|null
+     */
+    protected function getDataFromSource(): ?array
+    {
+        if(is_null($this->dataSourceCallback))
+            return null;
+
+        $getDataFn = $this->dataSourceCallback;
+        $data = $getDataFn();
+        if(is_countable($data) === false || count($data) == 0)
+            return null;
+
+        return $data;
     }
 }

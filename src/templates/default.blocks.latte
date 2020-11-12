@@ -11,7 +11,7 @@
 {/define}
 
 {* Thead open tag <thead> *}
-{define table-thead-open-tag}
+{define thead-open-tag}
     {$theadTemplate->renderStartTag()|noescape}
 {/define}
 
@@ -21,11 +21,36 @@
 {/define}
 
 {* Thead - titles row start tag <tr> *}
-{define thead-titles-row-open-tag}
+{define titles-row-open-tag}
     {$theadTitlesRowTemplate->renderStartTag()|noescape}
 {/define}
 
 {* Thead - titles row end tag </tr> *}
-{define thead-titles-row-end-tag}
+{define titles-row-end-tag}
     {$theadTitlesRowTemplate->renderEndTag()|noescape}
+{/define}
+
+{* Empty data row <tr> *}
+{define emptyData-row-open-tag}
+    {$emptyDataRowTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Empty data row </tr> *}
+{define emptyData-row-end-tag}
+    {$emptyDataRowTemplate->renderEndTag()|noescape}
+{/define}
+
+{* Empty data <td colspan="x">empty data text</td> *}
+{define emptyData}
+    {$emptyDataColTemplate->render()|noescape}
+{/define}
+
+{* Data Row start tag <tr> *}
+{define dataRow-open-tag}
+    {$dataRowTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Data Row end tag </tr> *}
+{define dataRow-end-tag}
+    {$dataRowTemplate->renderEndTag()|noescape}
 {/define}

@@ -124,11 +124,14 @@ class Column
     }
 
     /**
+     * Col will be hidden
      * @param bool $hidden
      */
     public function setHidden(bool $hidden=true): void
     {
         $this->hidden = $hidden;
+        $this->getTitleColTemplate()
+            ->setHidden($this->hidden);
     }
 
     /**

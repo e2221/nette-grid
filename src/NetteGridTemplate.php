@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace e2221\NetteGrid;
 
 use e2221\NetteGrid\Column\Column;
+use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
+use e2221\NetteGrid\Document\Templates\DataRowTemplate;
+use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
 use Nette\Application\UI\Presenter;
@@ -32,4 +35,10 @@ class NetteGridTemplate extends Template
     public Document\Templates\TableTemplate $tableTemplate;
     public TheadTemplate $theadTemplate;
     public TitlesRowTemplate $theadTitlesRowTemplate;
+    public EmptyDataRowTemplate $emptyDataRowTemplate;
+    public EmptyDataColTemplate $emptyDataColTemplate;
+    public DataRowTemplate $dataRowTemplate;
+    public ?array $data;
+    public bool $showEmptyResult;
+
 }
