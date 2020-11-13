@@ -72,12 +72,12 @@ class Column
     public function getCellValue($row)
     {
         $keyName = $this->name;
-        if(is_null(isset($row->$keyName)))
-        {
-            if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
-                return $row[$keyName];
-            throw new ResultRowNotExistsException("Result row does not have '{$keyName}' column.");
-        }
+
+        //array source
+        if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
+            return $row[$keyName];
+
+        //other object source
         return $row->$keyName;
     }
 
@@ -174,7 +174,6 @@ class Column
     /**
      * Set this column as primary
      * @return Column
-     * @throws ColumnNotFoundException
      */
     public function setAsPrimaryColumn(): self
     {
