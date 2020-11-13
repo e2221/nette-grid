@@ -54,7 +54,7 @@ class DocumentTemplate
     }
 
     /**
-     * Get data row template (only for style all rows - don´t combine with setDataRowCallback()!!!)
+     * Get data row template (only for style all rows
      * @return DataRowTemplate
      */
     public function getDataRowTemplate(): DataRowTemplate
@@ -71,13 +71,13 @@ class DocumentTemplate
      */
     public function getDataRowTemplateForRendering($row): DataRowTemplate
     {
-        $template = $this->dataRowTemplate instanceof DataRowTemplate ? $this->dataRowTemplate : new DataRowTemplate();
+        $template = clone($this->dataRowTemplate instanceof DataRowTemplate ? $this->dataRowTemplate : new DataRowTemplate());
         if(is_callable($this->dataRowCallback))
         {
             $fn = $this->dataRowCallback;
             $template = $fn($row, $template);
         }
-        return $this->dataRowTemplate = $template;
+        return $template;
     }
 
     /**

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Column;
 
 
+use ArrayAccess;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
+use e2221\NetteGrid\Exceptions\ResultRowNotExistsException;
 use e2221\NetteGrid\NetteGrid;
 use Nette\SmartObject;
 
@@ -63,7 +65,28 @@ class Column
     }
 
     /**
-     * Set data col template (use only for styling all cols the same)
+     * Get cell value
+     * @param mixed $row
+     * @return string
+     */
+    public function getCellValue($row): string
+    {
+        if(is_callable($this->cellValueCallback))
+        {
+            $fn = $this->cellValueCallback;
+            return $fn($row);
+        }else{
+            $keyName = $this->name;
+            if(isset($row->$keyName))
+                return $row->$keyName;
+            if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
+                return $row[$keyName];
+            throw new ResultRowNotExistsException("Result row does not have '{$keyName}' column.");
+        }
+    }
+
+    /**
+     * Set data col template
      * @return DataColTemplate
      */
     public function getDataColTemplate(): DataColTemplate
@@ -73,7 +96,7 @@ class Column
 
 
     /**
-     * Set data col template callback (use only in not used $column->getDataColTemplate)
+     * Set data col template callback
      * @param callable|null $callback
      * @return Column
      */
@@ -88,11 +111,11 @@ class Column
      *
      * Get data col template - only for rendering internal
      * @param mixed $row
-     * @return DataColTemplate|null
+     * @return DataColTemplate
      */
-    public function getDataColTemplateForRendering($row)
+    public function getDataColTemplateForRendering($row): DataColTemplate
     {
-        $template = is_null($this->dataColTemplate) ? new DataColTemplate() : $this->dataColTemplate;
+        $template = clone(is_null($this->dataColTemplate) ? new DataColTemplate() : $this->dataColTemplate);
         if(is_callable($this->dataColTemplateCallback))
         {
             $fn = $this->dataColTemplateCallback;
