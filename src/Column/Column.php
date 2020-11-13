@@ -228,6 +228,8 @@ class Column
         $this->hidden = $hidden;
         $this->getTitleColTemplate()
             ->setHidden($this->hidden);
+        $this->getDataColTemplate()
+            ->setHidden($this->hidden);
     }
 
     /**
