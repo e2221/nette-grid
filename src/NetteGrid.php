@@ -148,7 +148,7 @@ class NetteGrid extends Control
      */
     public function setPrimaryColumn(string $columnName): self
     {
-        $this->onAnchor[] = function() use ($columnName)
+        $this->onAnchor[] = function() use ($columnName): void
         {
             if($this->columnExists($columnName))
                 $this->primaryColumn = $columnName;
