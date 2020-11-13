@@ -186,7 +186,7 @@ class NetteGrid extends Control
      * Get data from source
      * @return mixed[]|null
      */
-    protected function getDataFromSource(): ?array
+    protected function getDataFromSource()
     {
         if(is_null($this->dataSourceCallback))
             return null;
