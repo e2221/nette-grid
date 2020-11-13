@@ -72,7 +72,7 @@ class Column
     public function getCellValue($row)
     {
         $keyName = $this->name;
-        if(!isset($row->$keyName))
+        if(is_null(isset($row->$keyName)))
         {
             if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
                 return $row[$keyName];

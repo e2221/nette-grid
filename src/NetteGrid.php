@@ -145,12 +145,14 @@ class NetteGrid extends Control
      * Set primary column
      * @param string $columnName
      * @return NetteGrid
-     * @throws ColumnNotFoundException
      */
     public function setPrimaryColumn(string $columnName): self
     {
-        if($this->columnExists($columnName))
-            $this->primaryColumn = $columnName;
+        $this->onAnchor[] = function() use ($columnName)
+        {
+            if($this->columnExists($columnName))
+                $this->primaryColumn = $columnName;
+        };
         return $this;
     }
 
