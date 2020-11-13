@@ -190,12 +190,10 @@ class NetteGrid extends Control
     {
         if(is_null($this->dataSourceCallback))
             return null;
-
         $getDataFn = $this->dataSourceCallback;
         $data = $getDataFn();
         if(is_countable($data) === false || count($data) == 0)
             return null;
-
         return $data;
     }
 }

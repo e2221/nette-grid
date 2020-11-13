@@ -72,11 +72,13 @@ class Column
     public function getCellValue($row)
     {
         $keyName = $this->name;
-        if(isset($row->$keyName))
-            return $row->$keyName;
-        if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
-            return $row[$keyName];
-        throw new ResultRowNotExistsException("Result row does not have '{$keyName}' column.");
+        if(!isset($row->$keyName))
+        {
+            if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
+                return $row[$keyName];
+            throw new ResultRowNotExistsException("Result row does not have '{$keyName}' column.");
+        }
+        return $row->$keyName;
     }
 
     /**
