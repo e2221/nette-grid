@@ -64,12 +64,14 @@
                                 {* <td> *}
                                 {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell}
 
-                                    {* ifset block with name #data-columnName replace it *}
-                                    {ifset #data-$columnName}
-                                        {include #data-$columnName}
-                                    {else}
-                                        {$cell}
-                                    {/ifset}
+                                    {if $dataColTemplate->isHidden() === false}
+                                        {* ifset block with name #data-columnName replace it *}
+                                        {ifset #data-$columnName}
+                                            {include #data-$columnName}
+                                        {else}
+                                            {$cell}
+                                        {/ifset}
+                                    {/if}
 
                                 {* </td> *}
                                 {include #data-col-end-tag dataColTemplate => $dataColTemplate}
