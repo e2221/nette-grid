@@ -50,7 +50,7 @@
                 {else}
 
                     {foreach $data as $dataKey => $row}
-                        {var $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
+                        {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
 
                         {* <tr> *}
                         {include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate}
@@ -58,12 +58,22 @@
                             {* columns *}
                             {foreach $columns as $columnName => $column}
 
-                                {* ifset block with name #data-columnName replace it *}
-                                {ifset #data-$columnName}
-                                    {include #data-$columnName}
-                                {else}
-                                    {$column->getCellValue($row)}
-                                {/ifset}
+                                {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering()}
+                                {var $cell = $column->getCellValue($row)}
+
+                                {* <td> *}
+                                {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell}
+
+                                    {* ifset block with name #data-columnName replace it *}
+                                    {ifset #data-$columnName}
+                                        {include #data-$columnName}
+                                    {else}
+                                        {$column->getCellValue($row)}
+                                    {/ifset}
+
+                                {* </td> *}
+                                {include #data-col-end-tag dataColTemplate => $dataColTemplate}
+
                             {/foreach}
 
                         {* </tr> *}

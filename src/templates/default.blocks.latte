@@ -1,6 +1,7 @@
 {templateType e2221\NetteGrid\NetteGridTemplate}
 
 {varType e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate}
+{varType e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate}
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
@@ -57,7 +58,7 @@
     {$emptyDataColTemplate->render()|noescape}
 {/define}
 
-{* Data Row start tag <tr> - expecting parameter $row *}
+{* Data Row start tag <tr> - expecting parameters (DataRowTemplate $dataRowTemplate, $row) *}
 {define data-row-open-tag}
     {$dataRowTemplate->renderStartTag()|noescape}
 {/define}
@@ -65,5 +66,15 @@
 {* Data Row end tag </tr> *}
 {define data-row-end-tag}
     {$dataRowTemplate->renderEndTag()|noescape}
+{/define}
+
+{* Data Col open tag <td> - expecting parameter (DataColTemplate $dataColTemplate, $row, $cell) *}
+{define data-col-open-tag}
+    {$dataColTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Data Col close tag </td> - expecting parameter (DataColTemplate $dataColTemplate) *}
+{define data-col-end-tag}
+    {$dataColTemplate->renderEndTag()|noescape}
 {/define}
 
