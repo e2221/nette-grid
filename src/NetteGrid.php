@@ -7,17 +7,18 @@ namespace e2221\NetteGrid;
 use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
-use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
+use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
 class NetteGrid extends Control
 {
-    /** @var Column[] */
+    /** @var IColumn[] */
     protected array $columns=[];
 
     /** @var HeaderAction[] */
@@ -63,7 +64,6 @@ class NetteGrid extends Control
      * @param string $name
      * @param string|null $label
      * @return ColumnPrimary
-     * @throws ColumnNotFoundException
      */
     public function addColumnPrimary(string $name='id', ?string $label='ID'): ColumnPrimary
     {
@@ -80,6 +80,23 @@ class NetteGrid extends Control
     {
         return $this->columns[] = new ColumnText($this, $name, $label);
     }
+
+    /**
+     * Load state
+     * @param array $params
+     * @throws BadRequestException
+     */
+    public function loadState(array $params): void
+    {
+        parent::loadState($params);
+
+    }
+
+    private function generateFilterForm()
+    {
+
+    }
+
 
     /**
      * Default renderer
@@ -115,8 +132,16 @@ class NetteGrid extends Control
     protected function createComponentForm(): Form
     {
         $form = new BootstrapForm();
-
         return $form;
+    }
+
+    /**
+     * Get from
+     * @return Form
+     */
+    public function getForm(): Form
+    {
+        return $this['form'];
     }
     
     /**

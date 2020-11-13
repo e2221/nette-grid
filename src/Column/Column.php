@@ -11,7 +11,7 @@ use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\NetteGrid;
 use Nette\SmartObject;
 
-class Column
+abstract class Column implements IColumn
 {
     use SmartObject;
 
@@ -66,6 +66,7 @@ class Column
      * Get cell value
      * @param mixed $row
      * @return mixed
+     * @internal
      */
     public function getCellValue($row)
     {
@@ -99,7 +100,7 @@ class Column
     }
 
     /**
-     * Set data col template
+     * Get data col template
      * @return DataColTemplate
      */
     public function getDataColTemplate(): DataColTemplate
@@ -180,56 +181,73 @@ class Column
     }
 
     /**
+     * Set sortable
      * @param bool $sortable
+     * @return Column
      */
-    public function setSortable(bool $sortable=true): void
+    public function setSortable(bool $sortable=true): self
     {
         $this->sortable = $sortable;
+        return $this;
     }
 
     /**
+     * Set filterable
      * @param bool $filterable
+     * @return Column
      */
-    public function setFilterable(bool $filterable=true): void
+    public function setFilterable(bool $filterable=true): self
     {
         $this->filterable = $filterable;
+        return $this;
     }
 
     /**
+     * Set multiple filterable
      * @param bool $multipleFilterable
+     * @return Column
      */
-    public function setMultipleFilterable(bool $multipleFilterable=true): void
+    public function setMultipleFilterable(bool $multipleFilterable=true): self
     {
         $this->multipleFilterable = $multipleFilterable;
+        return $this;
     }
 
     /**
+     * Set editable
      * @param bool $editable
+     * @return Column
      */
-    public function setEditable(bool $editable=true): void
+    public function setEditable(bool $editable=true): self
     {
         $this->editable = $editable;
+        return $this;
     }
 
     /**
+     * Set required
      * @param bool $required
+     * @return Column
      */
-    public function setRequired(bool $required=true): void
+    public function setRequired(bool $required=true): self
     {
         $this->required = $required;
+        return $this;
     }
 
     /**
      * Col will be hidden
      * @param bool $hidden
+     * @return Column
      */
-    public function setHidden(bool $hidden=true): void
+    public function setHidden(bool $hidden=true): self
     {
         $this->hidden = $hidden;
         $this->getTitleColTemplate()
             ->setHidden($this->hidden);
         $this->getDataColTemplate()
             ->setHidden($this->hidden);
+        return $this;
     }
 
     /**
@@ -296,6 +314,15 @@ class Column
         return $this->hidden;
     }
 
+    public function addFilterFormInput()
+    {
+        if($this->isFilterable())
+        {
+            $this->netteGrid->getForm()
+                ->addText($this->name);
+
+        }
+    }
 
 
 
