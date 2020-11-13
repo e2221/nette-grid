@@ -67,21 +67,34 @@ class Column
     /**
      * Get cell value
      * @param mixed $row
-     * @return string
+     * @return mixed
      */
-    public function getCellValue($row): string
+    public function getCellValue($row)
     {
+        $keyName = $this->name;
+        if(isset($row->$keyName))
+            return $row->$keyName;
+        if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
+            return $row[$keyName];
+        throw new ResultRowNotExistsException("Result row does not have '{$keyName}' column.");
+    }
+
+    /**
+     * @internal
+     *
+     * Get Cell value - internal for rendering
+     * @param mixed $row
+     * @return mixed
+     */
+    public function getCellValueForRendering($row)
+    {
+        $cellValue = $this->getCellValue($row);
         if(is_callable($this->cellValueCallback))
         {
             $fn = $this->cellValueCallback;
-            return $fn($row);
+            return $fn($row, $cellValue);
         }else{
-            $keyName = $this->name;
-            if(isset($row->$keyName))
-                return $row->$keyName;
-            if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
-                return $row[$keyName];
-            throw new ResultRowNotExistsException("Result row does not have '{$keyName}' column.");
+            return $cellValue;
         }
     }
 
@@ -91,7 +104,7 @@ class Column
      */
     public function getDataColTemplate(): DataColTemplate
     {
-        return $this->dataColTemplate = new DataColTemplate();
+        return $this->dataColTemplate = new DataColTemplate($this);
     }
 
 
@@ -115,7 +128,7 @@ class Column
      */
     public function getDataColTemplateForRendering($row): DataColTemplate
     {
-        $template = clone(is_null($this->dataColTemplate) ? new DataColTemplate() : $this->dataColTemplate);
+        $template = clone(is_null($this->dataColTemplate) ? new DataColTemplate($this) : $this->dataColTemplate);
         if(is_callable($this->dataColTemplateCallback))
         {
             $fn = $this->dataColTemplateCallback;

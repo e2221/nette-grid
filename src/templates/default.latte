@@ -59,7 +59,7 @@
                             {foreach $columns as $columnName => $column}
 
                                 {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row)}
-                                {var $cell = $column->getCellValue($row)}
+                                {var $cell = $column->getCellValueForRendering($row)}
 
                                 {* <td> *}
                                 {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell}

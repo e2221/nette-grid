@@ -59,7 +59,7 @@ class DocumentTemplate
      */
     public function getDataRowTemplate(): DataRowTemplate
     {
-        return $this->dataRowTemplate = new DataRowTemplate();
+        return $this->dataRowTemplate = new DataRowTemplate($this);
     }
 
     /**
@@ -71,7 +71,7 @@ class DocumentTemplate
      */
     public function getDataRowTemplateForRendering($row): DataRowTemplate
     {
-        $template = clone($this->dataRowTemplate instanceof DataRowTemplate ? $this->dataRowTemplate : new DataRowTemplate());
+        $template = clone($this->dataRowTemplate instanceof DataRowTemplate ? $this->dataRowTemplate : new DataRowTemplate($this));
         if(is_callable($this->dataRowCallback))
         {
             $fn = $this->dataRowCallback;
