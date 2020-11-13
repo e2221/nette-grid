@@ -30,15 +30,17 @@ class TableTemplate extends BaseTemplate
      */
     public function beforeRender(): void
     {
-        if($this->hoverRows == true)
+        if($this->hoverRows === true)
             $this->addClass('table-hover');
-        if($this->tableBorderLess == true)
+        if($this->tableBorderLess === true)
         {
             $this->tableBordered = false;
             $this->addClass('table-borderless');
         }
-        if($this->tableBordered == true)
+        if($this->tableBordered === true)
             $this->addClass('table-bordered');
+        if($this->tableStripped === true)
+            $this->addClass('table-striped');
     }
 
     /**
@@ -49,6 +51,10 @@ class TableTemplate extends BaseTemplate
     public function setRemoveStyles(bool $removeStyles=true): self
     {
         $this->removeStyles = $removeStyles;
+        $this->hoverRows = false;
+        $this->tableBordered = false;
+        $this->tableBorderLess = false;
+        $this->tableStripped = false;
         return $this;
     }
 
@@ -60,6 +66,8 @@ class TableTemplate extends BaseTemplate
     public function setTableBorderLess(bool $tableBorderLess=true): self
     {
         $this->tableBorderLess = $tableBorderLess;
+        if($this->tableBorderLess === true)
+            $this->tableBordered = false;
         return $this;
     }
 

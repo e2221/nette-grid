@@ -8,6 +8,7 @@ use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Column\Column;
+use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
@@ -56,6 +57,18 @@ class NetteGrid extends Control
      * ******************************************************************************
      *
      */
+
+    /**
+     * Add primary column
+     * @param string $name
+     * @param string|null $label
+     * @return ColumnPrimary
+     * @throws ColumnNotFoundException
+     */
+    public function addColumnPrimary(string $name='id', ?string $label='ID'): ColumnPrimary
+    {
+        return $this->columns[] = new ColumnPrimary($this, $name, $label);
+    }
 
     /**
      * Add Column text
