@@ -8,8 +8,6 @@ namespace e2221\NetteGrid\Column;
 use ArrayAccess;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
-use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
-use e2221\NetteGrid\Exceptions\ResultRowNotExistsException;
 use e2221\NetteGrid\NetteGrid;
 use Nette\SmartObject;
 
