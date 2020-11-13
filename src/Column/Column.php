@@ -132,7 +132,8 @@ class Column
         if(is_callable($this->dataColTemplateCallback))
         {
             $fn = $this->dataColTemplateCallback;
-            $template = $fn($template, $row, $this->getCellValue($row));
+            $edited = $fn($template, $row, $this->getCellValue($row));
+            $template = $edited instanceof DataColTemplate ? $edited : $template;
         }
         return $template;
     }

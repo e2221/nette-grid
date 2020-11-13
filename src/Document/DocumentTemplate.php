@@ -19,7 +19,7 @@ class DocumentTemplate
 {
     use SmartObject;
 
-    /** @var null|callable function($row, DataRowTemplate $dataRowTemplate) */
+    /** @var null|callable function(DataRowTemplate $template, $row) */
     protected $dataRowCallback=null;
 
     private NetteGrid $netteGrid;
@@ -75,7 +75,8 @@ class DocumentTemplate
         if(is_callable($this->dataRowCallback))
         {
             $fn = $this->dataRowCallback;
-            $template = $fn($row, $template);
+            $edited = $fn($template, $row);
+            $template = $edited instanceof DataRowTemplate ? $edited : $template;
         }
         return $template;
     }
