@@ -47,13 +47,13 @@ class Column
     /** @var TitleColTemplate Title col to style */
     protected TitleColTemplate $titleColTemplate;
 
-    /** @var null|callable Change cell value with callback function($rowData) */
+    /** @var null|callable Change cell value with callback function($row, $cell){} */
     protected $cellValueCallback=null;
 
     /** @var DataColTemplate|null Data col template */
     protected ?DataColTemplate $dataColTemplate=null;
 
-    /** @var null|callable  */
+    /** @var null|callable function(DataColTemplate $template, $row, $cell){} */
     protected $dataColTemplateCallback=null;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
@@ -132,7 +132,7 @@ class Column
         if(is_callable($this->dataColTemplateCallback))
         {
             $fn = $this->dataColTemplateCallback;
-            $template = $fn($row, $template);
+            $template = $fn($template, $row, $this->getCellValue($row));
         }
         return $template;
     }
