@@ -13,7 +13,7 @@ use Nette\SmartObject;
 
 abstract class Column implements IColumn
 {
-    use SmartObject;
+     use SmartObject;
 
     /** @var string Name of column */
     public string $name;
@@ -314,12 +314,12 @@ abstract class Column implements IColumn
         return $this->hidden;
     }
 
+
     public function addFilterFormInput()
     {
         if($this->isFilterable())
         {
-            $this->netteGrid->getForm()
-                ->addText($this->name);
+            $form = $this->netteGrid->getForm();
 
         }
     }

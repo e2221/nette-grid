@@ -7,9 +7,9 @@ namespace e2221\NetteGrid;
 use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
+use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
-use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use Nette\Application\BadRequestException;
@@ -18,7 +18,7 @@ use Nette\Application\UI\Form;
 
 class NetteGrid extends Control
 {
-    /** @var IColumn[] */
+    /** @var Column[] */
     protected array $columns=[];
 
     /** @var HeaderAction[] */
@@ -89,12 +89,14 @@ class NetteGrid extends Control
     public function loadState(array $params): void
     {
         parent::loadState($params);
+        $this->generateFilterForm();
 
     }
 
     private function generateFilterForm()
     {
-
+        $this['form']['filter'] = new Form();
+        $this['form']['filter']->addText('a');
     }
 
 
