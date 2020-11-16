@@ -7,12 +7,14 @@ namespace e2221\NetteGrid;
 use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
+use e2221\NetteGrid\Document\Templates\Cols\HeaderActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\HeadFilterRowTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TbodyTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
+use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 
@@ -46,8 +48,11 @@ class NetteGridTemplate extends Template
     public EmptyDataColTemplate $emptyDataColTemplate;
     public TbodyTemplate $tbodyTemplate;
     public HeadFilterRowTemplate $headFilterRowTemplate;
+    public HeaderActionsColTemplate $headerActionsColumnTemplate;
+    public WholeDocumentTemplate $wholeDocumentTemplate;
+
 
     public bool $showEmptyResult;
     public bool $isFilterable;
-
+    public bool $hasActionsColumn;
 }

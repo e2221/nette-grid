@@ -1,5 +1,6 @@
 {templateType e2221\NetteGrid\NetteGridTemplate}
 
+{$wholeDocumentTemplate->renderStartTag()|noescape}
 {snippet gridContent}
     {import default.blocks.latte}
     {foreach $templates as $templateKey => $template}
@@ -25,6 +26,12 @@
                             {$column->getTitleColTemplate()|noescape}
                         {/ifset}
                     {/foreach}
+
+                    {if $hasActionsColumn === true}
+                        {include #head-actions-column-open-tag}
+
+                        {include #head-actions-column-end-tag}
+                    {/if}
 
                 {* </tr> *}
                 {include #titles-row-end-tag}
@@ -114,3 +121,4 @@
     {/form}
 
 {/snippet}
+{$wholeDocumentTemplate->renderEndTag()|noescape}

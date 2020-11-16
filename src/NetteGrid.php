@@ -126,9 +126,11 @@ class NetteGrid extends Control
     {
         $this->template->uniqueID = $this->getUniqueId();
         $this->template->isFilterable = $this->isFilterable;
+        $this->template->hasActionsColumn = $this->isFilterable;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
+        $this->template->wholeDocumentTemplate = $this->documentTemplate->getWholeDocumentTemplate();
         $this->template->tableTemplate = $this->documentTemplate->getTableTemplate();
         $this->template->theadTemplate = $this->documentTemplate->getTheadTemplate();
         $this->template->theadTitlesRowTemplate = $this->documentTemplate->getTheadTitlesRowTemplate();
@@ -136,6 +138,7 @@ class NetteGrid extends Control
         $this->template->emptyDataRowTemplate = $this->documentTemplate->getEmptyDataRowTemplate();
         $this->template->emptyDataColTemplate = $this->documentTemplate->getEmptyDataColTemplate();
         $this->template->headFilterRowTemplate = $this->documentTemplate->getHeadFilterRowTemplate();
+        $this->template->headerActionsColumnTemplate = $this->documentTemplate->getHeaderActionsColTemplate();
 
 
         $data = $this->getDataFromSource();

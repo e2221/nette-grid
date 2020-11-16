@@ -104,3 +104,13 @@
 {define filter-input}
     {input $columnName}
 {/define}
+
+{* Head actions column open tag <th> *}
+{define head-actions-column-open-tag}
+    {$headerActionsColumnTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Head actions column end tag </th> *}
+{define head-actions-column-end-tag}
+    {$headerActionsColumnTemplate->renderEndTag()|noescape}
+{/define}

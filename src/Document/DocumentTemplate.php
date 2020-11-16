@@ -6,6 +6,7 @@ namespace e2221\NetteGrid\Document;
 
 
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
+use e2221\NetteGrid\Document\Templates\Cols\HeaderActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\DataRowTemplate;
 use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\HeadFilterRowTemplate;
@@ -13,6 +14,7 @@ use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TbodyTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
+use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use e2221\NetteGrid\NetteGrid;
 use Nette\SmartObject;
 
@@ -32,10 +34,13 @@ class DocumentTemplate
     protected ?DataRowTemplate $dataRowTemplate=null;
     protected TbodyTemplate $tbodyTemplate;
     protected HeadFilterRowTemplate $headFilterRowTemplate;
+    protected HeaderActionsColTemplate $headerActionsColTemplate;
+    protected WholeDocumentTemplate $wholeDocumentTemplate;
 
     public function __construct(NetteGrid $netteGrid)
     {
         $this->netteGrid = $netteGrid;
+        $this->wholeDocumentTemplate = new WholeDocumentTemplate();
         $this->tableTemplate = new TableTemplate();
         $this->theadTemplate = new TheadTemplate();
         $this->theadTitlesRowTemplate = new TitlesRowTemplate();
@@ -43,6 +48,27 @@ class DocumentTemplate
         $this->emptyDataRowTemplate = new EmptyDataRowTemplate();
         $this->emptyDataColTemplate = new EmptyDataColTemplate();
         $this->headFilterRowTemplate = new HeadFilterRowTemplate();
+        $this->headerActionsColTemplate = new HeaderActionsColTemplate();
+    }
+
+    /**
+     * @return WholeDocumentTemplate
+     */
+    public function getWholeDocumentTemplate(): WholeDocumentTemplate
+    {
+        $this->wholeDocumentTemplate
+            ->setDataAttribute('grid-name', $this->netteGrid->getUniqueId())
+            ->setDefaultClass('nette-grid');
+        return $this->wholeDocumentTemplate;
+    }
+
+    /**
+     * Get actions col template
+     * @return HeaderActionsColTemplate
+     */
+    public function getHeaderActionsColTemplate(): HeaderActionsColTemplate
+    {
+        return $this->headerActionsColTemplate;
     }
 
     /**
