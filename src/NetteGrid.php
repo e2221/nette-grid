@@ -15,6 +15,7 @@ use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 
 class NetteGrid extends Control
 {
@@ -39,9 +40,13 @@ class NetteGrid extends Control
     /** @var DocumentTemplate include all document template */
     protected DocumentTemplate $documentTemplate;
 
+    /** @var Container|null */
+    protected ?Container $filterContainer=null;
+
     public function __construct()
     {
         $this->documentTemplate = new DocumentTemplate($this);
+        $this->filterContainer = $this['form']->addContainer('filter');
     }
 
     /**
@@ -89,15 +94,12 @@ class NetteGrid extends Control
     public function loadState(array $params): void
     {
         parent::loadState($params);
-        $this->generateFilterForm();
+
+
 
     }
 
-    private function generateFilterForm()
-    {
-        $this['form']['filter'] = new Form();
-        $this['form']['filter']->addText('a');
-    }
+
 
 
     /**
@@ -144,6 +146,16 @@ class NetteGrid extends Control
     public function getForm(): Form
     {
         return $this['form'];
+    }
+
+    /**
+     * Get filter container
+     * @return Container
+     * @internal
+     */
+    public function getFilterContainer(): Container
+    {
+        return $this->filterContainer;
     }
     
     /**
