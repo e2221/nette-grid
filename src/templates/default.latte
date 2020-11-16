@@ -34,7 +34,7 @@
                     {include #head-filter-row-open-tag}
                         {formContainer filter}
                             {foreach $columns as $columnName => $column}
-                                {include head-filter-col-open-tag columnName => $columnName, headFilterRowTempalte => $column->getHeadFilterColTemplate()}
+                                {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
                                     {if $column->isFilterable()}
                                         {ifset #filter-input-$columnName}
                                             {include #filter-input-$columnName}
@@ -42,7 +42,7 @@
                                             {include #filter-input columnName => $columnName}
                                         {/ifset}
                                     {/if}
-                                {include head-filter-col-end-tag columnName => $columnName, headFilterRowTempalte => $column->getHeadFilterColTemplate()}
+                                {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
                             {/foreach}
                         {/formContainer}
                     {include #head-filter-row-end-tag}

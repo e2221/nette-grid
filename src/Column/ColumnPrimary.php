@@ -7,7 +7,7 @@ namespace e2221\NetteGrid\Column;
 
 use e2221\NetteGrid\NetteGrid;
 
-class ColumnPrimary extends Column
+class ColumnPrimary extends Column implements IColumn
 {
     /**
      * ColumnPrimary constructor.

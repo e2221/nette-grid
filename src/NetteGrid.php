@@ -10,6 +10,7 @@ use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
+use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use Nette\Application\BadRequestException;
@@ -68,6 +69,17 @@ class NetteGrid extends Control
      */
 
     /**
+     * Add column
+     * @param string $name
+     * @param IColumn $column
+     * @return IColumn
+     */
+    public function addColumn(string $name, IColumn $column)
+    {
+        return $this->columns[$name] = $column;
+    }
+
+    /**
      * Add primary column
      * @param string $name
      * @param string|null $label
@@ -75,7 +87,7 @@ class NetteGrid extends Control
      */
     public function addColumnPrimary(string $name='id', ?string $label='ID'): ColumnPrimary
     {
-        return $this->columns[] = new ColumnPrimary($this, $name, $label);
+        return $this->columns[$name] = new ColumnPrimary($this, $name, $label);
     }
 
     /**
@@ -86,7 +98,7 @@ class NetteGrid extends Control
      */
     public function addColumnText(string $name, ?string $label=null): ColumnText
     {
-        return $this->columns[] = new ColumnText($this, $name, $label);
+        return $this->columns[$name] = new ColumnText($this, $name, $label);
     }
 
     /**
@@ -127,7 +139,7 @@ class NetteGrid extends Control
 
 
         $data = $this->getDataFromSource();
-        $this->template->columns = $this->columns;
+        $this->template->columns = $this->getColumns(true);
         $this->template->data = $data;
         $this->template->showEmptyResult = !((bool)$data);
         $this->template->templates = $this->templates;
@@ -224,6 +236,24 @@ class NetteGrid extends Control
             if($column->isHidden() === false)
                 $count++;
         return $count;
+    }
+
+    /**
+     * Get columns
+     * @param bool $onlyVisible
+     * @return Column[]
+     */
+    protected function getColumns($onlyVisible=false): array
+    {
+        if($onlyVisible === true)
+        {
+            $visibleColumns = [];
+            foreach($this->columns as $columnName => $column)
+                if($column->isHidden() === false)
+                    $visibleColumns[$columnName] = $column;
+            return $visibleColumns;
+        }
+        return $this->columns;
     }
 
     /**
