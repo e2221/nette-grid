@@ -8,6 +8,7 @@ namespace e2221\NetteGrid\Document;
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
 use e2221\NetteGrid\Document\Templates\DataRowTemplate;
 use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
+use e2221\NetteGrid\Document\Templates\HeadFilterRowTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TbodyTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
@@ -30,6 +31,7 @@ class DocumentTemplate
     protected EmptyDataRowTemplate $emptyDataRowTemplate;
     protected ?DataRowTemplate $dataRowTemplate=null;
     protected TbodyTemplate $tbodyTemplate;
+    protected HeadFilterRowTemplate $headFilterRowTemplate;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -40,6 +42,16 @@ class DocumentTemplate
         $this->tbodyTemplate = new TbodyTemplate();
         $this->emptyDataRowTemplate = new EmptyDataRowTemplate();
         $this->emptyDataColTemplate = new EmptyDataColTemplate();
+        $this->headFilterRowTemplate = new HeadFilterRowTemplate();
+    }
+
+    /**
+     * Get head filter row template
+     * @return HeadFilterRowTemplate
+     */
+    public function getHeadFilterRowTemplate(): HeadFilterRowTemplate
+    {
+        return $this->headFilterRowTemplate;
     }
 
     /**

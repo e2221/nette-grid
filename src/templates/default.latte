@@ -29,6 +29,25 @@
                 {* </tr> *}
                 {include #titles-row-end-tag}
 
+                {* head filter *}
+                {if $isFilterable === true}
+                    {include #head-filter-row-open-tag}
+                        {formContainer filter}
+                            {foreach $columns as $columnName => $column}
+                                {include head-filter-col-open-tag columnName => $columnName, headFilterRowTempalte => $column->getHeadFilterColTemplate()}
+                                    {if $column->isFilterable()}
+                                        {ifset #filter-input-$columnName}
+                                            {include #filter-input-$columnName}
+                                        {else}
+                                            {include #filter-input columnName => $columnName}
+                                        {/ifset}
+                                    {/if}
+                                {include head-filter-col-end-tag columnName => $columnName, headFilterRowTempalte => $column->getHeadFilterColTemplate()}
+                            {/foreach}
+                        {/formContainer}
+                    {include #head-filter-row-end-tag}
+                {/if}
+
             {* </thead> *}
             {include #thead-close-tag}
 

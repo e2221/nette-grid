@@ -8,6 +8,7 @@ use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
 use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
+use e2221\NetteGrid\Document\Templates\HeadFilterRowTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TbodyTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
@@ -44,7 +45,9 @@ class NetteGridTemplate extends Template
     public EmptyDataRowTemplate $emptyDataRowTemplate;
     public EmptyDataColTemplate $emptyDataColTemplate;
     public TbodyTemplate $tbodyTemplate;
+    public HeadFilterRowTemplate $headFilterRowTemplate;
 
     public bool $showEmptyResult;
+    public bool $isFilterable;
 
 }

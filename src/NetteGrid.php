@@ -43,6 +43,9 @@ class NetteGrid extends Control
     /** @var Container|null */
     protected ?Container $filterContainer=null;
 
+    /** @var bool Is there at least one filterable column? */
+    protected bool $isFilterable=false;
+
     public function __construct()
     {
         $this->documentTemplate = new DocumentTemplate($this);
@@ -94,9 +97,11 @@ class NetteGrid extends Control
     public function loadState(array $params): void
     {
         parent::loadState($params);
-
-
-
+        foreach($this->columns as $columnName => $column)
+        {
+            if($column->addFilterFormInput() === true)
+                $this->isFilterable = true;
+        }
     }
 
 
@@ -108,6 +113,7 @@ class NetteGrid extends Control
     public function render(): void
     {
         $this->template->uniqueID = $this->getUniqueId();
+        $this->template->isFilterable = $this->isFilterable;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -117,6 +123,7 @@ class NetteGrid extends Control
         $this->template->tbodyTemplate = $this->documentTemplate->getTbodyTemplate();
         $this->template->emptyDataRowTemplate = $this->documentTemplate->getEmptyDataRowTemplate();
         $this->template->emptyDataColTemplate = $this->documentTemplate->getEmptyDataColTemplate();
+        $this->template->headFilterRowTemplate = $this->documentTemplate->getHeadFilterRowTemplate();
 
 
         $data = $this->getDataFromSource();

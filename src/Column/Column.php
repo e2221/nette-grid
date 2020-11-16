@@ -6,9 +6,12 @@ namespace e2221\NetteGrid\Column;
 
 
 use ArrayAccess;
+use Contributte\FormsBootstrap\Inputs\TextInput;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
+use e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\NetteGrid;
+use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 
 abstract class Column implements IColumn
@@ -54,12 +57,29 @@ abstract class Column implements IColumn
     /** @var null|callable function(DataColTemplate $template, $row, $cell){} */
     protected $dataColTemplateCallback=null;
 
+    /** @var HeadFilterColTemplate|null Filter col template */
+    protected ?HeadFilterColTemplate $headFilterColTemplate=null;
+
+    /** @var BaseControl|null Filter input */
+    protected ?BaseControl $filterInput=null;
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
         $this->netteGrid = $netteGrid;
         $this->name = $name;
         $this->label = $label ?? ucfirst($this->name);
         $this->titleColTemplate = $this->defaultTitleColTemplate();
+    }
+
+    /**
+     * Get head filter col template
+     * @return HeadFilterColTemplate
+     */
+    public function getHeadFilterColTemplate(): HeadFilterColTemplate
+    {
+        if(is_null($this->headFilterColTemplate))
+            $this->headFilterColTemplate = new HeadFilterColTemplate($this);
+        return $this->headFilterColTemplate;
     }
 
     /**
@@ -315,13 +335,38 @@ abstract class Column implements IColumn
     }
 
 
-    public function addFilterFormInput()
+    /**
+     * Add filter form input
+     * @internal
+     */
+    public function addFilterFormInput(): bool
     {
         if($this->isFilterable())
         {
-            $form = $this->netteGrid->getForm();
-
+            $container = $this->netteGrid->getFilterContainer();
+            $container->addComponent($this->getFilterInput(), $this->name);
+            return true;
         }
+        return false;
+    }
+
+    /**
+     * Get filter input
+     * @return BaseControl
+     */
+    public function getFilterInput(): BaseControl
+    {
+        if(is_null($this->filterInput))
+            $this->filterInput = $this->getInput();
+        return $this->filterInput;
+    }
+
+    /**
+     * @return BaseControl
+     */
+    public function getInput(): BaseControl
+    {
+        return new TextInput($this->name);
     }
 
 

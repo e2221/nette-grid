@@ -2,6 +2,8 @@
 
 {varType e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate}
 {varType e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate}
+{varType e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate $headFilterColTemplate}
+{varType string $columnName}
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
@@ -78,3 +80,27 @@
     {$dataColTemplate->renderEndTag()|noescape}
 {/define}
 
+{* Head filter open tag <tr> *}
+{define head-filter-row-open-tag}
+    {$headFilterRowTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Head filter end tag </tr> *}
+{define head-filter-row-end-tag}
+    {$headFilterRowTemplate->renderEndTag()|noescape}
+{/define}
+
+{* Head filter open tag <td> - expecting parameter (HeadFilterColTemplate $headFilterRowTempalte, string $columnName) *}
+{define head-filter-col-open-tag}
+    {$headFilterColTemplate->renderStartTag()|noescape}
+{/define}
+
+{* Head filter end tag <td> - expecting parameter (HeadFilterColTemplate $headFilterRowTempalte, string $columnName) *}
+{define head-filter-col-end-tag}
+    {$headFilterColTemplate->renderEndTag()|noescape}
+{/define}
+
+{* Filter input - expecting parameter (string $columnName) *}
+{define filter-input}
+    {input $columnName}
+{/define}

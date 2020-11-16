@@ -6,7 +6,7 @@ namespace e2221\NetteGrid\Document\Templates\Cols;
 
 use e2221\NetteGrid\Document\Templates\BaseColTemplate;
 
-class DataColTemplate extends BaseColTemplate
+class HeadFilterColTemplate extends BaseColTemplate
 {
-    protected ?string $elName='td';
+    protected ?string $elName='th';
 }
