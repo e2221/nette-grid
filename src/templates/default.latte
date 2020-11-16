@@ -1,7 +1,6 @@
 {templateType e2221\NetteGrid\NetteGridTemplate}
 
 {$wholeDocumentTemplate->renderStartTag()|noescape}
-{snippet gridContent}
     {import default.blocks.latte}
     {foreach $templates as $templateKey => $template}
         {import $template}
@@ -119,6 +118,4 @@
         {include #table-close-tag}
 
     {/form}
-
-{/snippet}
 {$wholeDocumentTemplate->renderEndTag()|noescape}

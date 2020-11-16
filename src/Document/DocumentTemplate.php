@@ -52,13 +52,15 @@ class DocumentTemplate
     }
 
     /**
+     * Get whole document template
      * @return WholeDocumentTemplate
      */
     public function getWholeDocumentTemplate(): WholeDocumentTemplate
     {
         $this->wholeDocumentTemplate
             ->setDataAttribute('grid-name', $this->netteGrid->getUniqueId())
-            ->setDefaultClass('nette-grid');
+            ->setDefaultClass('nette-grid')
+            ->setAttribute('id', $this->netteGrid->getMainSnippetId());
         return $this->wholeDocumentTemplate;
     }
 

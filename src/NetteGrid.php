@@ -20,6 +20,8 @@ use Nette\Forms\Container;
 
 class NetteGrid extends Control
 {
+    const MAIN_CONTENT_SNIPPET = 'gridContent';
+
     /** @var Column[] */
     protected array $columns=[];
 
@@ -115,8 +117,6 @@ class NetteGrid extends Control
                 $this->isFilterable = true;
         }
     }
-
-
 
 
     /**
@@ -272,5 +272,14 @@ class NetteGrid extends Control
         if(is_countable($data) === false || count($data) == 0)
             return null;
         return $data;
+    }
+
+    /**
+     * Get snipped id of main content snippet
+     * @return string
+     */
+    public function getMainSnippetId(): string
+    {
+        return $this->getSnippetId(self::MAIN_CONTENT_SNIPPET);
     }
 }
