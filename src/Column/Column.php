@@ -344,7 +344,11 @@ abstract class Column implements IColumn
         if($this->isFilterable())
         {
             $container = $this->netteGrid->getFilterContainer();
-            $container->addComponent($this->getFilterInput(), $this->name);
+            $input = $this->getFilterInput();
+            $input->setHtmlAttribute('data-autosubmit');
+            $input->setHtmlAttribute('data-formid', $this->netteGrid['form']->getElementPrototype()->id);
+            $input->setHtmlAttribute('data-container', 'filter');
+            $container->addComponent($input, $this->name);
             return true;
         }
         return false;
