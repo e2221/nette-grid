@@ -27,7 +27,7 @@ class EmptyDataColTemplate extends BaseTemplate
         if(count($this->netteGrid->filter) > 0)
             $this->addElement(
                 HrefElement::getStatic('a', [], 'Reset filter')
-                    ->setHref($this->netteGrid->link('reload!', ['filter' => []]))
+                    ->setHref($this->netteGrid->link('redrawGrid!', ['filter' => []]))
             );
     }
 }
