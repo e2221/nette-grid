@@ -1,46 +1,49 @@
 {templateType e2221\NetteGrid\NetteGridTemplate}
 
-{$wholeDocumentTemplate->renderStartTag()|noescape}
-    {import default.blocks.latte}
-    {foreach $templates as $templateKey => $template}
-        {import $template}
-    {/foreach}
+{snippetArea documentArea}
+    {$wholeDocumentTemplate->renderStartTag()|noescape}
+        {snippet gridContent}
 
-    {form form}
+            {import default.blocks.latte}
+            {foreach $templates as $templateKey => $template}
+                {import $template}
+            {/foreach}
 
-        {* <table> *}
-        {include #table-open-tag}
+            {form form data-id => $control->getUniqueId()}
 
-            {* <thead> *}
-            {include #thead-open-tag}
+                {* <table> *}
+                {include #table-open-tag}
 
-                {* <tr> *}
-                {include #titles-row-open-tag}
+                    {* <thead> *}
+                    {include #thead-open-tag}
 
-                    {* columns cols <td>Column title</td> *}
-                    {foreach $columns as $columnName => $column}
-                        {ifset #title-col-$columnName}
-                            {include #title-col-$columnName}
-                        {else}
-                            {$column->getTitleColTemplate()|noescape}
-                        {/ifset}
-                    {/foreach}
+                        {* <tr> *}
+                        {include #titles-row-open-tag}
 
-                    {if $hasActionsColumn === true}
-                        {include #head-actions-column-open-tag}
-
-                        {include #head-actions-column-end-tag}
-                    {/if}
-
-                {* </tr> *}
-                {include #titles-row-end-tag}
-
-                {* head filter *}
-                {if $isFilterable === true}
-                    {include #head-filter-row-open-tag}
-                        {formContainer filter}
+                            {* columns cols <td>Column title</td> *}
                             {foreach $columns as $columnName => $column}
-                                {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                {ifset #title-col-$columnName}
+                                    {include #title-col-$columnName}
+                                {else}
+                                    {$column->getTitleColTemplate()|noescape}
+                                {/ifset}
+                            {/foreach}
+
+                            {if $hasActionsColumn === true}
+                                {include #head-actions-column-open-tag}
+
+                                {include #head-actions-column-end-tag}
+                            {/if}
+
+                        {* </tr> *}
+                        {include #titles-row-end-tag}
+
+                        {* head filter *}
+                        {if $isFilterable === true}
+                            {include #head-filter-row-open-tag}
+                            {formContainer filter}
+                                {foreach $columns as $columnName => $column}
+                                    {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
                                     {if $column->isFilterable()}
                                         {ifset #filter-input-$columnName}
                                             {include #filter-input-$columnName}
@@ -48,46 +51,48 @@
                                             {include #filter-input columnName => $columnName}
                                         {/ifset}
                                     {/if}
-                                {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
-                            {/foreach}
-                        {/formContainer}
-                    {include #head-filter-row-end-tag}
-                {/if}
-
-            {* </thead> *}
-            {include #thead-close-tag}
-
-            {* <tbody> *}
-            {include #tbody-open-tag}
+                                    {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                {/foreach}
+                            {/formContainer}
+                            {include #head-filter-row-end-tag}
+                        {/if}
 
 
-                {if $showEmptyResult === true}
+                {* </thead> *}
+                {include #thead-close-tag}
 
-                    {* <tr> *}
-                    {include #emptyData-row-open-tag}
+                {* <tbody> *}
+                {*include #tbody-open-tag*}
+                <tbody n:snippet="data" {$tbodyTemplate->getAttributes()|noescape}>
+
+
+                    {if $showEmptyResult === true}
+
+                        {* <tr> *}
+                        {include #emptyData-row-open-tag}
 
                         {* <td> </td> *}
                         {include #emptyData}
 
-                    {* </tr> *}
-                    {include #emptyData-row-end-tag}
+                        {* </tr> *}
+                        {include #emptyData-row-end-tag}
 
-                {else}
+                    {else}
 
-                    {foreach $data as $dataKey => $row}
-                        {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
+                        {foreach $data as $dataKey => $row}
+                            {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
 
-                        {* <tr> *}
-                        {include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate}
+                            {* <tr> *}
+                            {include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate}
 
-                            {* columns *}
-                            {foreach $columns as $columnName => $column}
+                                {* columns *}
+                                {foreach $columns as $columnName => $column}
 
-                                {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row)}
-                                {var $cell = $column->getCellValueForRendering($row)}
+                                    {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row)}
+                                    {var $cell = $column->getCellValueForRendering($row)}
 
-                                {* <td> *}
-                                {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell}
+                                    {* <td> *}
+                                    {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell}
 
                                     {if $dataColTemplate->isHidden() === false}
                                         {* ifset block with name #data-columnName replace it *}
@@ -98,24 +103,28 @@
                                         {/ifset}
                                     {/if}
 
-                                {* </td> *}
-                                {include #data-col-end-tag dataColTemplate => $dataColTemplate}
+                                    {* </td> *}
+                                    {include #data-col-end-tag dataColTemplate => $dataColTemplate}
 
-                            {/foreach}
+                                {/foreach}
 
-                        {* </tr> *}
-                        {include #data-row-end-tag row => $row, dataRowTemplate => $dataRowTemplate}
+                            {* </tr> *}
+                            {include #data-row-end-tag row => $row, dataRowTemplate => $dataRowTemplate}
 
-                    {/foreach}
+                        {/foreach}
 
 
-                {/if}
+                    {/if}
 
-            {* </tbody> *}
-            {include #tbody-end-tag}
+                </tbody>
 
-        {* </table> *}
-        {include #table-close-tag}
+                {* </table> *}
+                {include #table-close-tag}
 
-    {/form}
-{$wholeDocumentTemplate->renderEndTag()|noescape}
+
+                {input filterSubmit class => 'd-none'}
+            {/form}
+
+        {/snippet}
+    {$wholeDocumentTemplate->renderEndTag()|noescape}
+{/snippetArea}

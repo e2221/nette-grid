@@ -17,13 +17,17 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Utils\ArrayHash;
 
 class NetteGrid extends Control
 {
     const MAIN_CONTENT_SNIPPET = 'gridContent';
 
-    /** @var Column[] */
+    /** @var IColumn[] */
     protected array $columns=[];
+
+    /** @var array @persistent */
+    public array $filter=[];
 
     /** @var HeaderAction[] */
     protected array $headerActions=[];
@@ -62,6 +66,11 @@ class NetteGrid extends Control
     public function getDocumentTemplate(): DocumentTemplate
     {
         return $this->documentTemplate;
+    }
+
+    public function setEmptyDataContent()
+    {
+
     }
 
     /**
@@ -103,6 +112,28 @@ class NetteGrid extends Control
         return $this->columns[$name] = new ColumnText($this, $name, $label);
     }
 
+
+    /**
+     * HANDLERS
+     * ******************************************************************************
+     *
+     */
+
+    /**
+     * Redraw all grid
+     */
+    public function handleRedrawGrid(): void
+    {
+        $this->redrawControl('documentArea');
+        $this->redrawControl(self::MAIN_CONTENT_SNIPPET);
+    }
+
+    public function handleRedrawData(): void
+    {
+        $this->redrawControl('documentArea');
+        $this->redrawControl('data');
+    }
+
     /**
      * Load state
      * @param array $params
@@ -124,6 +155,8 @@ class NetteGrid extends Control
      */
     public function render(): void
     {
+        $this['form']['filter']->setDefaults($this->filter);
+
         $this->template->uniqueID = $this->getUniqueId();
         $this->template->isFilterable = $this->isFilterable;
         $this->template->hasActionsColumn = $this->isFilterable;
@@ -158,7 +191,24 @@ class NetteGrid extends Control
     protected function createComponentForm(): Form
     {
         $form = new BootstrapForm();
+        $form->setHtmlAttribute('data-reset', 'false');
+        $form->addSubmit('filterSubmit')
+            ->onClick[] = [$this, 'filterForm'];
+
+        //$form->onSuccess[] = [$this, 'filterForm'];
         return $form;
+    }
+
+    /** @internal  */
+    public function filterForm($button, ArrayHash $values): void
+    {
+        //dumpe($values["filter"]);
+        $filterValues = (array)$values['filter'];
+        foreach($filterValues as $key => $value)
+            if(empty($value))
+                unset($filterValues[$key]);
+        $this->filter = $filterValues;
+        $this->handleRedrawData();
     }
 
     /**
@@ -179,7 +229,7 @@ class NetteGrid extends Control
     {
         return $this->filterContainer;
     }
-    
+
     /**
      * Add template
      * @param string $templatePath
@@ -244,7 +294,7 @@ class NetteGrid extends Control
     /**
      * Get columns
      * @param bool $onlyVisible
-     * @return Column[]
+     * @return IColumn[]
      */
     protected function getColumns($onlyVisible=false): array
     {
@@ -268,7 +318,7 @@ class NetteGrid extends Control
         if(is_null($this->dataSourceCallback))
             return null;
         $getDataFn = $this->dataSourceCallback;
-        $data = $getDataFn();
+        $data = $getDataFn($this->filter);
         if(is_countable($data) === false || count($data) == 0)
             return null;
         return $data;
