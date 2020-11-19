@@ -83,7 +83,8 @@
                             {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
 
                             {* <tr> *}
-                            {include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate}
+                            <tr n:snippet="data-$control->getRowPrimaryValue($row)" {$dataRowTemplate->getAttributes()|noescape}>
+                            {*include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate*}
 
                                 {* columns *}
                                 {foreach $columns as $columnName => $column}
@@ -109,7 +110,8 @@
                                 {/foreach}
 
                             {* </tr> *}
-                            {include #data-row-end-tag row => $row, dataRowTemplate => $dataRowTemplate}
+                            </tr>
+                            {*include #data-row-end-tag row => $row, dataRowTemplate => $dataRowTemplate*}
 
                         {/foreach}
 

@@ -7,7 +7,6 @@ namespace e2221\NetteGrid;
 use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
-use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
 use e2221\NetteGrid\Column\IColumn;
@@ -17,6 +16,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\Button;
 use Nette\Utils\ArrayHash;
 
 class NetteGrid extends Control
@@ -193,16 +193,20 @@ class NetteGrid extends Control
         $form = new BootstrapForm();
         $form->setHtmlAttribute('data-reset', 'false');
         $form->addSubmit('filterSubmit')
-            ->onClick[] = [$this, 'filterForm'];
+            ->onClick[] = [$this, 'filterFormSuccess'];
 
         //$form->onSuccess[] = [$this, 'filterForm'];
         return $form;
     }
 
-    /** @internal  */
-    public function filterForm($button, ArrayHash $values): void
+    /**
+     * Filter form success
+     * @param Button $button
+     * @param ArrayHash $values
+     * @internal
+     */
+    public function filterFormSuccess(Button $button, ArrayHash $values): void
     {
-        //dumpe($values["filter"]);
         $filterValues = (array)$values['filter'];
         foreach($filterValues as $key => $value)
             if(empty($value))
@@ -331,5 +335,16 @@ class NetteGrid extends Control
     public function getMainSnippetId(): string
     {
         return $this->getSnippetId(self::MAIN_CONTENT_SNIPPET);
+    }
+
+    /**
+     * Get primary value from row
+     * @param mixed $row
+     * @return mixed
+     */
+    public function getRowPrimaryValue($row)
+    {
+        $primaryColumn = $this->primaryColumn;
+        return $row->$primaryColumn;
     }
 }

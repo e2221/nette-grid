@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Document;
 
 
+use e2221\HtmElement\BaseElement;
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeaderActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\DataRowTemplate;
@@ -37,6 +38,8 @@ class DocumentTemplate
     protected HeaderActionsColTemplate $headerActionsColTemplate;
     protected WholeDocumentTemplate $wholeDocumentTemplate;
 
+    protected ?BaseElement $emptyData=null;
+
     public function __construct(NetteGrid $netteGrid)
     {
         $this->netteGrid = $netteGrid;
@@ -49,6 +52,15 @@ class DocumentTemplate
         $this->emptyDataColTemplate = new EmptyDataColTemplate($netteGrid);
         $this->headFilterRowTemplate = new HeadFilterRowTemplate();
         $this->headerActionsColTemplate = new HeaderActionsColTemplate();
+    }
+
+    /**
+     * Get empty data element
+     * @return BaseElement
+     */
+    public function getEmptyData(): BaseElement
+    {
+        return is_null($this->emptyData) ? BaseElement::getStatic('', [], 'Empty data. ') : $this->emptyData;
     }
 
     /**
@@ -137,7 +149,8 @@ class DocumentTemplate
     public function getEmptyDataColTemplate(): EmptyDataColTemplate
     {
         return $this->emptyDataColTemplate
-            ->setAttribute('colspan', (string)$this->netteGrid->getCountOfPrintableColumns());
+            ->setAttribute('colspan', (string)$this->netteGrid->getCountOfPrintableColumns())
+            ->addElement($this->getEmptyData());
     }
 
     /**

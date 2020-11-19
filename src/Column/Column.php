@@ -13,6 +13,7 @@ use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\NetteGrid;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 
 abstract class Column implements IColumn
 {
@@ -94,7 +95,7 @@ abstract class Column implements IColumn
 
         //array source
         if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
-            return $row[$keyName];
+            $row = ArrayHash::from($row);
 
         //other object source
         return $row->$keyName;

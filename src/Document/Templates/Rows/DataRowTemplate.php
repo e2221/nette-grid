@@ -23,4 +23,11 @@ class DataRowTemplate extends BaseTemplate
     {
         return $this->documentTemplate;
     }
+
+    public function beforeRender(): void
+    {
+        //unset id attribute
+        if(isset($this->attributes['id']))
+            unset($this->attributes['id']);
+    }
 }
