@@ -60,6 +60,9 @@ class NetteGrid extends Control
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
+    /** @var null|callable Function that will be called after submit edit function(ArrayHash $values, $primary) */
+    protected $onEditCallback=null;
+
     /** @var bool Active edit mode [true = edit is enable] */
     public bool $editMode=false;
 
@@ -322,9 +325,33 @@ class NetteGrid extends Control
         return $form;
     }
 
+    /**
+     * Edit form success
+     * @param Button $button
+     * @param ArrayHash $values
+     * @throws AbortException
+     */
     public function editFormSuccess(Button $button, ArrayHash $values): void
     {
-        $editValues = $values['edit'];
+        if(is_null($this->editKey) === false && $this->editMode === true)
+        {
+            $editValues = $values->edit;
+            $primaryColumn = $this->primaryColumn;
+            $editValues->$primaryColumn = $this->editKey;
+            if(is_callable($this->onEditCallback))
+            {
+                $fn = $this->onEditCallback;
+                $fn($editValues, $this->editKey);
+            }
+        }
+        $this->editMode = false;
+        if($this->presenter->isAjax())
+        {
+            $this->redrawControl('documentArea');
+            $this->redrawControl('data');
+        }else{
+            $this->redirect('this');
+        }
 
     }
 
@@ -342,7 +369,12 @@ class NetteGrid extends Control
             if(empty($value))
                 unset($filterValues[$key]);
         $this->filter = $filterValues;
-        $this->handleRedrawData();
+        if(count($this->filter) > 0)
+        {
+            $this->handleRedrawData();
+        }else{
+            $this->handleRedrawGrid();
+        }
     }
 
     /**
@@ -500,5 +532,16 @@ class NetteGrid extends Control
     public function setFilterable(bool $filterable=true): void
     {
         $this->isFilterable = $filterable;
+    }
+
+    /**
+     * Set on edit callback
+     * @param callable|null $onEditCallback
+     * @return NetteGrid
+     */
+    public function setOnEditCallback(?callable $onEditCallback): self
+    {
+        $this->onEditCallback = $onEditCallback;
+        return $this;
     }
 }
