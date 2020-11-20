@@ -210,10 +210,10 @@ class NetteGrid extends Control
      */
     public function handleEdit(?int $editKey=null): void
     {
+        $this->editMode = true;
+        $this->editKey = $editKey;
         if($this->presenter->isAjax())
         {
-            $this->editMode = true;
-            $this->editKey = $editKey;
             $this->redrawControl('documentArea');
             $this->redrawControl('data');
         }
@@ -221,14 +221,16 @@ class NetteGrid extends Control
 
     /**
      * Signal - Cancel editing
-     * @throws AbortException
      */
     public function handleCancelEdit(): void
     {
+        $this->editMode = false;
         if($this->presenter->isAjax())
         {
-            $this->editMode = false;
-            $this->handleRedrawData();
+            $this->redrawControl('documentArea');
+            $this->redrawControl('data');
+        }else{
+            $this->filter = [];
         }
     }
 
@@ -244,16 +246,11 @@ class NetteGrid extends Control
         if($this->isFilterable === true)
         {
             $this->filterContainer = $this['form']->addContainer('filter');
-            $this->filterContainer->addSubmit('filterSubmit')
-                ->setHtmlAttribute('class', 'd-none')
-                ->onClick[] = [$this, 'filterFormSuccess'];
         }
 
         if($this->isEditable === true)
         {
             $this->editContainer = $this['form']->addContainer('edit');
-            $this->editContainer->addSubmit('editSubmit')
-                ->onClick[] = [$this, 'editFormSuccess'];
             $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
         }
 
@@ -317,6 +314,11 @@ class NetteGrid extends Control
     {
         $form = new BootstrapForm();
         $form->setHtmlAttribute('data-reset', 'false');
+        $form->addSubmit('filterSubmit')
+            ->setHtmlAttribute('class', 'd-none')
+            ->onClick[] = [$this, 'filterFormSuccess'];
+        $form->addSubmit('editSubmit')
+            ->onClick[] = [$this, 'editFormSuccess'];
         return $form;
     }
 
@@ -450,7 +452,7 @@ class NetteGrid extends Control
         if(is_null($this->dataSourceCallback))
             return null;
 
-        if(is_null($this->editKey) === false)
+        if(is_null($this->editKey) === false && $this->presenter->isAjax())
         {
             $this->filter[$this->primaryColumn] = $this->editKey;
         }

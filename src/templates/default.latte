@@ -139,10 +139,10 @@
 
                                         {if $editRowKey === $primaryValue && $column->isEditable() === true}
 
-                                            {formContainer edit}
-                                                {include #data-action-save row => $row, primary => $primaryValue}
-                                            {/formContainer}
+                                            {* save button *}
+                                            {include #data-action-save row => $row, primary => $primaryValue}
 
+                                            {* cancel button *}
                                             {include #data-action-cancel row => $row, primary => $primaryValue}
 
                                         {elseif count($rowActions) > 0}
@@ -178,9 +178,7 @@
                 {include #table-close-tag}
 
                 {if $isFilterable}
-                    {formContainer filter}
-                        {input filterSubmit}
-                    {/formContainer}
+                    {input filterSubmit}
                 {/if}
             {/form}
 
