@@ -320,7 +320,6 @@ class NetteGrid extends Control
 
     public function editFormSuccess(Button $button, ArrayHash $values): void
     {
-
     }
 
     /**
