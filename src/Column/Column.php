@@ -109,16 +109,16 @@ abstract class Column implements IColumn
 
     /**
      * @param mixed $row
-     * @param mixed $cell
      * @return mixed
      * @internal
      *
      * Get Cell value for rendering - internal
      */
-    public function getEditCellValue($row, $cell)
+    public function getEditCellValue($row)
     {
+        $cell = $this->getCellValue($row);
         if(is_null($this->editCellValueCallback))
-            return $this->getCellValueForRendering($row);
+            return $cell;
         $fn = $this->editCellValueCallback;
         return $fn($row, $cell);
     }

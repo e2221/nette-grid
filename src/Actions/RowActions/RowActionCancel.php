@@ -12,7 +12,7 @@ class RowActionCancel extends RowAction
 {
     public string $class='btn-warning';
 
-    public function __construct(NetteGrid $netteGrid, string $name='edit', ?string $title = 'Edit')
+    public function __construct(NetteGrid $netteGrid, string $name='cancel', ?string $title = 'Cancel')
     {
         parent::__construct($netteGrid, $name, $title);
         $this->setLinkCallback([$this, 'getLink']);
@@ -21,8 +21,6 @@ class RowActionCancel extends RowAction
     /**
      * Get link to edit
      * @param NetteGrid $netteGrid
-     * @param mixed $row
-     * @param string|int $primary
      * @return string
      * @throws InvalidLinkException
      */

@@ -60,6 +60,9 @@ class NetteGrid extends Control
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
+    /** @var bool Active edit mode [true = edit is enable] */
+    public bool $editMode=false;
+
     /** @var bool Is there at least one filterable column? */
     protected bool $isFilterable=false;
 
@@ -210,6 +213,7 @@ class NetteGrid extends Control
     {
         if($this->presenter->isAjax())
         {
+            $this->editMode = true;
             $this->editKey = $editKey;
             $this->handleRedrawData();
         }
@@ -223,7 +227,7 @@ class NetteGrid extends Control
     {
         if($this->presenter->isAjax())
         {
-            $this->editKey = null;
+            $this->editMode = false;
             $this->handleRedrawData();
         }
     }
@@ -265,6 +269,7 @@ class NetteGrid extends Control
         $this->template->uniqueID = $this->getUniqueId();
         $this->template->isFilterable = $this->isFilterable;
         $this->template->isEditable = $this->isEditable;
+        $this->template->editMode = $this->editMode;
         $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0;
         $this->template->rowActionsOrder = $this->rowActionsOrder;
         $this->template->rowActions = $this->rowActions;

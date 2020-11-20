@@ -98,7 +98,8 @@
 
                                         {if $dataColTemplate->isHidden() === false}
 
-                                            {if $editRowKey === $primaryValue && $column->isEditable() === true}
+                                            {* edit - print input *}
+                                            {if $editMode === true && $editRowKey === $primaryValue && $column->isEditable() === true}
 
                                                 {var $editValue = $column->getEditCellValue($row, $cell)}
 
@@ -112,6 +113,7 @@
 
                                                 {/formContainer}
 
+                                            {* print cell value *}
                                             {else}
 
                                                 {* ifset block with name #data-columnName replace it *}
@@ -138,7 +140,7 @@
                                         {if $editRowKey === $primaryValue && $column->isEditable() === true}
 
 
-                                            {include #data-action-cancel}
+                                            {include #data-action-cancel row => $row, primary => $primaryValue}
 
                                         {elseif count($rowActions) > 0}
 

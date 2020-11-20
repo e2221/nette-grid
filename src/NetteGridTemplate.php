@@ -62,6 +62,7 @@ class NetteGridTemplate extends Template
     public DataActionsColTemplate $dataActionsColumnTemplate;
     public RowActionCancel $rowActionCancel;
 
+    public bool $editMode;
     public bool $showEmptyResult;
     public bool $isFilterable;
     public bool $hasActionsColumn;
