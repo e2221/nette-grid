@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace e2221\NetteGrid;
 
-use e2221\NetteGrid\Column\Column;
+use e2221\NetteGrid\Actions\RowAction\RowAction;
+use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
+use e2221\NetteGrid\Document\Templates\Cols\DataActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeaderActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
@@ -31,7 +33,7 @@ class NetteGridTemplate extends Template
     /** @var string[] */
     public array $templates;
 
-    /** @var Column[] */
+    /** @var IColumn[] */
     public array $columns;
 
     /** @var mixed[]|null */
@@ -39,6 +41,9 @@ class NetteGridTemplate extends Template
 
     /** @var null|int|string  */
     public $editRowKey;
+
+    /** @var RowAction[] */
+    public array $rowActions;
 
     public NetteGrid $control;
     public Presenter $presenter;
@@ -53,9 +58,11 @@ class NetteGridTemplate extends Template
     public HeadFilterRowTemplate $headFilterRowTemplate;
     public HeaderActionsColTemplate $headerActionsColumnTemplate;
     public WholeDocumentTemplate $wholeDocumentTemplate;
-
+    public DataActionsColTemplate $dataActionsColumnTemplate;
 
     public bool $showEmptyResult;
     public bool $isFilterable;
     public bool $hasActionsColumn;
+    public bool $isEditable;
+    public array $rowActionsOrder;
 }

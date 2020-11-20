@@ -107,3 +107,17 @@
     {input $columnName value => $editValue}
 {/define}
 
+{* Open tag for data actions column <td> *}
+{define data-actions-column-open-tag}
+    {$dataActionsColumnTemplate->renderStartTag()|noescape}
+{/define}
+
+{* End tag for data actions column </td> *}
+{define data-actions-column-end-tag}
+    {$dataActionsColumnTemplate->renderEndTag()|noescape}
+{/define}
+
+{* Data single action - expecting parameters (RowAction $action, $row, $primary) *}
+{define data-action}
+
+{/define}

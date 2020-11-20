@@ -36,6 +36,9 @@ class NetteGrid extends Control
     /** @var RowAction[] */
     protected array $rowActions=[];
 
+    /** @var array */
+    protected array $rowActionsOrder;
+
     /** @var string[] Templates with changed blocks */
     protected array $templates=[];
 
@@ -120,6 +123,48 @@ class NetteGrid extends Control
         return $this->columns[$name] = new ColumnText($this, $name, $label);
     }
 
+    /**
+     * ADD ROW ACTIONS
+     * ******************************************************************************
+     *
+     */
+
+    /**
+     * Add row action with as child of RowAction
+     * @param RowAction $rowAction
+     * @return RowAction
+     */
+    public function addRowActionDirectly(RowAction $rowAction): RowAction
+    {
+        $action = $this->rowActions[$rowAction->name] = $rowAction;
+        $this->onAddRowAction($action->name);
+        return $action;
+    }
+
+    /**
+     * Add row action
+     * @param string $name
+     * @param string|null $title
+     * @return RowAction
+     */
+    public function addRowAction(string $name, ?string $title=null): RowAction
+    {
+        $title = $title ?? ucfirst($name);
+        $action = $this->rowActions[$name] = new RowAction($this, $name, $title);
+        $this->onAddRowAction($name);
+        return $action;
+    }
+
+    public function resortActions(string $name, int $position)
+    {
+        // todo
+    }
+
+    private function onAddRowAction(string $name): void
+    {
+        $this->rowActionsOrder[] = $name;
+    }
+
 
     /**
      * HANDLERS
@@ -179,7 +224,10 @@ class NetteGrid extends Control
         if($this->isFilterable === true)
             $this->filterContainer = $this['form']->addContainer('filter');
         if($this->isEditable === true)
+        {
             $this->editContainer = $this['form']->addContainer('edit');
+            $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
+        }
 
         foreach($this->columns as $columnName => $column)
         {
@@ -200,7 +248,10 @@ class NetteGrid extends Control
 
         $this->template->uniqueID = $this->getUniqueId();
         $this->template->isFilterable = $this->isFilterable;
-        $this->template->hasActionsColumn = $this->isFilterable;
+        $this->template->isEditable = $this->isEditable;
+        $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0;
+        $this->template->rowActionsOrder = $this->rowActionsOrder;
+        $this->template->rowActions = $this->rowActions;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -213,6 +264,7 @@ class NetteGrid extends Control
         $this->template->emptyDataColTemplate = $this->documentTemplate->getEmptyDataColTemplate();
         $this->template->headFilterRowTemplate = $this->documentTemplate->getHeadFilterRowTemplate();
         $this->template->headerActionsColumnTemplate = $this->documentTemplate->getHeaderActionsColTemplate();
+        $this->template->dataActionsColumnTemplate = $this->documentTemplate->getDataActionsColTemplate();
 
 
         $data = $this->getDataFromSource();

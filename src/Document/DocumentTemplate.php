@@ -6,6 +6,8 @@ namespace e2221\NetteGrid\Document;
 
 
 use e2221\HtmElement\BaseElement;
+use e2221\NetteGrid\Actions\RowAction\RowActionEdit;
+use e2221\NetteGrid\Document\Templates\Cols\DataActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeaderActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\DataRowTemplate;
@@ -37,8 +39,9 @@ class DocumentTemplate
     protected HeadFilterRowTemplate $headFilterRowTemplate;
     protected HeaderActionsColTemplate $headerActionsColTemplate;
     protected WholeDocumentTemplate $wholeDocumentTemplate;
-
+    protected DataActionsColTemplate $dataActionsColTemplate;
     protected ?BaseElement $emptyData=null;
+    protected RowActionEdit $rowActionEdit;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -52,6 +55,26 @@ class DocumentTemplate
         $this->emptyDataColTemplate = new EmptyDataColTemplate($netteGrid);
         $this->headFilterRowTemplate = new HeadFilterRowTemplate();
         $this->headerActionsColTemplate = new HeaderActionsColTemplate();
+        $this->dataActionsColTemplate = new DataActionsColTemplate();
+        $this->rowActionEdit = new RowActionEdit($netteGrid);
+    }
+
+    /**
+     * Get row action edit
+     * @return RowActionEdit
+     */
+    public function getRowActionEdit(): RowActionEdit
+    {
+        return $this->rowActionEdit;
+    }
+
+    /**
+     * Get data actions column template
+     * @return DataActionsColTemplate
+     */
+    public function getDataActionsColTemplate(): DataActionsColTemplate
+    {
+        return $this->dataActionsColTemplate;
     }
 
     /**

@@ -96,39 +96,63 @@
                                     {* <td> *}
                                     {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell}
 
-                                    {if $dataColTemplate->isHidden() === false}
+                                        {if $dataColTemplate->isHidden() === false}
 
-                                        {if $editRowKey === $primaryValue}
+                                            {if $editRowKey === $primaryValue}
 
-                                            {var $editValue = $column->getEditCellValue($row, $cell)}
+                                                {var $editValue = $column->getEditCellValue($row, $cell)}
 
-                                            {formContainer edit}
+                                                {formContainer edit}
 
-                                                {ifset #data-edit-$columnName}
-                                                    {include #data-edit-$columnName}
+                                                    {ifset #data-edit-$columnName}
+                                                        {include #data-edit-$columnName}
+                                                    {else}
+                                                        {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
+                                                    {/ifset}
+
+                                                {/formContainer}
+
+                                            {else}
+
+                                                {* ifset block with name #data-columnName replace it *}
+                                                {ifset #data-$columnName}
+                                                    {include #data-$columnName}
                                                 {else}
-                                                    {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
+                                                    {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
                                                 {/ifset}
 
-                                            {/formContainer}
-
-                                        {else}
-
-                                            {* ifset block with name #data-columnName replace it *}
-                                            {ifset #data-$columnName}
-                                                {include #data-$columnName}
-                                            {else}
-                                                {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
-                                            {/ifset}
+                                            {/if}
 
                                         {/if}
-
-                                    {/if}
 
                                     {* </td> *}
                                     {include #data-col-end-tag dataColTemplate => $dataColTemplate}
 
                                 {/foreach}
+
+                                {if $hasActionsColumn === true}
+
+                                    {* <td> *}
+                                    {include #data-actions-column-open-tag}
+
+                                        {if count($rowActions) > 0}
+
+                                            {foreach $rowActionsOrder as $index => $action}
+
+                                                {ifset #action-$action}
+                                                    {include #data-action-$action row => $row, primary => $primaryValue}
+                                                {else}
+                                                    {include #data-action action => $rowActions[$action], row => $row, primary => $primaryValue}
+                                                {/ifset}
+
+                                            {/foreach}
+
+                                        {/if}
+
+                                    {* </td> *}
+                                    {include #data-actions-column-end-tag}
+
+                                {/if}
 
                             {* </tr> *}
                             </tr>
