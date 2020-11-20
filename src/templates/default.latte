@@ -139,7 +139,10 @@
 
                                         {if $editRowKey === $primaryValue && $column->isEditable() === true}
 
-                                            {include #data-action-save row => $row, primary => $primaryValue}
+                                            {formContainer edit}
+                                                {include #data-action-save row => $row, primary => $primaryValue}
+                                            {/formContainer}
+
                                             {include #data-action-cancel row => $row, primary => $primaryValue}
 
                                         {elseif count($rowActions) > 0}
@@ -175,8 +178,9 @@
                 {* </table> *}
                 {include #table-close-tag}
 
-
-                {input filterSubmit}
+                {if $isFilterable}
+                    {input filterSubmit}
+                {/if}
             {/form}
 
             <script type="application/javascript">
@@ -199,8 +203,8 @@
                                 }(this), 200);
                             });
 
-                            $(frm).on('click', 'button[data-submit]', function(){
-                                di.getService('formLocator').getForm(frm).submit($this.data('container'));
+                            $(frm).on('click', '[data-submit]', function(){
+                                di.getService('formLocator').getForm(frm).submit($(this).data('container'));
                             });
                         })
                         .teardown(function() {
