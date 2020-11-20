@@ -37,6 +37,9 @@ class NetteGridTemplate extends Template
     /** @var mixed[]|null */
     public ?array $data;
 
+    /** @var null|int|string  */
+    public $editRowKey;
+
     public NetteGrid $control;
     public Presenter $presenter;
     public string $uniqueID;

@@ -81,9 +81,10 @@
 
                         {foreach $data as $dataKey => $row}
                             {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
+                            {var string|int $primaryValue = $control->getRowPrimaryValue($row)}
 
                             {* <tr> *}
-                            <tr n:snippet="data-$control->getRowPrimaryValue($row)" {$dataRowTemplate->getAttributes()|noescape}>
+                            <tr n:snippet="data-$primaryValue" {$dataRowTemplate->getAttributes()|noescape}>
                             {*include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate*}
 
                                 {* columns *}
@@ -96,12 +97,32 @@
                                     {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell}
 
                                     {if $dataColTemplate->isHidden() === false}
-                                        {* ifset block with name #data-columnName replace it *}
-                                        {ifset #data-$columnName}
-                                            {include #data-$columnName}
+
+                                        {if $editRowKey === $primaryValue}
+
+                                            {* ifset block with name #data-columnName replace it *}
+                                            {ifset #data-$columnName}
+                                                {include #data-$columnName}
+                                            {else}
+                                                {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
+                                            {/ifset}
+
                                         {else}
-                                            {$cell}
-                                        {/ifset}
+
+                                            {var $editValue = $column->getEditCellValue($row, $cell)}
+
+                                            {formContainer edit}
+
+                                                {ifset #data-edit-$columnName}
+                                                    {include #data-edit-$columnName}
+                                                {else}
+                                                    {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
+                                                {/ifset}
+
+                                            {/formContainer}
+
+                                        {/if}
+
                                     {/if}
 
                                     {* </td> *}
@@ -124,8 +145,36 @@
                 {include #table-close-tag}
 
 
-                {input filterSubmit class => 'd-none'}
+                {input filterSubmit}
             {/form}
+
+            <script type="application/javascript">
+                (window._stack = window._stack || []).push(function(di) {
+
+                    //autosubmit filter
+                    var tmr = null;
+                    di.getService('page').getSnippet({form.id form})
+                        .setup(function(frm) {
+                            $(frm).on('keyup', 'input[data-autosubmit]', function(e) {
+                                var $this, code;
+                                code = e.which || e.keyCode || 0;
+                                if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
+                                    return;
+                                }
+                                var $this = $(this);
+                                tmr && window.clearTimeout(tmr);
+                                tmr = window.setTimeout(function(_this) {
+                                    di.getService('formLocator').getForm(frm).submit($this.data('container'));
+                                }(this), 200);
+                            });
+                        })
+                        .teardown(function() {
+                            tmr && window.clearTimeout(tmr);
+                            tmr = null;
+                        });
+                });
+
+            </script>
 
         {/snippet}
     {$wholeDocumentTemplate->renderEndTag()|noescape}

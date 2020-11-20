@@ -12,6 +12,7 @@ use e2221\NetteGrid\Column\ColumnText;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -47,16 +48,23 @@ class NetteGrid extends Control
     /** @var DocumentTemplate include all document template */
     protected DocumentTemplate $documentTemplate;
 
-    /** @var Container|null */
+    /** @var Container|null Filter container */
     protected ?Container $filterContainer=null;
+
+    /** @var Container|null Edit container */
+    protected ?Container $editContainer=null;
+
+    /** @var null|int|string @persistent Edit key */
+    public $editKey=null;
 
     /** @var bool Is there at least one filterable column? */
     protected bool $isFilterable=false;
 
+    protected bool $isEditable=false;
+
     public function __construct()
     {
         $this->documentTemplate = new DocumentTemplate($this);
-        $this->filterContainer = $this['form']->addContainer('filter');
     }
 
     /**
@@ -121,17 +129,42 @@ class NetteGrid extends Control
 
     /**
      * Redraw all grid
+     * @throws AbortException
      */
     public function handleRedrawGrid(): void
     {
-        $this->redrawControl('documentArea');
-        $this->redrawControl(self::MAIN_CONTENT_SNIPPET);
+        if($this->presenter->isAjax())
+        {
+            $this->redrawControl('documentArea');
+            $this->redrawControl(self::MAIN_CONTENT_SNIPPET);
+        }else{
+            $this->redirect('this');
+        }
     }
 
+    /**
+     * Redraw Data
+     * @throws AbortException
+     */
     public function handleRedrawData(): void
     {
-        $this->redrawControl('documentArea');
-        $this->redrawControl('data');
+        if($this->presenter->isAjax()){
+            $this->redrawControl('documentArea');
+            $this->redrawControl('data');
+        }else{
+            $this->redirect('this');
+        }
+    }
+
+    /**
+     * Signal - Edit
+     * @param int|null $editKey
+     * @throws AbortException
+     */
+    public function handleEdit(?int $editKey=null): void
+    {
+        $this->editKey = $editKey;
+        $this->handleRedrawData();
     }
 
     /**
@@ -142,10 +175,18 @@ class NetteGrid extends Control
     public function loadState(array $params): void
     {
         parent::loadState($params);
+
+        if($this->isFilterable === true)
+            $this->filterContainer = $this['form']->addContainer('filter');
+        if($this->isEditable === true)
+            $this->editContainer = $this['form']->addContainer('edit');
+
         foreach($this->columns as $columnName => $column)
         {
-            if($column->addFilterFormInput() === true)
-                $this->isFilterable = true;
+            if($this->isFilterable === true)
+                $column->addFilterFormInput();
+            if($this->isEditable === true)
+                $column->addEditFormInput();
         }
     }
 
@@ -176,6 +217,7 @@ class NetteGrid extends Control
 
         $data = $this->getDataFromSource();
         $this->template->columns = $this->getColumns(true);
+        $this->template->editRowKey = $this->editKey;
         $this->template->data = $data;
         $this->template->showEmptyResult = !((bool)$data);
         $this->template->templates = $this->templates;
@@ -193,16 +235,24 @@ class NetteGrid extends Control
         $form = new BootstrapForm();
         $form->setHtmlAttribute('data-reset', 'false');
         $form->addSubmit('filterSubmit')
+            ->setHtmlAttribute('class', 'd-none')
             ->onClick[] = [$this, 'filterFormSuccess'];
+        $form->addSubmit('editSubmit')
+            ->onClick[] = [$this, 'editFormSuccess'];
 
-        //$form->onSuccess[] = [$this, 'filterForm'];
         return $form;
+    }
+
+    public function editFormSuccess(Button $button, ArrayHash $values): void
+    {
+
     }
 
     /**
      * Filter form success
      * @param Button $button
      * @param ArrayHash $values
+     * @throws AbortException
      * @internal
      */
     public function filterFormSuccess(Button $button, ArrayHash $values): void
@@ -226,12 +276,21 @@ class NetteGrid extends Control
 
     /**
      * Get filter container
-     * @return Container
+     * @return Container|null
      * @internal
      */
-    public function getFilterContainer(): Container
+    public function getFilterContainer(): ?Container
     {
         return $this->filterContainer;
+    }
+
+    /**
+     * Get edit container
+     * @return Container|null
+     */
+    public function getEditContainer(): ?Container
+    {
+        return $this->editContainer;
     }
 
     /**
@@ -321,6 +380,11 @@ class NetteGrid extends Control
     {
         if(is_null($this->dataSourceCallback))
             return null;
+
+        if(is_null($this->editKey) === false)
+        {
+            $this->filter[$this->primaryColumn] = $this->editKey;
+        }
         $getDataFn = $this->dataSourceCallback;
         $data = $getDataFn($this->filter);
         if(is_countable($data) === false || count($data) == 0)
@@ -346,5 +410,24 @@ class NetteGrid extends Control
     {
         $primaryColumn = $this->primaryColumn;
         return $row->$primaryColumn;
+    }
+
+    /**
+     * Set Grid editable
+     * @param bool $editable
+     * @internal
+     */
+    public function setEditable(bool $editable=true): void
+    {
+        $this->isEditable = true;
+    }
+
+    /**
+     * Set Grid filterable
+     * @param bool $filterable
+     */
+    public function setFilterable(bool $filterable=true): void
+    {
+        $this->isFilterable = $filterable;
     }
 }

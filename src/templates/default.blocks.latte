@@ -3,6 +3,8 @@
 {varType e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate}
 {varType e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate $headFilterColTemplate}
 {varType string $columnName}
+{varType mixed $cell}
+{varType mixed $editValue}
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
@@ -94,3 +96,14 @@
 {define head-actions-column-end-tag}
     {$headerActionsColumnTemplate->renderEndTag()|noescape}
 {/define}
+
+{* Data cell - expecting parameter ($row, $cell, $primary )*}
+{define data-cell}
+    {$cell}
+{/define}
+
+{* Data edit input - expecting parameters ($row, $editValue, $primary, $columnName) *}
+{define data-edit}
+    {input $columnName value => $editValue}
+{/define}
+

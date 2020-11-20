@@ -52,6 +52,9 @@ abstract class Column implements IColumn
     /** @var null|callable Change cell value with callback function($row, $cell){} */
     protected $cellValueCallback=null;
 
+    /** @var null|callable Change edit cell value function($row, $cell){}  */
+    protected $editCellValueCallback=null;
+
     /** @var DataColTemplate|null Data col template */
     protected ?DataColTemplate $dataColTemplate=null;
 
@@ -63,6 +66,9 @@ abstract class Column implements IColumn
 
     /** @var BaseControl|null Filter input */
     protected ?BaseControl $filterInput=null;
+
+    /** @var BaseControl|null Edit input */
+    protected ?BaseControl $editInput=null;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
@@ -102,15 +108,32 @@ abstract class Column implements IColumn
     }
 
     /**
+     * @param mixed $row
+     * @param mixed $cell
+     * @return mixed
+     * @internal
+     *
+     * Get Cell value for rendering - internal
+     */
+    public function getEditCellValue($row, $cell)
+    {
+        if(is_null($this->editCellValueCallback))
+            return $this->getCellValueForRendering($row);
+        $fn = $this->editCellValueCallback;
+        return $fn($row, $cell);
+    }
+
+    /**
+     * @param mixed $row
+     * @param mixed $cell
+     * @return mixed
      * @internal
      *
      * Get Cell value - internal for rendering
-     * @param mixed $row
-     * @return mixed
      */
-    public function getCellValueForRendering($row)
+    public function getCellValueForRendering($row, $cell=null)
     {
-        $cellValue = $this->getCellValue($row);
+        $cellValue = $cell ?? $this->getCellValue($row);
         if(is_callable($this->cellValueCallback))
         {
             $fn = $this->cellValueCallback;
@@ -220,6 +243,7 @@ abstract class Column implements IColumn
     public function setFilterable(bool $filterable=true): self
     {
         $this->filterable = $filterable;
+        $this->netteGrid->setFilterable($filterable);
         return $this;
     }
 
@@ -242,6 +266,8 @@ abstract class Column implements IColumn
     public function setEditable(bool $editable=true): self
     {
         $this->editable = $editable;
+        if($editable === true)
+            $this->netteGrid->setEditable(true);
         return $this;
     }
 
@@ -340,20 +366,32 @@ abstract class Column implements IColumn
      * Add filter form input
      * @internal
      */
-    public function addFilterFormInput(): bool
+    public function addFilterFormInput(): void
     {
         if($this->isFilterable())
         {
             $container = $this->netteGrid->getFilterContainer();
             $input = $this->getFilterInput();
             $input->setHtmlAttribute('data-autosubmit');
-            $input->setHtmlAttribute('data-formid', $this->netteGrid['form']->getElementPrototype()->id);
-            $input->setHtmlAttribute('data-container', 'filter');
+            $input->setHtmlAttribute('data-container', 'filterSubmit');
             $container->addComponent($input, $this->name);
-            return true;
         }
-        return false;
     }
+
+    /**
+     * Add filter form input
+     * @internal
+     */
+    public function addEditFormInput(): void
+    {
+        if($this->isEditable())
+        {
+            $container = $this->netteGrid->getEditContainer();
+            $input = $this->getEditInput();
+            $container->addComponent($input, $this->name);
+        }
+    }
+
 
     /**
      * Get filter input
@@ -367,11 +405,25 @@ abstract class Column implements IColumn
     }
 
     /**
+     * Get edit input
+     * @return BaseControl
+     */
+    public function getEditInput(): BaseControl
+    {
+        if(is_null($this->editInput))
+            $this->editInput = $this->getInput();
+        return $this->editInput;
+    }
+
+    /**
+     * Get input
      * @return BaseControl
      */
     public function getInput(): BaseControl
     {
-        return new TextInput($this->name);
+        $input = new TextInput($this->name);
+        $input->setHtmlAttribute('class', 'form-control-sm');
+        return $input;
     }
 
 
