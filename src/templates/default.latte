@@ -100,15 +100,6 @@
 
                                         {if $editRowKey === $primaryValue}
 
-                                            {* ifset block with name #data-columnName replace it *}
-                                            {ifset #data-$columnName}
-                                                {include #data-$columnName}
-                                            {else}
-                                                {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
-                                            {/ifset}
-
-                                        {else}
-
                                             {var $editValue = $column->getEditCellValue($row, $cell)}
 
                                             {formContainer edit}
@@ -120,6 +111,15 @@
                                                 {/ifset}
 
                                             {/formContainer}
+
+                                        {else}
+
+                                            {* ifset block with name #data-columnName replace it *}
+                                            {ifset #data-$columnName}
+                                                {include #data-$columnName}
+                                            {else}
+                                                {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
+                                            {/ifset}
 
                                         {/if}
 
