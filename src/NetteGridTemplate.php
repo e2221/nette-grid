@@ -6,6 +6,7 @@ namespace e2221\NetteGrid;
 
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
+use e2221\NetteGrid\Actions\RowAction\RowActionSave;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\DataActionsColTemplate;
@@ -61,6 +62,7 @@ class NetteGridTemplate extends Template
     public WholeDocumentTemplate $wholeDocumentTemplate;
     public DataActionsColTemplate $dataActionsColumnTemplate;
     public RowActionCancel $rowActionCancel;
+    public RowActionSave $rowActionSave;
 
     public bool $editMode;
     public bool $showEmptyResult;

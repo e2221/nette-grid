@@ -139,7 +139,7 @@
 
                                         {if $editRowKey === $primaryValue && $column->isEditable() === true}
 
-
+                                            {include #data-action-save row => $row, primary => $primaryValue}
                                             {include #data-action-cancel row => $row, primary => $primaryValue}
 
                                         {elseif count($rowActions) > 0}
@@ -187,7 +187,7 @@
                     di.getService('page').getSnippet({form.id form})
                         .setup(function(frm) {
                             $(frm).on('keyup', 'input[data-autosubmit]', function(e) {
-                                var $this, code;
+                                var code;
                                 code = e.which || e.keyCode || 0;
                                 if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
                                     return;
@@ -197,6 +197,10 @@
                                 tmr = window.setTimeout(function(_this) {
                                     di.getService('formLocator').getForm(frm).submit($this.data('container'));
                                 }(this), 200);
+                            });
+
+                            $(frm).on('click', 'button[data-submit]', function(){
+                                di.getService('formLocator').getForm(frm).submit($this.data('container'));
                             });
                         })
                         .teardown(function() {

@@ -108,6 +108,17 @@ abstract class Column implements IColumn
     }
 
     /**
+     * Set edit cell value callback
+     * @param callable|null $editCellValueCallback
+     * @return Column
+     */
+    public function setEditCellValueCallback(?callable $editCellValueCallback): self
+    {
+        $this->editCellValueCallback = $editCellValueCallback;
+        return $this;
+    }
+
+    /**
      * @param mixed $row
      * @return mixed
      * @internal

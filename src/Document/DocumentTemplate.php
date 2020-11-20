@@ -8,6 +8,7 @@ namespace e2221\NetteGrid\Document;
 use e2221\HtmElement\BaseElement;
 use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
 use e2221\NetteGrid\Actions\RowAction\RowActionEdit;
+use e2221\NetteGrid\Actions\RowAction\RowActionSave;
 use e2221\NetteGrid\Document\Templates\Cols\DataActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeaderActionsColTemplate;
@@ -44,6 +45,7 @@ class DocumentTemplate
     protected ?BaseElement $emptyData=null;
     protected RowActionEdit $rowActionEdit;
     protected RowActionCancel $rowActionCancel;
+    protected RowActionSave $rowActionSave;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -60,6 +62,16 @@ class DocumentTemplate
         $this->dataActionsColTemplate = new DataActionsColTemplate();
         $this->rowActionEdit = new RowActionEdit($netteGrid);
         $this->rowActionCancel = new RowActionCancel($netteGrid);
+        $this->rowActionSave = new RowActionSave();
+    }
+
+    /**
+     * Get row action save
+     * @return RowActionSave
+     */
+    public function getRowActionSave(): RowActionSave
+    {
+        return $this->rowActionSave;
     }
 
     /**
