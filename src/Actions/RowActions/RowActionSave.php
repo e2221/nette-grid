@@ -12,7 +12,6 @@ class RowActionSave extends BaseAction
     public string $defaultClass = 'btn btn-xs';
     public string $class = 'btn-primary';
 
-
     public function __construct(string $name='save', string $title = 'Save')
     {
         parent::__construct($name);
