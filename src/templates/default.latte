@@ -98,7 +98,7 @@
 
                                         {if $dataColTemplate->isHidden() === false}
 
-                                            {if $editRowKey === $primaryValue}
+                                            {if $editRowKey === $primaryValue && $column->isEditable() === true}
 
                                                 {var $editValue = $column->getEditCellValue($row, $cell)}
 
@@ -135,7 +135,12 @@
                                     {* <td> *}
                                     {include #data-actions-column-open-tag}
 
-                                        {if count($rowActions) > 0}
+                                        {if $editRowKey === $primaryValue && $column->isEditable() === true}
+
+
+                                            {include #data-action-cancel}
+
+                                        {elseif count($rowActions) > 0}
 
                                             {foreach $rowActionsOrder as $index => $action}
 

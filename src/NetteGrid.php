@@ -37,7 +37,7 @@ class NetteGrid extends Control
     protected array $rowActions=[];
 
     /** @var array */
-    protected array $rowActionsOrder;
+    protected array $rowActionsOrder=[];
 
     /** @var string[] Templates with changed blocks */
     protected array $templates=[];
@@ -208,8 +208,24 @@ class NetteGrid extends Control
      */
     public function handleEdit(?int $editKey=null): void
     {
-        $this->editKey = $editKey;
-        $this->handleRedrawData();
+        if($this->presenter->isAjax())
+        {
+            $this->editKey = $editKey;
+            $this->handleRedrawData();
+        }
+    }
+
+    /**
+     * Signal - Cancel editing
+     * @throws AbortException
+     */
+    public function handleCancelEdit(): void
+    {
+        if($this->presenter->isAjax())
+        {
+            $this->editKey = null;
+            $this->handleRedrawData();
+        }
     }
 
     /**
@@ -265,6 +281,7 @@ class NetteGrid extends Control
         $this->template->headFilterRowTemplate = $this->documentTemplate->getHeadFilterRowTemplate();
         $this->template->headerActionsColumnTemplate = $this->documentTemplate->getHeaderActionsColTemplate();
         $this->template->dataActionsColumnTemplate = $this->documentTemplate->getDataActionsColTemplate();
+        $this->template->rowActionCancel = $this->documentTemplate->getRowActionCancel();
 
 
         $data = $this->getDataFromSource();

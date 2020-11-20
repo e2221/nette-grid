@@ -38,6 +38,7 @@ class RowAction extends BaseAction
     {
         parent::__construct($name, $title);
         $this->netteGrid = $netteGrid;
+        $this->setTextContent($title);
     }
 
     public function beforeRender(): void

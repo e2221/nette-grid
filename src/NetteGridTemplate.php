@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace e2221\NetteGrid;
 
 use e2221\NetteGrid\Actions\RowAction\RowAction;
+use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\DataActionsColTemplate;
@@ -59,6 +60,7 @@ class NetteGridTemplate extends Template
     public HeaderActionsColTemplate $headerActionsColumnTemplate;
     public WholeDocumentTemplate $wholeDocumentTemplate;
     public DataActionsColTemplate $dataActionsColumnTemplate;
+    public RowActionCancel $rowActionCancel;
 
     public bool $showEmptyResult;
     public bool $isFilterable;
