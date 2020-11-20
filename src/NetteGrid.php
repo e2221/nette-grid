@@ -207,7 +207,6 @@ class NetteGrid extends Control
     /**
      * Signal - Edit
      * @param int|null $editKey
-     * @throws AbortException
      */
     public function handleEdit(?int $editKey=null): void
     {
@@ -215,7 +214,8 @@ class NetteGrid extends Control
         {
             $this->editMode = true;
             $this->editKey = $editKey;
-            $this->handleRedrawData();
+            $this->redrawControl('documentArea');
+            $this->redrawControl('data');
         }
     }
 
@@ -242,10 +242,18 @@ class NetteGrid extends Control
         parent::loadState($params);
 
         if($this->isFilterable === true)
+        {
             $this->filterContainer = $this['form']->addContainer('filter');
+            $this->filterContainer->addSubmit('filterSubmit')
+                ->setHtmlAttribute('class', 'd-none')
+                ->onClick[] = [$this, 'filterFormSuccess'];
+        }
+
         if($this->isEditable === true)
         {
             $this->editContainer = $this['form']->addContainer('edit');
+            $this->editContainer->addSubmit('editSubmit')
+                ->onClick[] = [$this, 'editFormSuccess'];
             $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
         }
 
@@ -309,17 +317,13 @@ class NetteGrid extends Control
     {
         $form = new BootstrapForm();
         $form->setHtmlAttribute('data-reset', 'false');
-        $form->addSubmit('filterSubmit')
-            ->setHtmlAttribute('class', 'd-none')
-            ->onClick[] = [$this, 'filterFormSuccess'];
-        $form->addSubmit('editSubmit')
-            ->onClick[] = [$this, 'editFormSuccess'];
-
         return $form;
     }
 
     public function editFormSuccess(Button $button, ArrayHash $values): void
     {
+        $editValues = $values['edit'];
+
     }
 
     /**
@@ -337,15 +341,6 @@ class NetteGrid extends Control
                 unset($filterValues[$key]);
         $this->filter = $filterValues;
         $this->handleRedrawData();
-    }
-
-    /**
-     * Get from
-     * @return Form
-     */
-    public function getForm(): Form
-    {
-        return $this['form'];
     }
 
     /**

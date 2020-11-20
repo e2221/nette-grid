@@ -178,7 +178,9 @@
                 {include #table-close-tag}
 
                 {if $isFilterable}
-                    {input filterSubmit}
+                    {formContainer filter}
+                        {input filterSubmit}
+                    {/formContainer}
                 {/if}
             {/form}
 
