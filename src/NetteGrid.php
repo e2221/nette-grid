@@ -212,7 +212,6 @@ class NetteGrid extends Control
      */
     public function handleEdit(): void
     {
-        $this->editMode = true;
         if($this->presenter->isAjax())
         {
             $this->redrawControl('documentArea');
