@@ -25,6 +25,6 @@ class RowActionEdit extends RowAction
      */
     public function getLink(NetteGrid $netteGrid, $row, $primary): string
     {
-        return $netteGrid->link('edit!', $primary);
+        return $netteGrid->link('edit!', ['editKey' => $primary]);
     }
 }

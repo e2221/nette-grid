@@ -209,12 +209,10 @@ class NetteGrid extends Control
 
     /**
      * Signal - Edit
-     * @param int|null $editKey
      */
-    public function handleEdit(?int $editKey=null): void
+    public function handleEdit(): void
     {
         $this->editMode = true;
-        $this->editKey = $editKey;
         if($this->presenter->isAjax())
         {
             $this->redrawControl('documentArea');
@@ -329,30 +327,26 @@ class NetteGrid extends Control
      * Edit form success
      * @param Button $button
      * @param ArrayHash $values
-     * @throws AbortException
      */
     public function editFormSuccess(Button $button, ArrayHash $values): void
     {
-        if(is_null($this->editKey) === false && $this->editMode === true)
-        {
-            $editValues = $values->edit;
-            $primaryColumn = $this->primaryColumn;
-            $editValues->$primaryColumn = $this->editKey;
-            if(is_callable($this->onEditCallback))
-            {
-                $fn = $this->onEditCallback;
-                $fn($editValues, $this->editKey);
-            }
-        }
-        $this->editMode = false;
         if($this->presenter->isAjax())
         {
+            if(!is_null($this->editKey))
+            {
+                $editValues = $values->edit;
+                $primaryColumn = $this->primaryColumn;
+                $editValues->$primaryColumn = $this->editKey;
+                if(is_callable($this->onEditCallback))
+                {
+                    $fn = $this->onEditCallback;
+                    $fn($editValues, $this->editKey);
+                }
+            }
+            $this->editMode = false;
             $this->redrawControl('documentArea');
             $this->redrawControl('data');
-        }else{
-            $this->redirect('this');
         }
-
     }
 
     /**
