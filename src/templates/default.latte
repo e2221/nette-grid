@@ -99,7 +99,7 @@
                                         {if $dataColTemplate->isHidden() === false}
 
                                             {* edit - print input *}
-                                            {if $editMode === true && $editRowKey === $primaryValue && $column->isEditable() === true}
+                                            {if $editMode === true && $editRowKey == $primaryValue && $column->isEditable() === true}
 
                                                 {var $editValue = $column->getEditCellValue($row, $cell)}
 
@@ -137,8 +137,10 @@
                                     {* <td> *}
                                     {include #data-actions-column-open-tag}
 
-                                        {if $editRowKey === $primaryValue && $column->isEditable() === true}
+                                        {if $editMode === true && $editRowKey == $primaryValue && $column->isEditable() === true}
 
+                                            {* primary hidden input *}
+                                            {input $primaryColumn value => $primaryValue}
 
                                             {* save button *}
                                             {include #data-action-save row => $row, primary => $primaryValue}

@@ -63,7 +63,7 @@ class NetteGrid extends Control
     /** @var null|callable Function that will be called after submit edit function(ArrayHash $values, $primary) */
     protected $onEditCallback=null;
 
-    /** @var bool Active edit mode [true = edit is enable] */
+    /** @var bool @persistent Active edit mode [true = edit is enable] */
     public bool $editMode=false;
 
     /** @var bool Is there at least one filterable column? */
@@ -251,6 +251,7 @@ class NetteGrid extends Control
         if($this->isEditable === true)
         {
             $this->editContainer = $this['form']->addContainer('edit');
+            $this->editContainer->addHidden($this->primaryColumn);
             $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
         }
 
@@ -297,6 +298,7 @@ class NetteGrid extends Control
 
         $data = $this->getDataFromSource();
         $this->template->columns = $this->getColumns(true);
+        $this->template->primaryColumn = $this->primaryColumn;
         $this->template->editRowKey = $this->editKey;
         $this->template->data = $data;
         $this->template->showEmptyResult = !((bool)$data);
