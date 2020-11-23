@@ -127,15 +127,9 @@
 
 {* Data action cancel - available parameters (RowActionCancel $action, $row, $primary) *}
 {define data-action-cancel}
-    {var e2221\NetteGrid\Actions\RowAction\RowActionEdit $cancelBtn = $documentTemplate->getRowActionCancel()}
-    {$cancelBtn->render($row, $primary)}
+    {$rowActionCancel->render($row, $primary)}
 {/define}
 
-{* Data action edit button - available parameters (RowAction $action, $row, $primary) *}
-{define data-action-edit}
-    {var e2221\NetteGrid\Actions\RowAction\RowActionEdit $editBtn = $documentTemplate->getRowActionEdit()}
-    {$editBtn->render($row, $primary)}
-{/define}
 
 {* Data action save - available parameters (RowActionSave $action, $row, $primary) *}
 {define data-action-save}

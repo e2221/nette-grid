@@ -71,7 +71,7 @@ class DocumentTemplate
      */
     public function getRowActionSave(): RowActionSave
     {
-        return clone($this->rowActionSave);
+        return $this->rowActionSave;
     }
 
     /**
@@ -80,7 +80,7 @@ class DocumentTemplate
      */
     public function getRowActionCancel(): RowActionCancel
     {
-        return clone($this->rowActionCancel);
+        return $this->rowActionCancel;
     }
 
     /**
