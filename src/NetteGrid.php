@@ -212,16 +212,11 @@ class NetteGrid extends Control
 
     /**
      * Signal - Edit
-     * @param mixed $editKey
      */
-    public function handleEdit($editKey): void
+    public function handleEdit(): void
     {
         if($this->presenter->isAjax())
         {
-            $this->editKey = $editKey;
-            $this->editMode = true;
-            if($this->editMode === true && isset($this->editKey))
-                $this->handleRedrawRow($this->editKey);
             $this->redrawControl('documentArea');
             $this->redrawControl('data');
         }
