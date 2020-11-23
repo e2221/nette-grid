@@ -140,7 +140,9 @@
                                         {if $editMode === true && $editRowKey == $primaryValue && $column->isEditable() === true}
 
                                             {* primary hidden input *}
-                                            {input $primaryColumn value => $primaryValue}
+                                            {formContainer edit}
+                                                {input $primaryColumn value => $primaryValue}
+                                            {/formContainer}
 
                                             {* save button *}
                                             {include #data-action-save row => $row, primary => $primaryValue}
