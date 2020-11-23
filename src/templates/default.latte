@@ -215,6 +215,15 @@
                             tmr && window.clearTimeout(tmr);
                             tmr = null;
                         });
+
+                    let editButtonsSelector = document.querySelectorAll('.{snippet.id data}[data-edit]');
+                    editButtonsSelector.forEach(function(item){
+                        item.addEventListener("click", function(){
+                            editButtonsSelector.forEach(function(item){
+                                $(this).classList.add("disabled");
+                            });
+                        }) ;
+                    });
                 });
 
             </script>
