@@ -122,16 +122,16 @@
 
 {* Data single action - available parameters (RowAction $action, $row, $primary) *}
 {define data-action}
-    {$action->render($row, $primary)}
+    {$action->renderImmutable($row, $primary)}
 {/define}
 
 {* Data action cancel - available parameters (RowActionCancel $action, $row, $primary) *}
 {define data-action-cancel}
-    {$rowActionCancel->render($row, $primary)}
+    {$documentTemplate->getRowActionCancel()->renderImmutable($row, $primary)}
 {/define}
 
 {define data-action-edit}
-    {$documentTemplate->getRowActionEdit()->render($row, $primary)}
+    {$documentTemplate->getRowActionEdit()->renderImmutable($row, $primary)}
 {/define}
 
 {* Data action save - available parameters (RowActionSave $action, $row, $primary) *}

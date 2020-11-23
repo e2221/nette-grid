@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Actions\RowAction;
 
 
+use e2221\HtmElement\BaseElement;
 use e2221\NetteGrid\Actions\BaseAction;
 use e2221\NetteGrid\NetteGrid;
 use Nette\Utils\Html;
@@ -89,6 +90,21 @@ class RowAction extends BaseAction
         $this->row = $row;
         $this->primary = $primary;
         return parent::render();
+    }
+
+    /**
+     * Render rewrite
+     * @param mixed|null $row
+     * @param int|string|mixed|null $primary
+     * @return Html|null
+     */
+    public function renderImmutable($row=null, $primary=null): ?Html
+    {
+        if(is_null($row) === true || is_null($primary) === true)
+            return null;
+        $this->row = $row;
+        $this->primary = $primary;
+        return parent::renderImmutable();
     }
 
     /**
