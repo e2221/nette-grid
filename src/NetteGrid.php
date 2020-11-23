@@ -60,6 +60,9 @@ class NetteGrid extends Control
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
+    /** @var mixed|null */
+    protected $data=null;
+
     /** @var null|callable Function that will be called after submit edit function(ArrayHash $values, $primary) */
     protected $onEditCallback=null;
 
@@ -235,6 +238,20 @@ class NetteGrid extends Control
     }
 
     /**
+     * Signal - RedrawRow
+     * @param mixed $rowID
+     */
+    public function handleRedrawRow($rowID): void
+    {
+        if($this->presenter->isAjax())
+        {
+            $this->data = $this->getDataFromSource($rowID);
+            $this->redrawControl('documentArea');
+            $this->redrawControl('data');
+        }
+    }
+
+    /**
      * Load state
      * @param array $params
      * @throws BadRequestException
@@ -296,7 +313,7 @@ class NetteGrid extends Control
         $this->template->rowActionSave = $this->documentTemplate->getRowActionSave();
 
 
-        $data = $this->getDataFromSource();
+        $data = $this->data ?? $this->getDataFromSource();
         $this->template->columns = $this->getColumns(true);
         $this->template->primaryColumn = $this->primaryColumn;
         $this->template->editRowKey = $this->editKey;
@@ -333,6 +350,12 @@ class NetteGrid extends Control
     {
         if($this->presenter->isAjax())
         {
+            if($this->editMode === true && isset($this->editKey))
+            {
+                $this->editMode = false;
+                $this->handleRedrawRow($this->editKey);
+            }
+
             $editValues = $values->edit;
             $primaryColumn = $this->primaryColumn;
             $primaryValue = $editValues->$primaryColumn;
@@ -362,6 +385,8 @@ class NetteGrid extends Control
             if(empty($value))
                 unset($filterValues[$key]);
         $this->filter = $filterValues;
+        $this->editKey = null;
+        $this->editMode = false;
         if(count($this->filter) > 0)
         {
             $this->handleRedrawData();
@@ -470,14 +495,18 @@ class NetteGrid extends Control
 
     /**
      * Get data from source
+     * @param mixed|null $rowID
      * @return mixed[]|null
      */
-    protected function getDataFromSource()
+    protected function getDataFromSource($rowID=null)
     {
         if(is_null($this->dataSourceCallback))
             return null;
 
-        if(is_null($this->editKey) === false && $this->presenter->isAjax())
+        if($rowID)
+        {
+            $this->filter[$this->primaryColumn] = $rowID;
+        }else if(is_null($this->editKey) === false && $this->presenter->isAjax())
         {
             $this->filter[$this->primaryColumn] = $this->editKey;
         }
