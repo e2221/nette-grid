@@ -23,7 +23,7 @@
                             {* columns cols <td>Column title</td> *}
                             {foreach $columns as $columnName => $column}
                                 {ifset #title-col-$columnName}
-                                    {include #title-col-$columnName}
+                                    {include #"title-col-{$columnName}"}
                                 {else}
                                     {$column->getTitleColTemplate()|noescape}
                                 {/ifset}
@@ -46,7 +46,7 @@
                                     {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
                                     {if $column->isFilterable()}
                                         {ifset #filter-input-$columnName}
-                                            {include #filter-input-$columnName}
+                                            {include #"filter-input-{$columnName}"}
                                         {else}
                                             {include #filter-input columnName => $columnName}
                                         {/ifset}
@@ -106,7 +106,7 @@
                                                 {formContainer edit}
 
                                                     {ifset #data-edit-$columnName}
-                                                        {include #data-edit-$columnName}
+                                                        {include #"data-edit-{$columnName}"}
                                                     {else}
                                                         {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
                                                     {/ifset}
@@ -118,7 +118,7 @@
 
                                                 {* ifset block with name #data-columnName replace it *}
                                                 {ifset #data-$columnName}
-                                                    {include #data-$columnName}
+                                                    {include #"data-{$columnName}"}
                                                 {else}
                                                     {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
                                                 {/ifset}
@@ -155,7 +155,7 @@
                                             {foreach $rowActionsOrder as $index => $action}
 
                                                 {ifset #data-action-$action}
-                                                    {include #data-action-$action row => $row, primary => $primaryValue}
+                                                    {include #"data-action-{$action} row => $row, primary => $primaryValue}
                                                 {else}
                                                     {include #data-action action => $rowActions[$action], row => $row, primary => $primaryValue}
                                                 {/ifset}
