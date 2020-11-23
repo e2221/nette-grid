@@ -333,16 +333,12 @@ class NetteGrid extends Control
     {
         if($this->presenter->isAjax())
         {
-            if(!is_null($this->editKey))
+            $primaryColumn = $this->primaryColumn;
+            $primaryValue = $values->$primaryColumn;
+            if(is_callable($this->onEditCallback))
             {
-                $editValues = $values->edit;
-                $primaryColumn = $this->primaryColumn;
-                $editValues->$primaryColumn = $this->editKey;
-                if(is_callable($this->onEditCallback))
-                {
-                    $fn = $this->onEditCallback;
-                    $fn($editValues, $this->editKey);
-                }
+                $fn = $this->onEditCallback;
+                $fn($values, $primaryValue);
             }
             $this->editMode = false;
             $this->redrawControl('documentArea');
