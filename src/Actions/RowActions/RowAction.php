@@ -88,7 +88,7 @@ class RowAction extends BaseAction
             return null;
         $this->row = $row;
         $this->primary = $primary;
-        return clone(parent::render());
+        return parent::render();
     }
 
     /**

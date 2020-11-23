@@ -130,6 +130,9 @@
     {$rowActionCancel->render($row, $primary)}
 {/define}
 
+{define data-action-edit}
+    {$documentTemplate->getRowActionEdit()->render($row, $primary)}
+{/define}
 
 {* Data action save - available parameters (RowActionSave $action, $row, $primary) *}
 {define data-action-save}
