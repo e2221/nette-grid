@@ -10,8 +10,8 @@ use Nette\Application\UI\InvalidLinkException;
 class RowActionEdit extends RowAction
 {
     protected ?string $spanClass = 'fa fa-pencil fa fa-pencil-alt';
-    protected string $class = 'btn btn-xs btn-secondary';
-    protected string $defaultClass = 'datagrid-edit-button';
+    public string $class = 'btn btn-xs btn-secondary';
+    public string $defaultClass = 'datagrid-edit-button';
 
     public function __construct(NetteGrid $netteGrid, string $name='edit', ?string $title = 'Edit')
     {
