@@ -15,7 +15,8 @@ class RowActionEdit extends RowAction
 
     public function __construct(NetteGrid $netteGrid, string $name='edit', ?string $title = 'Edit')
     {
-        parent::__construct($netteGrid, $name, $title);
+        parent::__construct($netteGrid, $name);
+        $this->setTitle($title);
         $this->setLinkCallback([$this, 'getLink']);
     }
 

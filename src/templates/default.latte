@@ -155,7 +155,7 @@
                                             {foreach $rowActionsOrder as $index => $action}
 
                                                 {ifset #data-action-$action}
-                                                    {include #"data-action-{$action} row => $row, primary => $primaryValue}
+                                                    {include #"data-action-{$action}" row => $row, primary => $primaryValue}
                                                 {else}
                                                     {include #data-action action => $rowActions[$action], row => $row, primary => $primaryValue}
                                                 {/ifset}
