@@ -342,6 +342,7 @@ class NetteGrid extends Control
                 $fn($editValues, $primaryValue);
             }
             $this->editMode = false;
+            $this->editKey = $primaryValue;
             $this->redrawControl('documentArea');
             $this->redrawControl('data');
         }
