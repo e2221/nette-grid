@@ -60,6 +60,9 @@ class NetteGrid extends Control
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
+    /** @var string|null @persistent Edit only column */
+    public ?string $editColumn=null;
+
     /** @var mixed|null */
     protected $data=null;
 
@@ -317,6 +320,7 @@ class NetteGrid extends Control
         $this->template->columns = $this->getColumns(true);
         $this->template->primaryColumn = $this->primaryColumn;
         $this->template->editRowKey = $this->editKey;
+        $this->template->editColumn = $this->editColumn;
         $this->template->data = $data;
         $this->template->showEmptyResult = !((bool)$data);
         $this->template->templates = $this->templates;

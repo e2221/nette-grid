@@ -132,6 +132,7 @@
 
 {define data-action-edit}
     {$rowActionEdit->render($row, $primary)}
+    <a n:href="edit! 'editKey' => $primary, 'editMode' => true, 'editColumn'=>'user'">aa</a>
 {/define}
 
 {* Data action save - available parameters (RowActionSave $action, $row, $primary) *}

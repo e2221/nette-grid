@@ -100,18 +100,25 @@
 
                                             {* edit - print input *}
                                             {if $editMode === true && $editRowKey == $primaryValue && $column->isEditable() === true}
-
                                                 {var $editValue = $column->getEditCellValue($row, $cell)}
 
-                                                {formContainer edit}
+                                                {if (is_string($editColumn) && $editColumn == $columnName) || is_null($editColumn) }
 
-                                                    {ifset #data-edit-$columnName}
-                                                        {include #"data-edit-{$columnName}"}
-                                                    {else}
-                                                        {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
-                                                    {/ifset}
+                                                    {formContainer edit}
 
-                                                {/formContainer}
+                                                        {ifset #data-edit-$columnName}
+                                                            {include #"data-edit-{$columnName}"}
+                                                        {else}
+                                                            {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
+                                                        {/ifset}
+
+                                                        {if is_string($editColumn)}
+                                                            Button
+                                                        {/if}
+
+                                                    {/formContainer}
+
+                                                {/if}
 
                                             {* print cell value *}
                                             {else}
