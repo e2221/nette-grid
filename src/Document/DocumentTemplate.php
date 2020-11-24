@@ -61,7 +61,7 @@ class DocumentTemplate
         $this->dataActionsColTemplate = new DataActionsColTemplate();
         $this->rowActionEdit = new RowActionEdit($netteGrid);
         $this->rowActionCancel = new RowActionCancel($netteGrid);
-        $this->rowActionSave = new RowActionSave();
+        $this->rowActionSave = new RowActionSave($netteGrid);
     }
 
     /**
