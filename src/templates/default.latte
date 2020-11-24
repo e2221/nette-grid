@@ -97,7 +97,7 @@
                                     {var $cell = $column->getCellValueForRendering($row)}
 
                                     {* <td> *}
-                                    {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell}
+                                    {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell, primary => $primaryValue, columnName => $columnName}
 
                                         {if $dataColTemplate->isHidden() === false}
 
