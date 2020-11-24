@@ -82,6 +82,9 @@
                         {foreach $data as $dataKey => $row}
                             {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
                             {var string|int $primaryValue = $control->getRowPrimaryValue($row)}
+                            {php
+                                $dataRowTemplate->prepareElement($primaryValue)
+                            }
 
                             {* <tr> *}
                             <tr n:snippet="data-$primaryValue" {$dataRowTemplate->getAttributes()|noescape}>
@@ -221,6 +224,18 @@
                         .teardown(function() {
                             tmr && window.clearTimeout(tmr);
                             tmr = null;
+                        });
+
+                    di.getService('page').getSnippet({snippet.id data})
+                        .setup(function(row) {
+                            $(row).on('dblclick', 'tr[data-row]', function() {
+                                let rowId = $(this).data('id');
+                                console.log(rowId);
+                            });
+
+                        })
+                        .teardown(function() {
+
                         });
                 });
             </script>

@@ -6,6 +6,7 @@ namespace e2221\NetteGrid\Document\Templates;
 
 
 use e2221\NetteGrid\Document\DocumentTemplate;
+use Nette\Utils\Html;
 
 class DataRowTemplate extends BaseTemplate
 {
@@ -17,6 +18,20 @@ class DataRowTemplate extends BaseTemplate
     {
         parent::__construct();
         $this->documentTemplate = $documentTemplate;
+        $this->addDataAttribute('row');
+
+    }
+
+    /**
+     * Prepare element
+     * @param mixed|null $primary
+     * @return void
+     */
+    public function prepareElement($primary=null): void
+    {
+        if(is_null($primary) == false)
+            $this->addDataAttribute('id', $primary);
+        parent::prepareElement();
     }
 
     public function endTemplate(): DocumentTemplate
@@ -24,10 +39,4 @@ class DataRowTemplate extends BaseTemplate
         return $this->documentTemplate;
     }
 
-    public function beforeRender(): void
-    {
-        //unset id attribute
-        if(isset($this->attributes['id']))
-            unset($this->attributes['id']);
-    }
 }
