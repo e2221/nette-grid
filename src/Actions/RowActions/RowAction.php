@@ -39,7 +39,6 @@ class RowAction extends BaseAction
     {
         parent::__construct($name, $title);
         $this->netteGrid = $netteGrid;
-        $this->setTextContent($title);
     }
 
     public function beforeRender(): void
@@ -66,7 +65,7 @@ class RowAction extends BaseAction
         if(is_callable($this->linkCallback))
         {
             $fn = $this->linkCallback;
-            $this->setHref($fn($this->netteGrid, $this->row, $this->primary));
+            $this->setLink($fn($this->netteGrid, $this->row, $this->primary));
         }
 
         //show if
@@ -90,21 +89,6 @@ class RowAction extends BaseAction
         $this->row = $row;
         $this->primary = $primary;
         return parent::render();
-    }
-
-    /**
-     * Render rewrite
-     * @param mixed|null $row
-     * @param int|string|mixed|null $primary
-     * @return Html|null
-     */
-    public function renderImmutable($row=null, $primary=null): ?Html
-    {
-        if(is_null($row) === true || is_null($primary) === true)
-            return null;
-        $this->row = $row;
-        $this->primary = $primary;
-        return parent::renderImmutable();
     }
 
     /**

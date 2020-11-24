@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Actions;
 
 
-use e2221\HtmElement\HrefElement;
+use e2221\utils\Html\HrefElement;
 
 class BaseAction extends HrefElement
 {
@@ -20,7 +20,7 @@ class BaseAction extends HrefElement
         $this->name = $name;
         parent::__construct();
         if(is_string($title))
-            $this->setTitle($title);
+            $this->addTextContent($title);
     }
 
 }

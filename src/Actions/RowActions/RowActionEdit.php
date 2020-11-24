@@ -15,9 +15,11 @@ class RowActionEdit extends RowAction
 
     public function __construct(NetteGrid $netteGrid, string $name='edit', ?string $title = 'Edit')
     {
-        parent::__construct($netteGrid, $name);
-        $this->setTitle($title);
+        parent::__construct($netteGrid, $name, $title);
         $this->setLinkCallback([$this, 'getLink']);
+        $this->addSpanElement('fa fa-pencil fa fa-pencil-al');
+        $this->setDefaultClass('datagrid-edit-button');
+        $this->setClass('btn btn-xs btn-secondary');
     }
 
     /**

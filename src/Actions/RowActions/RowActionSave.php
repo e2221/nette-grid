@@ -16,7 +16,7 @@ class RowActionSave extends BaseAction
     {
         parent::__construct($name);
         $this
-            ->setAttribute('type', 'submit')
-            ->setAttribute('value', $title);
+            ->addHtmlAttribute('type', 'submit')
+            ->addHtmlAttribute('value', $title);
     }
 }

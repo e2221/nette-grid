@@ -2,6 +2,12 @@
     "name": "e2221/nette-grid",
     "description": "Datagrid for Nette Framework",
     "type": "library",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/e2221/utils"
+        }
+    ],
     "require": {
         "nette/application": "^3.0",
         "nette/component-model": "^3.0",
@@ -15,6 +21,7 @@
     },
     "license": "MIT",
     "require-dev": {
+        "e2221/utils": "dev-main@dev",
         "phpstan/phpstan-nette": "^0.12"
     },
     "scripts": {
