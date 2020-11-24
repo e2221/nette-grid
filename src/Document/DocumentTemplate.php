@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace e2221\NetteGrid\Document;
 
-
-use e2221\HtmElement\BaseElement;
 use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
 use e2221\NetteGrid\Actions\RowAction\RowActionEdit;
 use e2221\NetteGrid\Actions\RowAction\RowActionSave;
@@ -21,6 +19,7 @@ use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use e2221\NetteGrid\NetteGrid;
+use e2221\utils\Html\BaseElement;
 use Nette\SmartObject;
 
 class DocumentTemplate
@@ -117,9 +116,9 @@ class DocumentTemplate
     public function getWholeDocumentTemplate(): WholeDocumentTemplate
     {
         $this->wholeDocumentTemplate
-            ->setDataAttribute('grid-name', $this->netteGrid->getUniqueId())
+            ->addDataAttribute('grid-name', $this->netteGrid->getUniqueId())
             ->setDefaultClass('nette-grid')
-            ->setAttribute('id', $this->netteGrid->getMainSnippetId());
+            ->addHtmlAttribute('id', $this->netteGrid->getMainSnippetId());
         return $this->wholeDocumentTemplate;
     }
 
@@ -196,7 +195,7 @@ class DocumentTemplate
     public function getEmptyDataColTemplate(): EmptyDataColTemplate
     {
         return $this->emptyDataColTemplate
-            ->setAttribute('colspan', (string)$this->netteGrid->getCountOfPrintableColumns())
+            ->addHtmlAttribute('colspan', (string)$this->netteGrid->getCountOfPrintableColumns())
             ->addElement($this->getEmptyData());
     }
 

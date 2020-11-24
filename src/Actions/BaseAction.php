@@ -15,12 +15,14 @@ class BaseAction extends HrefElement
     /** @var string|null Title of action */
     public ?string $title=null;
 
-    public function __construct(string $name, ?string $title=null)
+    public function __construct(string $name, ?string $title=null, ?string $textContent=null)
     {
         $this->name = $name;
         parent::__construct();
         if(is_string($title))
             $this->addTitle($title);
+        if(is_string($textContent))
+            $this->addTextContent($textContent);
     }
 
 }

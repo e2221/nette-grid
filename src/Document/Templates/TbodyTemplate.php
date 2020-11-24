@@ -11,10 +11,4 @@ class TbodyTemplate extends BaseTemplate
     public string $defaultClass = 'snippet-container';
     public array $dataAttributes = ['dynamic-mask' => 'snippet--data-\\d+'];
 
-    public function beforeRender(): void
-    {
-        //unset id attribute
-        if(isset($this->attributes['id']))
-            unset($this->attributes['id']);
-    }
 }

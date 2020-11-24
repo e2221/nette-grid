@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Actions\RowAction;
 
 
-use e2221\HtmElement\BaseElement;
 use e2221\NetteGrid\Actions\BaseAction;
 use e2221\NetteGrid\NetteGrid;
 use Nette\Utils\Html;
@@ -35,9 +34,9 @@ class RowAction extends BaseAction
     /** @var null|callable function($row, $primary){}: string|null  */
     protected $confirmationCallback=null;
 
-    public function __construct(NetteGrid $netteGrid, string $name, ?string $title=null)
+    public function __construct(NetteGrid $netteGrid, string $name, ?string $title=null, ?string $textContent=null)
     {
-        parent::__construct($name, $title);
+        parent::__construct($name, $title, $textContent);
         $this->netteGrid = $netteGrid;
     }
 
