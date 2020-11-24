@@ -7,7 +7,7 @@ namespace e2221\NetteGrid\Document\Templates;
 
 class TableTemplate extends BaseTemplate
 {
-    protected ?string $elName = 'table';
+    protected ?string $elementName='table';
     public string $defaultClass = 'table table-sm';
 
     /** @var bool true adds class table-hover */

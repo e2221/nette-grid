@@ -7,5 +7,5 @@ namespace e2221\NetteGrid\Document\Templates;
 
 class TitlesRowTemplate extends BaseTemplate
 {
-    protected ?string $elName = 'tr';
+    protected ?string $elementName='tr';
 }

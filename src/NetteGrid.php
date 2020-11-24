@@ -538,7 +538,7 @@ class NetteGrid extends Control
      */
     public function setEditable(bool $editable=true): void
     {
-        $this->isEditable = true;
+        $this->isEditable = $editable;
     }
 
     /**

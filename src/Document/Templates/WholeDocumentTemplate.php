@@ -7,5 +7,5 @@ namespace e2221\NetteGrid\Document\Templates;
 
 class WholeDocumentTemplate extends BaseTemplate
 {
-    protected ?string $elName='div';
+    protected ?string $elementName='div';
 }

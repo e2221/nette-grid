@@ -8,5 +8,5 @@ use e2221\NetteGrid\Document\Templates\BaseColTemplate;
 
 class HeadFilterColTemplate extends BaseColTemplate
 {
-    protected ?string $elName='th';
+    protected ?string $elementName='th';
 }

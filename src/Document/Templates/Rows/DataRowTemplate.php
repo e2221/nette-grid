@@ -9,7 +9,7 @@ use e2221\NetteGrid\Document\DocumentTemplate;
 
 class DataRowTemplate extends BaseTemplate
 {
-    protected ?string $elName = 'tr';
+    protected ?string $elementName='tr';
 
     private DocumentTemplate $documentTemplate;
 

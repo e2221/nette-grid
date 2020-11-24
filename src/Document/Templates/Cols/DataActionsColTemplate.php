@@ -9,5 +9,5 @@ use e2221\NetteGrid\Document\Templates\BaseTemplate;
 
 class DataActionsColTemplate extends BaseTemplate
 {
-    protected ?string $elName='td';
+    protected ?string $elementName='td';
 }
