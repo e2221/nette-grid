@@ -215,26 +215,7 @@
                             tmr && window.clearTimeout(tmr);
                             tmr = null;
                         });
-
-                    di.getService('snippetManager').on('after-update', function () {
-                        $(function() {
-                            disableEdit();
-                        });
-                    });
                 });
-
-                disableEdit = function(){
-                    let editButtonsSelector = document.querySelectorAll('.'+{snippet.id data}+'[data-edit]');
-                    editButtonsSelector.forEach(function(item){
-                        item.addEventListener("click", function(){
-                            editButtonsSelector.forEach(function(item_2){
-                                item_2.classList.add("disabled");
-                            });
-                        }) ;
-                    });
-                }
-
-
             </script>
 
         {/snippet}
