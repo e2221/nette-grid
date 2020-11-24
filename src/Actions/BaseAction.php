@@ -20,7 +20,7 @@ class BaseAction extends HrefElement
         $this->name = $name;
         parent::__construct();
         if(is_string($title))
-            $this->addTextContent($title);
+            $this->addTitle($title);
     }
 
 }

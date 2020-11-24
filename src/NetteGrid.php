@@ -310,7 +310,8 @@ class NetteGrid extends Control
         $this->template->headerActionsColumnTemplate = $this->documentTemplate->getHeaderActionsColTemplate();
         $this->template->dataActionsColumnTemplate = $this->documentTemplate->getDataActionsColTemplate();
         $this->template->rowActionSave = $this->documentTemplate->getRowActionSave();
-
+        $this->template->rowActionCancel = $this->documentTemplate->getRowActionCancel();
+        $this->template->rowActionEdit = $this->documentTemplate->getRowActionEdit();
 
         $data = $this->data ?? $this->getDataFromSource();
         $this->template->columns = $this->getColumns(true);
