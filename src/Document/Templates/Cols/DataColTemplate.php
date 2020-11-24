@@ -12,10 +12,13 @@ class DataColTemplate extends BaseColTemplate
 
     /**
      * @param null $columnName
+     * @param null $primary
      */
-    public function prepareElement($columnName=null): void
+    public function prepareElement($columnName=null, $primary=null): void
     {
-        $this->addDataAttribute('column', $columnName);
+        $this->addDataAttribute('column');
+        $this->addDataAttribute('name', $columnName);
+        $this->addDataAttribute('id', $primary);
         parent::prepareElement();
     }
 }

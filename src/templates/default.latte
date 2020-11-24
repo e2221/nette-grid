@@ -228,9 +228,11 @@
 
                     di.getService('page').getSnippet({snippet.id data})
                         .setup(function(row) {
-                            $(row).on('dblclick', 'tr[data-row]', function() {
+                            $(row).on('dblclick', 'td[data-column]', function() {
                                 let rowId = $(this).data('id');
+                                let columnName = $(this).data('name');
                                 console.log(rowId);
+                                console.log(columnName);
                             });
 
                         })
