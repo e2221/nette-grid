@@ -169,9 +169,12 @@ class NetteGrid extends Control
      * @param string $name
      * @param int $position
      */
-    public function resortActions(string $name, int $position)
+    public function reindexActions(string $name, int $position)
     {
-        // todo
+        $currentKey = array_search($name, $this->rowActionsOrder, true);
+        unset($this->rowActionsOrder[$currentKey]);
+        $this->rowActionsOrder = array_values($this->rowActionsOrder);
+        array_splice($this->rowActionsOrder, $position, 0, $name);
     }
 
     private function onAddRowAction(string $name): void
@@ -298,6 +301,7 @@ class NetteGrid extends Control
             $this->editContainer = $this['form']->addContainer('edit');
             $this->editContainer->addHidden($this->primaryColumn);
             $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
+            $this->reindexActions('edit', 0);
         }
 
         foreach($this->columns as $columnName => $column)
