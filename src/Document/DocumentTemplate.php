@@ -75,7 +75,7 @@ class DocumentTemplate
     public function setHiddenHeader(bool $hiddenHeader=true): self
     {
         $this->hiddenHeader = $hiddenHeader;
-        $this->tbodyTemplate->setHidden(true);
+        $this->theadTemplate->setHidden(true);
         return $this;
     }
 
