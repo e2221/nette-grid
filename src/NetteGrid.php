@@ -164,6 +164,11 @@ class NetteGrid extends Control
         return $action;
     }
 
+    /**
+     * Actions order in the cell
+     * @param string $name
+     * @param int $position
+     */
     public function resortActions(string $name, int $position)
     {
         // todo
