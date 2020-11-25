@@ -251,7 +251,6 @@ class NetteGrid extends Control
     public function handleCancelEdit(): void
     {
         $this->editMode = false;
-        $this->editColumn = null;
         if($this->presenter->isAjax())
         {
             $this->redrawControl('documentArea');

@@ -11,6 +11,7 @@ use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\NetteGrid;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -24,6 +25,9 @@ abstract class Column implements IColumn
 
     /** @var string|null Label of column */
     public ?string $label=null;
+
+    /** @var string Edit input used with directly edit (not inline), for text inputs it´s recommended to use textarea */
+    protected string $editInputTag='textarea';
 
     /** @var bool is column sortable */
     protected bool $sortable=false;
@@ -179,6 +183,7 @@ abstract class Column implements IColumn
      * @param mixed $row
      * @param mixed $primary
      * @return DataColTemplate
+     * @throws InvalidLinkException
      * @internal
      *
      * Get data col template - only for rendering internal
@@ -197,7 +202,8 @@ abstract class Column implements IColumn
             $template
                 ->addDataAttribute('column-editable', $this->name)
                 ->addDataAttribute('editable-link', $this->netteGrid->link('editColumn', $primary, $this->name))
-                ->addDataAttribute('edit-value', $this->getEditCellValue($row));
+                ->addDataAttribute('edit-value', $this->getEditCellValue($row))
+                ->addDataAttribute('edit-input', $this->editInputTag);
         }
         return $template;
     }
