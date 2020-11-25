@@ -1,0 +1,54 @@
+@keyframes inline-edited {
+    0% {
+        background-color: #A6E2A9
+    }
+
+    100% {
+        background-color: transparent
+    }
+}
+
+.nette-grid table tbody tr td.inline-edited {
+    animation-name: edited;
+    animation-duration: 1.2s;
+    animation-delay: 0
+}
+
+.nette-grid table thead tr th {
+    font-size: 90%;
+
+}
+
+.nette-grid .table-sm th, .grid .table-sm td {
+    padding: 0.3rem;
+}
+
+.nette-grid .form-control-sm {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+.nette-grid .btn-xs, .grid .btn-group-xs > .btn {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px
+}
+
+.nette-grid .column-sticky {
+    position: sticky;
+    top: 0;
+}
+
+.nette-grid .column-box-shadow {
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+
+.nette-grid .grid-pagination {
+    display: flex;
+    list-style: none;
+    border-radius: .25rem;
+}

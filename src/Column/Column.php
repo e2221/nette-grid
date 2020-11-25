@@ -192,15 +192,13 @@ abstract class Column implements IColumn
             $edited = $fn($template, $row, $this->getCellValue($row));
             $template = $edited instanceof DataColTemplate ? $edited : $template;
         }
-
-        $this->netteGrid->onAnchor[] = function() use ($template, $primary, $row){
-            if($this->isEditable() === true)
-            {
-                $template->addDataAttribute('column-editable');
-                $template->addDataAttribute('editable-link', $this->netteGrid->link('editColumn', $primary));
-                $template->addDataAttribute('edit-value', $this->getEditCellValue($row));
-            }
-        };
+        if($this->isEditable() === true)
+        {
+            $template
+                ->addDataAttribute('column-editable', $this->name)
+                ->addDataAttribute('editable-link', $this->netteGrid->link('editColumn', $primary, $this->name))
+                ->addDataAttribute('edit-value', $this->getEditCellValue($row));
+        }
         return $template;
     }
 

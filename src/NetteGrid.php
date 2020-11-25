@@ -225,16 +225,27 @@ class NetteGrid extends Control
         }
     }
 
-    public function handleEditColumn($id): void
+    /**
+     * Edit column handler
+     * @param mixed $id
+     * @param string $column
+     * @throws AbortException
+     */
+    public function handleEditColumn($id, string $column): void
     {
-        if($this->getPresenter()->isAjax())
+        $request = $this->getPresenter()->getRequest();
+        $value = $request->getPost('value');
+        $data = [
+            $this->primaryColumn    => $id,
+            $column                 => $value
+        ];
+        if(is_callable($this->onEditCallback))
         {
-            $request = $this->getPresenter()->getRequest();
-            $value = $request->getPost('value');
-            $this->flashMessage(sprintf('Edit column, id: %s, new %s', $id, $value));
-            //$this->redrawControl('documentArea');
-            //$this->redrawControl('data');
+            $fn = $this->onEditCallback;
+            $fn($data, $id);
         }
+        $this->getPresenter()->payload->_netteGrid_editColumn_newValue = $value;
+        $this->getPresenter()->sendPayload();
     }
 
     /**

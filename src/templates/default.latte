@@ -220,17 +220,50 @@
                         });
 
                     di.getService('page').getSnippet({snippet.id data})
-                        .setup(function(row) {
-                            $(row).on('dblclick', 'td[data-column]', function() {
-                                let rowId = $(this).data('id');
-                                let columnName = $(this).data('name');
-                                console.log(rowId);
-                                console.log(columnName);
+                        .setup(function(col) {
+                            $(col).on('dblclick', 'td[data-column-editable]', function() {
+                                let cell = $(this);
+                                let editableLink = $(this).data('editable-link');
+                                let editValue = $(this).data('edit-value');
+                                let columnName = $(this).data('column-editable');
+                                console.log(editableLink);
+                                console.log(editValue);
+
+
+                                let input = $('<textarea class="form-control">' + editValue + '</textarea>');
+                                let cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
+                                let cell_height = cell.outerHeight();
+                                let line_height = Math.round(parseFloat(cell.css('line-height')));
+                                let cell_lines = (cell_height - (2 * cell_padding)) / line_height;
+                                input.attr('rows', Math.round(cell_lines));
+
+                                input.on('blur', function(){
+                                    let newValue = $(this).val();
+                                    if(newValue !== editValue)
+                                    {
+                                        di.getService("ajax")
+                                            .post(editableLink, { value: newValue, columnName: columnName })
+                                            .then(
+                                                function(payload){
+                                                    newValue = payload.getPayload()._netteGrid_editColumn_newValue;
+                                                    console.log(newValue);
+                                                    cell.html(newValue);
+                                                    return cell.addClass('inline-edited');
+                                                },
+                                                function(err){
+                                                    console.log(err);
+                                                }
+                                            );
+                                    }else{
+                                        cell.html(editValue);
+                                    }
+                                })
+                                cell.html(input);
+                                input.focus();
                             });
 
                         })
                         .teardown(function() {
-
                         });
                 });
             </script>
