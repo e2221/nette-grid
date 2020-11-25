@@ -9,7 +9,7 @@
 }
 
 .nette-grid table tbody tr td.inline-edited {
-    animation-name: edited;
+    animation-name: inline-edited;
     animation-duration: 1.2s;
     animation-delay: 0
 }

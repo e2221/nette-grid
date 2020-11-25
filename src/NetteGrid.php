@@ -60,9 +60,6 @@ class NetteGrid extends Control
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
-    /** @var string|null @persistent Edit only column */
-    public ?string $editColumn=null;
-
     /** @var mixed|null */
     protected $data=null;
 
@@ -242,7 +239,7 @@ class NetteGrid extends Control
         if(is_callable($this->onEditCallback))
         {
             $fn = $this->onEditCallback;
-            $fn($data, $id);
+            $fn(ArrayHash::from($data), $id);
         }
         $this->getPresenter()->payload->_netteGrid_editColumn_newValue = $value;
         $this->getPresenter()->sendPayload();
