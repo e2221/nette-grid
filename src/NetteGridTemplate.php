@@ -74,4 +74,5 @@ class NetteGridTemplate extends Template
     public array $rowActionsOrder;
     public string $primaryColumn;
     public ?string $editColumn;
+    public bool $hiddenHeader;
 }

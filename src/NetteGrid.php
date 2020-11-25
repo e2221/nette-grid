@@ -329,6 +329,7 @@ class NetteGrid extends Control
         $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0;
         $this->template->rowActionsOrder = $this->rowActionsOrder;
         $this->template->rowActions = $this->rowActions;
+        $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;

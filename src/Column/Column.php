@@ -80,6 +80,20 @@ abstract class Column implements IColumn
         $this->name = $name;
         $this->label = $label ?? ucfirst($this->name);
         $this->titleColTemplate = $this->defaultTitleColTemplate();
+        $this->setStickyHeader();
+    }
+
+    /**
+     * Set sticky header
+     * @param bool $sticky
+     * @param int $offset
+     * @return Column
+     */
+    public function setStickyHeader(bool $sticky=true, int $offset=0): self
+    {
+        $this->getTitleColTemplate()
+            ->setStickyHeader($sticky, $offset);
+        return $this;
     }
 
     /**

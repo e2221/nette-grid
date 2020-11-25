@@ -30,7 +30,7 @@ class DocumentTemplate
     protected $dataRowCallback=null;
 
     /** @var bool Hidden all in tag <thead> */
-    protected bool $hiddenHeader=false;
+    public bool $hiddenHeader=false;
 
     private NetteGrid $netteGrid;
     protected TableTemplate $tableTemplate;
@@ -75,7 +75,6 @@ class DocumentTemplate
     public function setHiddenHeader(bool $hiddenHeader=true): self
     {
         $this->hiddenHeader = $hiddenHeader;
-        $this->theadTemplate->setHidden(true);
         return $this;
     }
 
