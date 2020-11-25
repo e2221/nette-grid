@@ -508,7 +508,7 @@ class NetteGrid extends Control
      * @param bool $onlyVisible
      * @return IColumn[]
      */
-    protected function getColumns($onlyVisible=false): array
+    public function getColumns($onlyVisible=false): array
     {
         if($onlyVisible === true)
         {

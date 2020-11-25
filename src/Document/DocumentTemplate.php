@@ -68,6 +68,19 @@ class DocumentTemplate
     }
 
     /**
+     * Set sticky header
+     * @param int $offset
+     * @return DocumentTemplate
+     */
+    public function setStickyHeader(int $offset): self
+    {
+        foreach($this->netteGrid->getColumns(true) as $columnName => $column)
+            $column->setStickyHeader(true, $offset);
+        $this->headerActionsColTemplate->setStickyHeader(true, $offset);
+        return $this;
+    }
+
+    /**
      * Set <tbody> hidden
      * @param bool $hiddenHeader
      * @return DocumentTemplate
