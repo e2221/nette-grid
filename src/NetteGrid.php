@@ -342,7 +342,6 @@ class NetteGrid extends Control
         $this->template->columns = $this->getColumns(true);
         $this->template->primaryColumn = $this->primaryColumn;
         $this->template->editRowKey = $this->editKey;
-        $this->template->editColumn = $this->editColumn;
         $this->template->data = $data;
         $this->template->showEmptyResult = !((bool)$data);
         $this->template->templates = $this->templates;
