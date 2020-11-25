@@ -29,6 +29,9 @@ class DocumentTemplate
     /** @var null|callable function(DataRowTemplate $template, $row) */
     protected $dataRowCallback=null;
 
+    /** @var bool Hidden all in tag <thead> */
+    protected bool $hiddenHeader=false;
+
     private NetteGrid $netteGrid;
     protected TableTemplate $tableTemplate;
     protected TheadTemplate $theadTemplate;
@@ -62,6 +65,18 @@ class DocumentTemplate
         $this->rowActionEdit = new RowActionEdit($netteGrid);
         $this->rowActionCancel = new RowActionCancel($netteGrid);
         $this->rowActionSave = new RowActionSave($netteGrid);
+    }
+
+    /**
+     * Set <tbody> hidden
+     * @param bool $hiddenHeader
+     * @return DocumentTemplate
+     */
+    public function setHiddenHeader(bool $hiddenHeader=true): self
+    {
+        $this->hiddenHeader = $hiddenHeader;
+        $this->tbodyTemplate->setHidden(true);
+        return $this;
     }
 
     /**
