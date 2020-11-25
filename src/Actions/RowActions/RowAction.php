@@ -34,9 +34,9 @@ class RowAction extends BaseAction
     /** @var null|callable function($row, $primary){}: string|null  */
     protected $confirmationCallback=null;
 
-    public function __construct(NetteGrid $netteGrid, string $name, ?string $title=null, ?string $textContent=null)
+    public function __construct(NetteGrid $netteGrid, string $name, ?string $title=null)
     {
-        parent::__construct($name, $title, $textContent);
+        parent::__construct($name, $title);
         $this->netteGrid = $netteGrid;
     }
 

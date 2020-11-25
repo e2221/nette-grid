@@ -14,7 +14,7 @@ class RowActionCancel extends RowAction
 
     public function __construct(NetteGrid $netteGrid, string $name='cancel', ?string $title = 'Cancel')
     {
-        parent::__construct($netteGrid, $name, $title, $title);
+        parent::__construct($netteGrid, $name, $title);
         $this->setLinkCallback([$this, 'getLink']);
         $netteGrid->onAnchor[] = function(NetteGrid $netteGrid)
         {
