@@ -93,7 +93,7 @@
                                 {* columns *}
                                 {foreach $columns as $columnName => $column}
 
-                                    {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row)}
+                                    {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row, $primaryValue)}
                                     {var $cell = $column->getCellValueForRendering($row)}
 
                                     {* <td> *}
