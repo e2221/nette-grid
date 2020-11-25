@@ -13,6 +13,8 @@ class TitleColTemplate extends BaseTemplate
 
     public int $stickyOffset=0;
 
+    protected string $class = 'bg-light';
+
     protected ?string $elementName='th';
 
     /**
