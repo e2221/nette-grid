@@ -102,10 +102,8 @@
                                         {if $dataColTemplate->isHidden() === false}
 
                                             {* edit - print input *}
-                                            {if $editMode === true && $editRowKey == $primaryValue && $column->isEditable() === true}
+                                            {if $editMode === true && $column->isEditable() === true && $editRowKey == $primaryValue}
                                                 {var $editValue = $column->getEditCellValue($row, $cell)}
-
-                                                {if (is_string($editColumn) && $editColumn == $columnName) || is_null($editColumn) }
 
                                                     {formContainer edit}
 
@@ -115,13 +113,8 @@
                                                             {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
                                                         {/ifset}
 
-                                                        {if is_string($editColumn)}
-                                                            Button
-                                                        {/if}
-
                                                     {/formContainer}
 
-                                                {/if}
 
                                             {* print cell value *}
                                             {else}

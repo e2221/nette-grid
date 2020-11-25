@@ -225,6 +225,18 @@ class NetteGrid extends Control
         }
     }
 
+    public function handleEditColumn($id): void
+    {
+        if($this->getPresenter()->isAjax())
+        {
+            $request = $this->getPresenter()->getRequest();
+            $value = $request->getPost('value');
+            $this->flashMessage(sprintf('Edit column, id: %s, new %s', $id, $value));
+            //$this->redrawControl('documentArea');
+            //$this->redrawControl('data');
+        }
+    }
+
     /**
      * Signal - Cancel editing
      */
@@ -291,7 +303,8 @@ class NetteGrid extends Control
      */
     public function render(): void
     {
-        $this['form']['filter']->setDefaults($this->filter);
+        if($this->isFilterable === true)
+            $this['form']['filter']->setDefaults($this->filter);
 
         $this->template->uniqueID = $this->getUniqueId();
         $this->template->isFilterable = $this->isFilterable;

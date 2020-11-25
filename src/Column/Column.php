@@ -176,13 +176,14 @@ abstract class Column implements IColumn
     }
 
     /**
+     * @param mixed $row
+     * @param mixed $primary
+     * @return DataColTemplate
      * @internal
      *
      * Get data col template - only for rendering internal
-     * @param mixed $row
-     * @return DataColTemplate
      */
-    public function getDataColTemplateForRendering($row): DataColTemplate
+    public function getDataColTemplateForRendering($row, $primary): DataColTemplate
     {
         $template = clone(is_null($this->dataColTemplate) ? new DataColTemplate($this) : $this->dataColTemplate);
         if(is_callable($this->dataColTemplateCallback))
@@ -191,6 +192,15 @@ abstract class Column implements IColumn
             $edited = $fn($template, $row, $this->getCellValue($row));
             $template = $edited instanceof DataColTemplate ? $edited : $template;
         }
+
+        $this->netteGrid->onAnchor[] = function() use ($template, $primary, $row){
+            if($this->isEditable() === true)
+            {
+                $template->addDataAttribute('column-editable');
+                $template->addDataAttribute('editable-link', $this->netteGrid->link('editColumn', $primary));
+                $template->addDataAttribute('edit-value', $this->getEditCellValue($row));
+            }
+        };
         return $template;
     }
 

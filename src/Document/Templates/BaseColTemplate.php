@@ -9,7 +9,7 @@ use e2221\NetteGrid\Column\IColumn;
 
 class BaseColTemplate extends BaseTemplate
 {
-    private IColumn $column;
+    protected IColumn $column;
 
     public function __construct(IColumn $column)
     {

@@ -6,7 +6,6 @@ namespace e2221\NetteGrid\Document\Templates;
 
 
 use e2221\NetteGrid\Document\DocumentTemplate;
-use Nette\Utils\Html;
 
 class DataRowTemplate extends BaseTemplate
 {
@@ -18,8 +17,6 @@ class DataRowTemplate extends BaseTemplate
     {
         parent::__construct();
         $this->documentTemplate = $documentTemplate;
-        $this->addDataAttribute('row');
-
     }
 
     /**

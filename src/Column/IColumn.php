@@ -147,9 +147,10 @@ interface IColumn
     /**
      * Get data col template for rendering - apply callbacks to edit <td> attribute
      * @param mixed $row
+     * @param mixed $primary
      * @return DataColTemplate
      */
-    public function getDataColTemplateForRendering($row): DataColTemplate;
+    public function getDataColTemplateForRendering($row, $primary): DataColTemplate;
 
 
 

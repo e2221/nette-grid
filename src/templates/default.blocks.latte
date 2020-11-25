@@ -56,9 +56,6 @@
 
 {* Data Col open tag <td> - available parameter (DataColTemplate $dataColTemplate, $row, $cell, $primary, $columnName) *}
 {define data-col-open-tag}
-    {php
-        $dataColTemplate->prepareElement($columnName, $primary);
-    }
     {$dataColTemplate->renderStartTag()|noescape}
 {/define}
 
