@@ -14,6 +14,6 @@ class HeaderActionInlineAdd extends HeaderAction
     public function beforeRender(): void
     {
         parent::beforeRender();
-        $this->setLink($this->netteGrid->link('inlineAdd'));
+        $this->setLink($this->netteGrid->link('inlineAdd', ['inlineAdd' => true]));
     }
 }

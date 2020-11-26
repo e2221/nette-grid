@@ -17,7 +17,7 @@ class RowActionInlineCancel extends RowAction
 
     public function beforeRender(): void
     {
-        $this->setLink($this->netteGrid->link('inlineAdd', false));
+        $this->setLink($this->netteGrid->link('inlineAdd', ['inlineAdd' => false]));
         parent::beforeRender();
     }
 

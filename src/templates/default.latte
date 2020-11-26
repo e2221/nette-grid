@@ -92,15 +92,15 @@
                             <tr {$emptyDataRowTemplate->getAttributes()|noescape}>
 
                                 {foreach $columns as $columnName => $column}
-                                    {formContainer add}
 
-                                        {if $column->isAdable() === true}
-                                            <td>
+                                    <td>
+                                        {if $column->isAddable() === true}
+                                            {formContainer add}
                                                 {input $columnName}
-                                            </td>
+                                            {/formContainer}
                                         {/if}
+                                    </td>
 
-                                    {/formContainer}
                                 {/foreach}
 
                                 <td>
