@@ -132,7 +132,9 @@
 {/define}
 
 {define data-action-edit}
-    {$rowActionEdit->render($row, $primary)}
+    {if $isEditable === true}
+        {$rowActionEdit->render($row, $primary)}
+    {/if}
 {/define}
 
 {* Data action save - available parameters (RowActionSave $action, $row, $primary) *}

@@ -6,12 +6,14 @@ namespace e2221\NetteGrid;
 
 use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
+use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
+use e2221\utils\Html\BaseElement;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -68,6 +70,9 @@ class NetteGrid extends Control
 
     /** @var bool @persistent Active edit mode [true = edit is enable] */
     public bool $editMode=false;
+
+    /** @var bool|null @persistent Enable/disable showing edit buttons */
+    public ?bool $editEnabled=null;
 
     /** @var bool Is there at least one filterable column? */
     protected bool $isFilterable=false;
@@ -157,7 +162,30 @@ class NetteGrid extends Control
      */
     public function addHeaderAction(string $name, ?string $title=null): HeaderAction
     {
-        return $this->addHeaderActionDirectly(new HeaderAction($name, $title));
+        return $this->addHeaderActionDirectly(new HeaderAction($this, $name, $title));
+    }
+
+    /**
+     * Add header action - update grid
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderAction|BaseElement
+     */
+    public function addHeaderDataUpdateAction(string $name='_updateGrid', ?string $title='Update'): HeaderAction
+    {
+        return $this->addHeaderAction($name, $title)
+            ->addIconElement('fas fa-sync-alt', [], true);
+    }
+
+    /**
+     * Add header action - disable/enable edit
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderAction
+     */
+    public function addHeaderDisableEditAction(string $name='_disableEdit', ?string $title=null)
+    {
+        return $this->addHeaderActionDirectly(new HeaderActionDisableEdit($this, $name, $title));
     }
 
 
@@ -354,7 +382,7 @@ class NetteGrid extends Control
 
         $this->template->uniqueID = $this->getUniqueId();
         $this->template->isFilterable = $this->isFilterable;
-        $this->template->isEditable = $this->isEditable;
+        $this->template->isEditable = $this->isEditable();
         $this->template->editMode = $this->editMode;
         $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0 || count($this->headerActions) > 0;
         $this->template->rowActionsOrder = $this->rowActionsOrder;
@@ -604,6 +632,15 @@ class NetteGrid extends Control
     public function setEditable(bool $editable=true): void
     {
         $this->isEditable = $editable;
+    }
+
+    /**
+     * Is grid editable
+     * @return bool
+     */
+    public function isEditable(): bool
+    {
+        return ($this->isEditable && $this->editEnabled);
     }
 
     /**
