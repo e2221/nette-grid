@@ -356,7 +356,7 @@ class NetteGrid extends Control
     {
         $this->inlineAdd = $add;
         if($this->presenter->isAjax())
-            $this->ajaxRedrawData();
+            $this->ajaxRedrawAllDocument();
     }
 
     /**
