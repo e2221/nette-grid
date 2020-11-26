@@ -25,5 +25,4 @@ class RowActionInlineSave extends RowAction
     {
         return parent::render($row, $primary);
     }
-
 }
