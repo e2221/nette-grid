@@ -72,6 +72,9 @@ class NetteGrid extends Control
     /** @var null|callable Function that will be called after submit edit function(ArrayHash $values, $primary) */
     protected $onEditCallback=null;
 
+    /** @var null|callable After submit inline add function(ArrayHash $values) */
+    protected $onAddCallback=null;
+
     /** @var bool @persistent Active edit mode [true = edit is enable] */
     public bool $editMode=false;
 
@@ -477,9 +480,20 @@ class NetteGrid extends Control
         return $form;
     }
 
+    /**
+     * Add from success
+     * @param Button $button
+     * @param ArrayHash $values
+     */
     public function addFormSuccess(Button $button, ArrayHash $values): void
     {
-
+        if(is_callable($this->onAddCallback))
+        {
+            $fn = $this->onAddCallback;
+            $fn($values);
+        }
+        if($this->getPresenter()->isAjax())
+            $this->ajaxRedrawAllDocument();
     }
 
     /**
@@ -489,20 +503,19 @@ class NetteGrid extends Control
      */
     public function editFormSuccess(Button $button, ArrayHash $values): void
     {
+        $editValues = $values->edit;
+        $primaryColumn = $this->primaryColumn;
+        $primaryValue = $editValues->$primaryColumn;
+        if(is_callable($this->onEditCallback))
+        {
+            $fn = $this->onEditCallback;
+            $fn($editValues, $primaryValue);
+        }
+        $this->editMode = false;
+        $this->editKey = $primaryValue;
         if($this->presenter->isAjax())
         {
-            $editValues = $values->edit;
-            $primaryColumn = $this->primaryColumn;
-            $primaryValue = $editValues->$primaryColumn;
-            if(is_callable($this->onEditCallback))
-            {
-                $fn = $this->onEditCallback;
-                $fn($editValues, $primaryValue);
-            }
-            $this->editMode = false;
-            $this->editKey = $primaryValue;
-            $this->redrawControl('documentArea');
-            $this->redrawControl('data');
+            $this->ajaxRedrawData();
         }
     }
 
@@ -524,9 +537,9 @@ class NetteGrid extends Control
         $this->editMode = false;
         if(count($this->filter) > 0)
         {
-            $this->handleRedrawData();
+            $this->ajaxRedrawData();
         }else{
-            $this->handleRedrawGrid();
+            $this->ajaxRedrawAllDocument();
         }
     }
 
@@ -737,6 +750,17 @@ class NetteGrid extends Control
     public function setOnEditCallback(?callable $onEditCallback): self
     {
         $this->onEditCallback = $onEditCallback;
+        return $this;
+    }
+
+    /**
+     * Set on add callback
+     * @param callable|null $onAddCallback
+     * @return NetteGrid
+     */
+    public function setOnAddCallback(?callable $onAddCallback): self
+    {
+        $this->onAddCallback = $onAddCallback;
         return $this;
     }
 

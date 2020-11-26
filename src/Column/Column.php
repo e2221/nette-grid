@@ -494,6 +494,9 @@ abstract class Column implements IColumn
     {
         if(is_null($this->editInput))
             $this->editInput = $this->getInput();
+        if($this->isRequired())
+            $this->editInput->setRequired();
+        $this->editInput->setHtmlAttribute('placeholder', $this->label);
         return $this->editInput;
     }
 
@@ -505,6 +508,9 @@ abstract class Column implements IColumn
     {
         if(is_null($this->addInput))
             $this->addInput = $this->getInput();
+        if($this->isRequired())
+            $this->addInput->setRequired();
+        $this->editInput->setHtmlAttribute('placeholder', $this->label);
         return $this->addInput;
     }
 

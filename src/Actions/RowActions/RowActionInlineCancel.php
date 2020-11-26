@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 class RowActionInlineCancel extends RowAction
 {
-    public function __construct(NetteGrid $netteGrid, string $name='__inlineCancel', ?string $title = null)
+    public function __construct(NetteGrid $netteGrid, string $name='__inlineCancel', ?string $title = 'Cancel')
     {
         parent::__construct($netteGrid, $name, $title);
         $this->setClass('btn-warning');
