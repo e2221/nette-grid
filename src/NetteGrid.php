@@ -18,6 +18,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\ArrayHash;
@@ -170,11 +171,13 @@ class NetteGrid extends Control
      * @param string $name
      * @param string|null $title
      * @return HeaderAction|BaseElement
+     * @throws InvalidLinkException
      */
     public function addHeaderDataUpdateAction(string $name='_updateGrid', ?string $title='Update'): HeaderAction
     {
         return $this->addHeaderAction($name, $title)
-            ->addIconElement('fas fa-sync-alt', [], true);
+            ->addIconElement('fas fa-sync-alt', [], true)
+            ->setLink($this->link('redrawData'));
     }
 
     /**

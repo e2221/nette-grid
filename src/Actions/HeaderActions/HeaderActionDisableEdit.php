@@ -15,6 +15,18 @@ class HeaderActionDisableEdit extends HeaderAction
     {
         parent::__construct($netteGrid, $name, $title);
         $this->addIconElement('far fa-edit', [], true);
+
+        $this->netteGrid->onAnchor[] = function(){
+            if($this->netteGrid->editEnabled === true)
+            {
+                $this->addTitle('Disable edit');
+                $this->setLink($this->netteGrid->link('redrawData', ['editEnabled' => false]));
+            }else{
+                $this->addTitle('Enable edit');
+                $this->setLink($this->netteGrid->link('redrawData', ['editEnabled' => true]));
+            }
+        };
+
         $this->prepareElement();
     }
 
@@ -36,15 +48,6 @@ class HeaderActionDisableEdit extends HeaderAction
             $this->setClass('btn-outline-primary');
         }else{
             $this->setClass('btn-primary');
-        }
-
-        if($this->netteGrid->editEnabled === true)
-        {
-            $this->addTitle('Disable edit');
-            $this->setLink($this->netteGrid->link('redrawData', ['editEnabled' => false]));
-        }else{
-            $this->addTitle('Enable edit');
-            $this->setLink($this->netteGrid->link('redrawData', ['editEnabled' => true]));
         }
     }
 }
