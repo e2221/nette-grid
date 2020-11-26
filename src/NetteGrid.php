@@ -186,11 +186,11 @@ class NetteGrid extends Control
      * Add header action - disable/enable edit
      * @param string $name
      * @param string|null $title
-     * @return HeaderAction
+     * @return HeaderActionDisableEdit
      */
-    public function addHeaderDisableEditAction(string $name='_disableEdit', ?string $title=null)
+    public function addHeaderDisableEditAction(string $name='_disableEdit', ?string $title=null): HeaderActionDisableEdit
     {
-        return $this->addHeaderActionDirectly(new HeaderActionDisableEdit($this, $name, $title));
+        return $this->headerActions[$name] = new HeaderActionDisableEdit($this, $name, $title);
     }
 
 
