@@ -14,7 +14,7 @@ class HeaderActionDisableEdit extends HeaderAction
     public function __construct(NetteGrid $netteGrid, string $name, ?string $title = null)
     {
         parent::__construct($netteGrid, $name, $title);
-        $this->addIconElement('far fa-edit', [], true);
+        $this->addIconElement('fas fa-edit', [], true);
 
         $this->netteGrid->onAnchor[] = function(){
             if($this->netteGrid->editEnabled === true)
@@ -26,8 +26,20 @@ class HeaderActionDisableEdit extends HeaderAction
                 $this->setLink($this->netteGrid->link('redrawGrid', ['editEnabled' => true]));
             }
         };
-
         $this->prepareElement();
+    }
+
+    /**
+     * Set default mode
+     * @param bool $mode [true = enabled, false = disabled]
+     * @return HeaderActionDisableEdit
+     */
+    public function setDefaultMode(bool $mode=false): self
+    {
+        $this->defaultMode = $mode;
+        $this->netteGrid->editEnabled = $mode;
+        $this->prepareElement();
+        return $this;
     }
 
     public function beforeRender(): void
