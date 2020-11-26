@@ -171,13 +171,15 @@ class NetteGrid extends Control
      * @param string $name
      * @param string|null $title
      * @return HeaderAction|BaseElement
-     * @throws InvalidLinkException
      */
     public function addHeaderDataUpdateAction(string $name='_updateGrid', ?string $title='Update'): HeaderAction
     {
-        return $this->addHeaderAction($name, $title)
-            ->addIconElement('fas fa-sync-alt', [], true)
-            ->setLink($this->link('redrawData'));
+        $headerAction = $this->addHeaderAction($name, $title)
+            ->addIconElement('fas fa-sync-alt', [], true);
+        $this->onAnchor[] = function() use ($headerAction){
+            $headerAction->setLink($this->link('redrawData!'));
+        };
+        return $headerAction;
     }
 
     /**

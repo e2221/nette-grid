@@ -20,10 +20,10 @@ class HeaderActionDisableEdit extends HeaderAction
             if($this->netteGrid->editEnabled === true)
             {
                 $this->addTitle('Disable edit');
-                $this->setLink($this->netteGrid->link('redrawData', ['editEnabled' => false]));
+                $this->setLink($this->netteGrid->link('redrawGrid', ['editEnabled' => false]));
             }else{
                 $this->addTitle('Enable edit');
-                $this->setLink($this->netteGrid->link('redrawData', ['editEnabled' => true]));
+                $this->setLink($this->netteGrid->link('redrawGrid', ['editEnabled' => true]));
             }
         };
 
