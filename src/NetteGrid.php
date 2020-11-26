@@ -490,8 +490,9 @@ class NetteGrid extends Control
         if(is_callable($this->onAddCallback))
         {
             $fn = $this->onAddCallback;
-            $fn($values);
+            $fn($values->add);
         }
+        $this->inlineAdd = false;
         if($this->getPresenter()->isAjax())
             $this->ajaxRedrawAllDocument();
     }

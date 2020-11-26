@@ -510,7 +510,7 @@ abstract class Column implements IColumn
             $this->addInput = $this->getInput();
         if($this->isRequired())
             $this->addInput->setRequired();
-        $this->editInput->setHtmlAttribute('placeholder', $this->label);
+        $this->addInput->setHtmlAttribute('placeholder', $this->label);
         return $this->addInput;
     }
 
