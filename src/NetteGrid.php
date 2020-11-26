@@ -7,6 +7,7 @@ namespace e2221\NetteGrid;
 use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
+use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
@@ -200,6 +201,17 @@ class NetteGrid extends Control
     public function addHeaderDisableEditAction(string $name='_disableEdit', ?string $title=null): HeaderActionDisableEdit
     {
         return $this->headerActions[$name] = new HeaderActionDisableEdit($this, $name, $title);
+    }
+
+    /**
+     * Add header action - inline add
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderActionInlineAdd
+     */
+    public function addHeaderInlineAddAction(string $name='_inlineAdd', ?string $title='Add'): HeaderActionInlineAdd
+    {
+        return $this->headerActions[$name] = new HeaderActionInlineAdd($this, $name, $title);
     }
 
 

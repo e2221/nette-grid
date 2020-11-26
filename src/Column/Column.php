@@ -350,7 +350,7 @@ abstract class Column implements IColumn
      * @param bool $addAble
      * @return Column
      */
-    public function setAddAble(bool $addAble): self
+    public function setAddAble(bool $addAble=true): self
     {
         $this->addAble = $addAble;
         if($addAble === true)
