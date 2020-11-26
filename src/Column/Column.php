@@ -74,6 +74,12 @@ abstract class Column implements IColumn
     /** @var BaseControl|null Edit input */
     protected ?BaseControl $editInput=null;
 
+    /** @var bool Enable/disable addable behaviour */
+    protected bool $addAble=false;
+
+    /** @var BaseControl|null Add input */
+    protected ?BaseControl $addInput=null;
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
         $this->netteGrid = $netteGrid;
@@ -340,6 +346,27 @@ abstract class Column implements IColumn
     }
 
     /**
+     * Set column addable
+     * @param bool $addAble
+     * @return Column
+     */
+    public function setAddAble(bool $addAble): self
+    {
+        $this->addAble = $addAble;
+        if($addAble === true)
+            $this->netteGrid->setAddable(true);
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAddable(): bool
+    {
+        return $this->addAble;
+    }
+
+    /**
      * @return string
      */
     public function getName(): string
@@ -434,6 +461,19 @@ abstract class Column implements IColumn
         }
     }
 
+    /**
+     * Add add form input
+     * @internal
+     */
+    public function addAddFormInput(): void
+    {
+        if($this->isAddAble())
+        {
+            $container = $this->netteGrid->getAddContainer();
+            $input = $this->getAddInput();
+            $container->addComponent($input, $this->name);
+        }
+    }
 
     /**
      * Get filter input
@@ -458,6 +498,17 @@ abstract class Column implements IColumn
     }
 
     /**
+     * Get add input
+     * @return BaseControl|null
+     */
+    public function getAddInput(): ?BaseControl
+    {
+        if(is_null($this->addInput))
+            $this->addInput = $this->getInput();
+        return $this->addInput;
+    }
+
+    /**
      * Get input
      * @return BaseControl
      */
@@ -467,7 +518,5 @@ abstract class Column implements IColumn
         $input->setHtmlAttribute('class', 'form-control-sm');
         return $input;
     }
-
-
 
 }

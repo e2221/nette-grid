@@ -88,6 +88,31 @@
 
                     {else}
 
+                        {if $isAddable === true && $inlineAdd === true}
+                            <tr {$emptyDataRowTemplate->getAttributes()|noescape}>
+
+                                {foreach $columns as $columnName => $column}
+                                    {formContainer add}
+
+                                        {if $column->isAdable() === true}
+                                            <td>
+                                                {input $columnName}
+                                            </td>
+                                        {/if}
+
+                                    {/formContainer}
+                                {/foreach}
+
+                                <td>
+
+                                    {$documentTemplate->getRowActionInlineAddSave()->render()}
+                                    {$documentTemplate->getRowActionInlineAddCancel()->render()}
+
+                                </td>
+
+                            </tr>
+                        {/if}
+
                         {foreach $data as $dataKey => $row}
                             {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
                             {var string|int $primaryValue = $control->getRowPrimaryValue($row)}

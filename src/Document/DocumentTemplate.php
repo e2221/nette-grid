@@ -6,6 +6,8 @@ namespace e2221\NetteGrid\Document;
 
 use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
 use e2221\NetteGrid\Actions\RowAction\RowActionEdit;
+use e2221\NetteGrid\Actions\RowAction\RowActionInlineCancel;
+use e2221\NetteGrid\Actions\RowAction\RowActionInlineSave;
 use e2221\NetteGrid\Actions\RowAction\RowActionSave;
 use e2221\NetteGrid\Document\Templates\Cols\DataActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
@@ -48,6 +50,8 @@ class DocumentTemplate
     protected RowActionEdit $rowActionEdit;
     protected RowActionCancel $rowActionCancel;
     protected RowActionSave $rowActionSave;
+    protected RowActionInlineCancel $rowActionInlineAddCancel;
+    protected RowActionInlineSave $rowActionInlineAddSave;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -65,6 +69,8 @@ class DocumentTemplate
         $this->rowActionEdit = new RowActionEdit($netteGrid);
         $this->rowActionCancel = new RowActionCancel($netteGrid);
         $this->rowActionSave = new RowActionSave($netteGrid);
+        $this->rowActionInlineAddCancel = new RowActionInlineCancel($netteGrid);
+        $this->rowActionInlineAddSave = new RowActionInlineSave($netteGrid);
     }
 
     /**
@@ -89,6 +95,24 @@ class DocumentTemplate
     {
         $this->hiddenHeader = $hiddenHeader;
         return $this;
+    }
+
+    /**
+     * Save button for inline add
+     * @return RowActionInlineSave
+     */
+    public function getRowActionInlineAddSave(): RowActionInlineSave
+    {
+        return $this->rowActionInlineAddSave;
+    }
+
+    /**
+     * Cancel button for inline add
+     * @return RowActionInlineCancel
+     */
+    public function getRowActionInlineAddCancel(): RowActionInlineCancel
+    {
+        return $this->rowActionInlineAddCancel;
     }
 
     /**

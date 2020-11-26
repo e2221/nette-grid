@@ -18,7 +18,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\ArrayHash;
@@ -60,6 +59,9 @@ class NetteGrid extends Control
     /** @var Container|null Edit container */
     protected ?Container $editContainer=null;
 
+    /** @var Container|null Add container */
+    protected ?Container $addContainer=null;
+
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
@@ -78,7 +80,14 @@ class NetteGrid extends Control
     /** @var bool Is there at least one filterable column? */
     protected bool $isFilterable=false;
 
+    /** @var bool Is there at least one editable column? */
     protected bool $isEditable=false;
+
+    /** @var bool Is there at least one addable column? */
+    protected bool $isAddable=false;
+
+    /** @var bool @persistent */
+    public bool $inlineAdd=false;
 
     public function __construct()
     {
@@ -260,8 +269,7 @@ class NetteGrid extends Control
     {
         if($this->presenter->isAjax())
         {
-            $this->redrawControl('documentArea');
-            $this->redrawControl(self::MAIN_CONTENT_SNIPPET);
+            $this->ajaxRedrawAllDocument();
         }else{
             $this->redirect('this');
         }
@@ -274,8 +282,7 @@ class NetteGrid extends Control
     public function handleRedrawData(): void
     {
         if($this->presenter->isAjax()){
-            $this->redrawControl('documentArea');
-            $this->redrawControl('data');
+            $this->ajaxRedrawData();
         }else{
             $this->redirect('this');
         }
@@ -288,8 +295,7 @@ class NetteGrid extends Control
     {
         if($this->presenter->isAjax())
         {
-            $this->redrawControl('documentArea');
-            $this->redrawControl('data');
+            $this->ajaxRedrawData();
         }
     }
 
@@ -324,11 +330,21 @@ class NetteGrid extends Control
         $this->editMode = false;
         if($this->presenter->isAjax())
         {
-            $this->redrawControl('documentArea');
-            $this->redrawControl('data');
+            $this->ajaxRedrawData();
         }else{
             $this->filter = [];
         }
+    }
+
+    /**
+     * Signal - Inline add
+     * @param bool $add
+     */
+    public function handleInlineAdd(bool $add=true): void
+    {
+        $this->inlineAdd = $add;
+        if($this->presenter->isAjax())
+            $this->ajaxRedrawData();
     }
 
     /**
@@ -340,8 +356,7 @@ class NetteGrid extends Control
         if($this->presenter->isAjax())
         {
             $this->data = $this->getDataFromSource($rowID);
-            $this->redrawControl('documentArea');
-            $this->redrawControl('data');
+            $this->ajaxRedrawData();
         }
     }
 
@@ -367,12 +382,19 @@ class NetteGrid extends Control
             $this->reindexActions('edit', 0);
         }
 
+        if($this->isAddable === true)
+        {
+            $this->addContainer = $this['form']->addContainer('add');
+        }
+
         foreach($this->columns as $columnName => $column)
         {
             if($this->isFilterable === true)
                 $column->addFilterFormInput();
             if($this->isEditable === true)
                 $column->addEditFormInput();
+            if($this->isAddable === true)
+                $column->addAddFormInput();
         }
     }
 
@@ -388,8 +410,10 @@ class NetteGrid extends Control
         $this->template->uniqueID = $this->getUniqueId();
         $this->template->isFilterable = $this->isFilterable;
         $this->template->isEditable = $this->isEditable();
+        $this->template->isAddable = $this->isAddable();
+        $this->template->inlineAdd = $this->inlineAdd;
         $this->template->editMode = $this->editMode;
-        $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0 || count($this->headerActions) > 0;
+        $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0 || count($this->headerActions) > 0 || $this->inlineAdd;
         $this->template->rowActionsOrder = $this->rowActionsOrder;
         $this->template->rowActions = $this->rowActions;
         $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
@@ -436,7 +460,14 @@ class NetteGrid extends Control
             ->onClick[] = [$this, 'filterFormSuccess'];
         $form->addSubmit('editSubmit')
             ->onClick[] = [$this, 'editFormSuccess'];
+        $form->addSubmit('addSubmit', 'Add')
+            ->onClick[] = [$this, 'addFormSuccess'];
         return $form;
+    }
+
+    public function addFormSuccess(Button $button, ArrayHash $values): void
+    {
+
     }
 
     /**
@@ -504,6 +535,15 @@ class NetteGrid extends Control
     public function getEditContainer(): ?Container
     {
         return $this->editContainer;
+    }
+
+    /**
+     * Get add container
+     * @return Container|null
+     */
+    public function getAddContainer(): ?Container
+    {
+        return $this->addContainer;
     }
 
     /**
@@ -649,8 +689,28 @@ class NetteGrid extends Control
     }
 
     /**
+     * Set grid add able
+     * @param bool $isAddable
+     * @internal
+     */
+    public function setAddable(bool $isAddable): void
+    {
+        $this->isAddable = $isAddable;
+    }
+
+    /**
+     * Is addable?
+     * @return bool
+     */
+    public function isAddable(): bool
+    {
+        return $this->isAddable;
+    }
+
+    /**
      * Set Grid filterable
      * @param bool $filterable
+     * @internal
      */
     public function setFilterable(bool $filterable=true): void
     {
@@ -666,5 +726,23 @@ class NetteGrid extends Control
     {
         $this->onEditCallback = $onEditCallback;
         return $this;
+    }
+
+    /**
+     * Ajax redraw all document
+     */
+    public function ajaxRedrawAllDocument(): void
+    {
+        $this->redrawControl('documentArea');
+        $this->redrawControl('gridContent');
+    }
+
+    /**
+     * Ajax redraw data
+     */
+    public function ajaxRedrawData(): void
+    {
+        $this->redrawControl('documentArea');
+        $this->redrawControl('data');
     }
 }
