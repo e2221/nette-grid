@@ -9,4 +9,6 @@ use e2221\NetteGrid\Actions\BaseAction;
 
 class HeaderAction extends BaseAction
 {
+    public string $defaultClass='btn btn-xs';
+    public string $class='btn-secondary';
 }

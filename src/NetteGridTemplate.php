@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace e2221\NetteGrid;
 
+use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
 use e2221\NetteGrid\Actions\RowAction\RowActionEdit;
@@ -47,6 +48,9 @@ class NetteGridTemplate extends Template
 
     /** @var RowAction[] */
     public array $rowActions;
+
+    /** @var HeaderAction[] */
+    public array $headerActions;
 
     public NetteGrid $control;
     public Presenter $presenter;

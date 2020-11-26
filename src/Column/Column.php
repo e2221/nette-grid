@@ -213,7 +213,7 @@ abstract class Column implements IColumn
         }
         if($this->isEditable() === true)
         {
-            if(($this->netteGrid->editMode === true && $this->netteGrid->editKey != $primary) || $this->netteGrid === false)
+            if(($this->netteGrid->editMode === true && $this->netteGrid->editKey != $primary) || $this->netteGrid->editMode === false)
             {
                 $template
                     ->addDataAttribute('column-editable', $this->name)

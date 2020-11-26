@@ -30,9 +30,16 @@
                                     {/ifset}
                                 {/foreach}
 
+                                {* header actions *}
                                 {if $hasActionsColumn === true}
                                     {include #head-actions-column-open-tag}
-
+                                        {foreach $headerActions as $headerActionName => $headerAction}
+                                            {ifset #header-action-$headerActionName}
+                                                {include #"header-action-{$headerActionName}"}
+                                            {else}
+                                                {include #header-action headerAction => $headerAction}
+                                            {/ifset}
+                                        {/foreach}
                                     {include #head-actions-column-end-tag}
                                 {/if}
 

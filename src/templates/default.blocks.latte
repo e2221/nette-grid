@@ -8,6 +8,7 @@
 {varType string|int $primary}
 {varType mixed $row}
 {varType e2221\NetteGrid\Actions\RowAction\RowAction $action}
+{varType e2221\NetteGrid\Actions\HeaderActions\HeaderAction $headerAction}
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
@@ -137,4 +138,9 @@
 {* Data action save - available parameters (RowActionSave $action, $row, $primary) *}
 {define data-action-save}
     {$rowActionSave->render($row, $primary)}
+{/define}
+
+{* Header action renderer - available parameters (HeaderAction $headerAction) *}
+{define header-action}
+    {$headerAction->render()}
 {/define}

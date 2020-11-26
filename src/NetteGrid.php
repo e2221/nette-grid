@@ -133,7 +133,36 @@ class NetteGrid extends Control
     }
 
     /**
-     * ADD ROW ACTIONS
+     * HEADER ACTIONS
+     * ******************************************************************************
+     *
+     */
+
+    /**
+     * Add header action directly
+     * @param HeaderAction $headerAction
+     * @return HeaderAction
+     * @internal
+     */
+    public function addHeaderActionDirectly(HeaderAction $headerAction): HeaderAction
+    {
+        return $this->headerActions[$headerAction->name] = $headerAction;
+    }
+
+    /**
+     * Add header action
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderAction
+     */
+    public function addHeaderAction(string $name, ?string $title=null): HeaderAction
+    {
+        return $this->addHeaderActionDirectly(new HeaderAction($name, $title));
+    }
+
+
+    /**
+     * ROW ACTIONS
      * ******************************************************************************
      *
      */
@@ -142,6 +171,7 @@ class NetteGrid extends Control
      * Add row action with as child of RowAction
      * @param RowAction $rowAction
      * @return RowAction
+     * @internal
      */
     public function addRowActionDirectly(RowAction $rowAction): RowAction
     {
@@ -326,10 +356,11 @@ class NetteGrid extends Control
         $this->template->isFilterable = $this->isFilterable;
         $this->template->isEditable = $this->isEditable;
         $this->template->editMode = $this->editMode;
-        $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0;
+        $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0 || count($this->headerActions) > 0;
         $this->template->rowActionsOrder = $this->rowActionsOrder;
         $this->template->rowActions = $this->rowActions;
         $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
+        $this->template->headerActions = $this->headerActions;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
