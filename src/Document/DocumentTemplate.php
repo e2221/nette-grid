@@ -168,8 +168,7 @@ class DocumentTemplate
     {
         $this->wholeDocumentTemplate
             ->addDataAttribute('grid-name', $this->netteGrid->getUniqueId())
-            ->setDefaultClass('nette-grid')
-            ->addHtmlAttribute('id', $this->netteGrid->getMainSnippetId());
+            ->setDefaultClass('nette-grid');
         return $this->wholeDocumentTemplate;
     }
 
