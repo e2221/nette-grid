@@ -25,7 +25,11 @@ use Nette\Utils\ArrayHash;
 
 class NetteGrid extends Control
 {
-    const MAIN_CONTENT_SNIPPET = 'gridContent';
+    const
+        SNIPPET_DOCUMENT_AREA = 'documentArea',
+        SNIPPET_ALL_CONTENT = 'gridContent',
+        SNIPPET_TBODY = 'data',
+        SNIPPET_ITEMS_AREA = 'dataItems';
 
     /** @var IColumn[] */
     protected array $columns=[];
@@ -282,12 +286,7 @@ class NetteGrid extends Control
      */
     public function handleRedrawGrid(): void
     {
-        if($this->presenter->isAjax())
-        {
-            $this->ajaxRedrawAllDocument();
-        }else{
-            $this->redirect('this');
-        }
+        $this->reloadDocument();
     }
 
     /**
@@ -296,22 +295,16 @@ class NetteGrid extends Control
      */
     public function handleRedrawData(): void
     {
-        if($this->presenter->isAjax()){
-            $this->ajaxRedrawData();
-        }else{
-            $this->redirect('this');
-        }
+        $this->reloadItems();
     }
 
     /**
      * Signal - Edit
+     * @throws AbortException
      */
     public function handleEdit(): void
     {
-        if($this->presenter->isAjax())
-        {
-            $this->ajaxRedrawData();
-        }
+        $this->reloadItem();
     }
 
     /**
@@ -339,40 +332,34 @@ class NetteGrid extends Control
 
     /**
      * Signal - Cancel editing
+     * @throws AbortException
      */
     public function handleCancelEdit(): void
     {
         $this->editMode = false;
-        if($this->presenter->isAjax())
-        {
-            $this->ajaxRedrawData();
-        }else{
-            $this->filter = [];
-        }
+        $this->reloadItem();
     }
 
     /**
      * Signal - Inline add
      * @param bool $add
+     * @throws AbortException
      */
     public function handleInlineAdd(bool $add=true): void
     {
         $this->inlineAdd = $add;
-        if($this->presenter->isAjax())
-            $this->ajaxRedrawAllDocument();
+        $this->reloadItems();
     }
 
     /**
      * Signal - RedrawRow
      * @param mixed $rowID
+     * @throws AbortException
      */
     public function handleRedrawRow($rowID): void
     {
-        if($this->presenter->isAjax())
-        {
-            $this->data = $this->getDataFromSource($rowID);
-            $this->ajaxRedrawData();
-        }
+        $this->data = $this->getDataFromSource($rowID);
+        $this->reloadItem();
     }
 
     /**
@@ -484,6 +471,7 @@ class NetteGrid extends Control
      * Add from success
      * @param Button $button
      * @param ArrayHash $values
+     * @throws AbortException
      */
     public function addFormSuccess(Button $button, ArrayHash $values): void
     {
@@ -493,14 +481,14 @@ class NetteGrid extends Control
             $fn($values->add);
         }
         $this->inlineAdd = false;
-        if($this->getPresenter()->isAjax())
-            $this->ajaxRedrawAllDocument();
+        $this->reloadItems();
     }
 
     /**
      * Edit form success
      * @param Button $button
      * @param ArrayHash $values
+     * @throws AbortException
      */
     public function editFormSuccess(Button $button, ArrayHash $values): void
     {
@@ -514,10 +502,7 @@ class NetteGrid extends Control
         }
         $this->editMode = false;
         $this->editKey = $primaryValue;
-        if($this->presenter->isAjax())
-        {
-            $this->ajaxRedrawData();
-        }
+        $this->reloadItem();
     }
 
     /**
@@ -536,12 +521,7 @@ class NetteGrid extends Control
         $this->filter = $filterValues;
         $this->editKey = null;
         $this->editMode = false;
-        if(count($this->filter) > 0)
-        {
-            $this->ajaxRedrawData();
-        }else{
-            $this->ajaxRedrawAllDocument();
-        }
+        $this->reloadItems();
     }
 
     /**
@@ -676,15 +656,6 @@ class NetteGrid extends Control
     }
 
     /**
-     * Get snipped id of main content snippet
-     * @return string
-     */
-    public function getMainSnippetId(): string
-    {
-        return $this->getSnippetId(self::MAIN_CONTENT_SNIPPET);
-    }
-
-    /**
      * Get primary value from row
      * @param mixed $row
      * @return mixed
@@ -766,20 +737,54 @@ class NetteGrid extends Control
     }
 
     /**
-     * Ajax redraw all document
+     * Reload
+     * @param null|string|string[] $snippet
+     * @throws AbortException
      */
-    public function ajaxRedrawAllDocument(): void
+    public function reload($snippet=null): void
     {
-        $this->redrawControl('documentArea');
-        $this->redrawControl('gridContent');
+        if($this->presenter->isAjax())
+        {
+            $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
+            if(is_null($snippet))
+            {
+                $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
+                $this->redrawControl(self::SNIPPET_ALL_CONTENT);
+            }else if (is_string($snippet)){
+                $this->redrawControl($snippet);
+            }else if (is_array($snippet)){
+                foreach($snippet as $snip)
+                    $this->redrawControl($snip);
+            }
+        }else{
+            $this->presenter->redirect('this');
+        }
     }
 
     /**
-     * Ajax redraw data
+     * Reload all document
+     * @throws AbortException
      */
-    public function ajaxRedrawData(): void
+    public function reloadDocument(): void
     {
-        $this->redrawControl('documentArea');
-        $this->redrawControl('data');
+        $this->reload(self::SNIPPET_ALL_CONTENT);
+    }
+
+    /**
+     * Reload all data (tbdoy)
+     * @throws AbortException
+     */
+    public function reloadItems(): void
+    {
+        $this->reload(self::SNIPPET_TBODY);
+    }
+
+    /**
+     * Reload one row (only one row must be provided from datasource)
+     * @throws AbortException
+     */
+    public function reloadItem(): void
+    {
+        $this->reload(self::SNIPPET_ITEMS_AREA);
     }
 }

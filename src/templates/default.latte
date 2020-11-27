@@ -1,313 +1,312 @@
 {templateType e2221\NetteGrid\NetteGridTemplate}
 
 {snippetArea documentArea}
-    {$wholeDocumentTemplate->renderStartTag()|noescape}
-        {snippet gridContent}
 
-            {import default.blocks.latte}
-            {foreach $templates as $templateKey => $template}
-                {import $template}
-            {/foreach}
+    {* import templates blocks *}
+    {import default.blocks.latte}
+    {foreach $templates as $templateKey => $template}
+        {import $template}
+    {/foreach}
 
-            {form form data-id => $control->getUniqueId()}
+    {snippet gridContent}
+        {$wholeDocumentTemplate->renderStartTag()|noescape}
 
-                {* <table> *}
-                {include #table-open-tag}
+                {form form}
 
-                    {* <thead> *}
-                    {if $hiddenHeader === false}
-                        {include #thead-open-tag}
+                    {* <table> *}
+                    {include #table-open-tag}
 
-                            {* <tr> *}
-                            {include #titles-row-open-tag}
+                        {* <thead> *}
+                        {if $hiddenHeader === false}
+                            {include #thead-open-tag}
 
-                                {* columns cols <td>Column title</td> *}
-                                {foreach $columns as $columnName => $column}
-                                    {ifset #title-col-$columnName}
-                                        {include #"title-col-{$columnName}"}
-                                    {else}
-                                        {$column->getTitleColTemplate()|noescape}
-                                    {/ifset}
-                                {/foreach}
+                                {* <tr> *}
+                                {include #titles-row-open-tag}
 
-                                {* header actions *}
-                                {if $hasActionsColumn === true}
-                                    {include #head-actions-column-open-tag}
-                                        {foreach $headerActions as $headerActionName => $headerAction}
-                                            {ifset #header-action-$headerActionName}
-                                                {include #"header-action-{$headerActionName}"}
-                                            {else}
-                                                {include #header-action headerAction => $headerAction}
-                                            {/ifset}
-                                        {/foreach}
-                                    {include #head-actions-column-end-tag}
-                                {/if}
-
-                            {* </tr> *}
-                            {include #titles-row-end-tag}
-
-                            {* head filter *}
-                            {if $isFilterable === true}
-                                {include #head-filter-row-open-tag}
-                                {formContainer filter}
+                                    {* columns cols <td>Column title</td> *}
                                     {foreach $columns as $columnName => $column}
-                                        {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
-                                        {if $column->isFilterable()}
-                                            {ifset #filter-input-$columnName}
-                                                {include #"filter-input-{$columnName}"}
-                                            {else}
-                                                {include #filter-input columnName => $columnName}
-                                            {/ifset}
-                                        {/if}
-                                        {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                        {ifset #title-col-$columnName}
+                                            {include #"title-col-{$columnName}"}
+                                        {else}
+                                            {$column->getTitleColTemplate()|noescape}
+                                        {/ifset}
                                     {/foreach}
-                                {/formContainer}
-                                {include #head-filter-row-end-tag}
-                            {/if}
 
-
-                    {* </thead> *}
-                    {include #thead-close-tag}
-                {/if}
-
-                {* <tbody> *}
-                {*include #tbody-open-tag*}
-                <tbody n:snippet="data" {$tbodyTemplate->getAttributes()|noescape}>
-
-
-                    {if $showEmptyResult === true}
-
-                        {* <tr> *}
-                        {include #emptyData-row-open-tag}
-
-                        {* <td> </td> *}
-                        {include #emptyData}
-
-                        {* </tr> *}
-                        {include #emptyData-row-end-tag}
-
-                    {else}
-
-                        {if $isAddable === true && $inlineAdd === true}
-                            <tr {$emptyDataRowTemplate->getAttributes()|noescape}>
-
-                                {foreach $columns as $columnName => $column}
-
-                                    <td>
-                                        {if $column->isAddable() === true}
-                                            {formContainer add}
-                                                {input $columnName}
-                                            {/formContainer}
-                                        {/if}
-                                    </td>
-
-                                {/foreach}
-
-                                <td>
-
-                                    {$documentTemplate->getRowActionInlineAddSave()->render()}
-                                    {$documentTemplate->getRowActionInlineAddCancel()->render()}
-
-                                </td>
-
-                            </tr>
-                        {/if}
-
-                        {foreach $data as $dataKey => $row}
-                            {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
-                            {var string|int $primaryValue = $control->getRowPrimaryValue($row)}
-                            {php
-                                $dataRowTemplate->prepareElement($primaryValue)
-                            }
-
-                            {* <tr> *}
-                            <tr n:snippet="data-$primaryValue" {$dataRowTemplate->getAttributes()|noescape}>
-                            {*include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate*}
-
-                                {* columns *}
-                                {foreach $columns as $columnName => $column}
-
-                                    {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row, $primaryValue)}
-                                    {var $cell = $column->getCellValueForRendering($row)}
-
-                                    {* <td> *}
-                                    {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell, primary => $primaryValue, columnName => $columnName}
-
-                                        {if $dataColTemplate->isHidden() === false}
-
-                                            {* edit - print input *}
-                                            {if $editMode === true && $column->isEditable() === true && $editRowKey == $primaryValue}
-                                                {var $editValue = $column->getEditCellValue($row, $cell)}
-
-                                                    {formContainer edit}
-
-                                                        {ifset #data-edit-$columnName}
-                                                            {include #"data-edit-{$columnName}"}
-                                                        {else}
-                                                            {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
-                                                        {/ifset}
-
-                                                    {/formContainer}
-
-
-                                            {* print cell value *}
-                                            {else}
-
-                                                {* ifset block with name #data-columnName replace it *}
-                                                {ifset #data-$columnName}
-                                                    {include #"data-{$columnName}"}
+                                    {* header actions *}
+                                    {if $hasActionsColumn === true}
+                                        {include #head-actions-column-open-tag}
+                                            {foreach $headerActions as $headerActionName => $headerAction}
+                                                {ifset #header-action-$headerActionName}
+                                                    {include #"header-action-{$headerActionName}"}
                                                 {else}
-                                                    {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
+                                                    {include #header-action headerAction => $headerAction}
                                                 {/ifset}
-
-                                            {/if}
-
-                                        {/if}
-
-                                    {* </td> *}
-                                    {include #data-col-end-tag dataColTemplate => $dataColTemplate}
-
-                                {/foreach}
-
-                                {if $hasActionsColumn === true}
-
-                                    {* <td> *}
-                                    {include #data-actions-column-open-tag}
-
-                                        {if $editMode === true && $editRowKey == $primaryValue}
-
-                                            {* primary hidden input *}
-                                            {formContainer edit}
-                                                {input $primaryColumn value => $primaryValue}
-                                            {/formContainer}
-
-                                            {* save button *}
-                                            {include #data-action-save row => $row, primary => $primaryValue}
-
-                                            {* cancel button *}
-                                            {include #data-action-cancel row => $row, primary => $primaryValue}
-
-                                        {elseif count($rowActions) > 0}
-
-                                            {foreach $rowActionsOrder as $index => $action}
-
-                                                {ifset #data-action-$action}
-                                                    {include #"data-action-{$action}" row => $row, primary => $primaryValue}
-                                                {else}
-                                                    {include #data-action action => $rowActions[$action], row => $row, primary => $primaryValue}
-                                                {/ifset}
-
                                             {/foreach}
+                                        {include #head-actions-column-end-tag}
+                                    {/if}
 
-                                        {/if}
+                                {* </tr> *}
+                                {include #titles-row-end-tag}
 
-                                    {* </td> *}
-                                    {include #data-actions-column-end-tag}
-
+                                {* head filter *}
+                                {if $isFilterable === true}
+                                    {include #head-filter-row-open-tag}
+                                        {formContainer filter}
+                                            {foreach $columns as $columnName => $column}
+                                                {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                                {if $column->isFilterable()}
+                                                    {ifset #filter-input-$columnName}
+                                                        {include #"filter-input-{$columnName}"}
+                                                    {else}
+                                                        {include #filter-input columnName => $columnName}
+                                                    {/ifset}
+                                                {/if}
+                                                {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                            {/foreach}
+                                        {/formContainer}
+                                    {include #head-filter-row-end-tag}
                                 {/if}
 
-                            {* </tr> *}
-                            </tr>
-                            {*include #data-row-end-tag row => $row, dataRowTemplate => $dataRowTemplate*}
-
-                        {/foreach}
-
+                        {* </thead> *}
+                        {include #thead-close-tag}
                     {/if}
 
-                </tbody>
+                    {* <tbody> *}
+                    {*include #tbody-open-tag*}
+                    <tbody n:snippet="data" {$tbodyTemplate->getAttributes()|noescape}>
+                        {snippetArea dataItems}
 
-                {* </table> *}
-                {include #table-close-tag}
+                            {* Empty data *}
+                            {if $showEmptyResult === true}
 
-                {if $isFilterable}
-                    {input filterSubmit}
-                {/if}
-            {/form}
+                                {* <tr> *}
+                                {include #emptyData-row-open-tag}
 
-            <script type="application/javascript">
-                (window._stack = window._stack || []).push(function(di) {
+                                    {* <td> </td> *}
+                                    {include #emptyData}
 
-                    //autosubmit filter
-                    var tmr = null;
-                    di.getService('page').getSnippet({form.id form})
-                        .setup(function(frm) {
-                            $(frm).on('keyup', 'input[data-autosubmit]', function(e) {
-                                var code;
-                                code = e.which || e.keyCode || 0;
-                                if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
-                                    return;
-                                }
-                                var $this = $(this);
-                                tmr && window.clearTimeout(tmr);
-                                tmr = window.setTimeout(function(_this) {
-                                    di.getService('formLocator').getForm(frm).submit($this.data('container'));
-                                }(this), 200);
-                            });
+                                {* </tr> *}
+                                {include #emptyData-row-end-tag}
 
-                            $(frm).on('click', '[data-submit]', function(){
-                                di.getService('formLocator').getForm(frm).submit($(this).data('container'));
-                            });
-                        })
-                        .teardown(function() {
-                            tmr && window.clearTimeout(tmr);
-                            tmr = null;
-                        });
+                            {else}
 
-                    di.getService('page').getSnippet({snippet.id data})
-                        .setup(function(col) {
-                            $(col).on('dblclick', 'td[data-column-editable]', function() {
-                                var input, cell, editableLink, editValue, columnName, editInputTag;
-                                cell = $(this);
-                                editableLink = $(this).data('editable-link');
-                                editValue = $(this).data('edit-value');
-                                columnName = $(this).data('column-editable');
-                                editInputTag = $(this).data('edit-input');
+                                {* Inline add *}
+                                {if $isAddable === true && $inlineAdd === true}
+                                    <tr {$emptyDataRowTemplate->getAttributes()|noescape}>
+                                        {formContainer add}
 
-                                //support for textarea
-                                if(editInputTag === 'textarea')
-                                {
-                                    input = $('<textarea class="form-control">' + editValue + '</textarea>');
-                                    let cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
-                                    let cell_height = cell.outerHeight();
-                                    let line_height = Math.round(parseFloat(cell.css('line-height')));
-                                    let cell_lines = (cell_height - (2 * cell_padding)) / line_height;
-                                    input.attr('rows', Math.round(cell_lines));
-                                }
-                                if(typeof input == "undefined" || input == null)
-                                {
-                                    console.log('Usupported input type. ['+editInputTag+']');
-                                    return;
-                                }
-                                input.on('blur', function(){
-                                    let newValue = $(this).val();
-                                    if(newValue !== editValue)
-                                    {
-                                        di.getService("ajax")
-                                            .post(editableLink, { value: newValue, columnName: columnName })
-                                            .then(
-                                                function(payload){
-                                                    newValue = payload.getPayload()._netteGrid_editColumn_newValue;
-                                                    console.log(newValue);
-                                                    cell.html(newValue);
-                                                    return cell.addClass('inline-edited');
-                                                },
-                                                function(err){
-                                                    console.log(err);
-                                                }
-                                            );
-                                    }else{
-                                        cell.html(editValue);
+                                            {foreach $columns as $columnName => $column}
+                                                <td>
+                                                    {if $column->isAddable() === true}
+                                                        {input $columnName}
+                                                    {/if}
+                                                </td>
+                                            {/foreach}
+
+                                            <td>
+                                                {$documentTemplate->getRowActionInlineAddSave()->render()}
+                                                {$documentTemplate->getRowActionInlineAddCancel()->render()}
+                                            </td>
+
+                                        {/formContainer}
+                                    </tr>
+                                {/if}
+
+                                {foreach $data as $dataKey => $row}
+                                    {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
+                                    {var string|int $primaryValue = $control->getRowPrimaryValue($row)}
+                                    {php
+                                        $dataRowTemplate->prepareElement($primaryValue);
                                     }
-                                })
-                                cell.html(input);
-                                input.focus();
-                            });
-                        })
-                        .teardown(function() {
-                        });
-                });
-            </script>
 
-        {/snippet}
-    {$wholeDocumentTemplate->renderEndTag()|noescape}
+                                    {* <tr> *}
+                                    <tr n:snippet="data-$primaryValue" {$dataRowTemplate->getAttributes()|noescape}>
+                                    {*include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate*}
+
+                                        {* columns *}
+                                        {foreach $columns as $columnName => $column}
+
+                                            {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row, $primaryValue)}
+                                            {var $cell = $column->getCellValueForRendering($row)}
+
+                                            {* <td> *}
+                                            {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell, primary => $primaryValue, columnName => $columnName}
+
+                                                {if $dataColTemplate->isHidden() === false}
+
+                                                    {* edit - print input *}
+                                                    {if $editMode === true && $column->isEditable() === true && $editRowKey == $primaryValue}
+                                                        {var $editValue = $column->getEditCellValue($row, $cell)}
+
+                                                            {formContainer edit}
+
+                                                                {ifset #data-edit-$columnName}
+                                                                    {include #"data-edit-{$columnName}"}
+                                                                {else}
+                                                                    {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
+                                                                {/ifset}
+
+                                                            {/formContainer}
+
+                                                    {* print cell value *}
+                                                    {else}
+
+                                                        {* ifset block with name #data-columnName replace it *}
+                                                        {ifset #data-$columnName}
+                                                            {include #"data-{$columnName}"}
+                                                        {else}
+                                                            {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
+                                                        {/ifset}
+
+                                                    {/if}
+
+                                                {/if}
+
+                                            {* </td> *}
+                                            {include #data-col-end-tag dataColTemplate => $dataColTemplate}
+
+                                        {/foreach}
+
+                                        {if $hasActionsColumn === true}
+
+                                            {* <td> *}
+                                            {include #data-actions-column-open-tag}
+
+                                                {if $editMode === true && $editRowKey == $primaryValue}
+
+                                                    {* primary hidden input *}
+                                                    {formContainer edit}
+                                                        {input $primaryColumn value => $primaryValue}
+                                                    {/formContainer}
+
+                                                    {* save button *}
+                                                    {include #data-action-save row => $row, primary => $primaryValue}
+
+                                                    {* cancel button *}
+                                                    {include #data-action-cancel row => $row, primary => $primaryValue}
+
+                                                {elseif count($rowActions) > 0}
+
+                                                    {foreach $rowActionsOrder as $index => $action}
+
+                                                        {ifset #data-action-$action}
+                                                            {include #"data-action-{$action}" row => $row, primary => $primaryValue}
+                                                        {else}
+                                                            {include #data-action action => $rowActions[$action], row => $row, primary => $primaryValue}
+                                                        {/ifset}
+
+                                                    {/foreach}
+
+                                                {/if}
+
+                                            {* </td> *}
+                                            {include #data-actions-column-end-tag}
+
+                                        {/if}
+
+                                    {* </tr> *}
+                                    </tr>
+
+                                {/foreach}
+
+                            {/if}
+
+                        {/snippetArea}
+                    </tbody>
+
+                    {* </table> *}
+                    {include #table-close-tag}
+
+                    {if $isFilterable}
+                        {input filterSubmit}
+                    {/if}
+                {/form}
+
+        {$wholeDocumentTemplate->renderEndTag()|noescape}
+    {/snippet}
 {/snippetArea}
+
+
+<script type="application/javascript">
+    (window._stack = window._stack || []).push(function(di) {
+
+        //autosubmit filter
+        var tmr = null;
+        di.getService('page').getSnippet({form.id form})
+            .setup(function(frm) {
+                $(frm).on('keyup', 'input[data-autosubmit]', function(e) {
+                    var code;
+                    code = e.which || e.keyCode || 0;
+                    if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
+                        return;
+                    }
+                    var $this = $(this);
+                    tmr && window.clearTimeout(tmr);
+                    tmr = window.setTimeout(function(_this) {
+                        di.getService('formLocator').getForm(frm).submit($this.data('container'));
+                    }(this), 200);
+                });
+
+                $(frm).on('click', '[data-submit]', function(){
+                    di.getService('formLocator').getForm(frm).submit($(this).data('container'));
+                });
+            })
+            .teardown(function() {
+                tmr && window.clearTimeout(tmr);
+                tmr = null;
+            });
+
+        di.getService('page').getSnippet({snippet.id data})
+            .setup(function(col) {
+                $(col).on('dblclick', 'td[data-column-editable]', function() {
+                    var input, cell, editableLink, editValue, columnName, editInputTag;
+                    cell = $(this);
+                    editableLink = $(this).data('editable-link');
+                    editValue = $(this).data('edit-value');
+                    columnName = $(this).data('column-editable');
+                    editInputTag = $(this).data('edit-input');
+
+                    //support for textarea
+                    if(editInputTag === 'textarea')
+                    {
+                        input = $('<textarea class="form-control">' + editValue + '</textarea>');
+                        let cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
+                        let cell_height = cell.outerHeight();
+                        let line_height = Math.round(parseFloat(cell.css('line-height')));
+                        let cell_lines = (cell_height - (2 * cell_padding)) / line_height;
+                        input.attr('rows', Math.round(cell_lines));
+                    }
+                    if(typeof input == "undefined" || input == null)
+                    {
+                        console.log('Usupported input type. ['+editInputTag+']');
+                        return;
+                    }
+                    input.on('blur', function(){
+                        let newValue = $(this).val();
+                        if(newValue !== editValue)
+                        {
+                            di.getService("ajax")
+                                .post(editableLink, { value: newValue, columnName: columnName })
+                                .then(
+                                    function(payload){
+                                        newValue = payload.getPayload()._netteGrid_editColumn_newValue;
+                                        console.log(newValue);
+                                        cell.html(newValue);
+                                        return cell.addClass('inline-edited');
+                                    },
+                                    function(err){
+                                        console.log(err);
+                                    }
+                                );
+                        }else{
+                            cell.html(editValue);
+                        }
+                    })
+                    cell.html(input);
+                    input.focus();
+                });
+            })
+            .teardown(function() {
+            });
+    });
+</script>

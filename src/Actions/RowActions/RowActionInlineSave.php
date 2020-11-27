@@ -17,8 +17,13 @@ class RowActionInlineSave extends RowAction
         $this->setElement(Html::el('input'));
         $this
             ->addHtmlAttribute('type', 'submit')
-            ->addHtmlAttribute('value', $title)
-            ->addHtmlAttribute('name', 'addSubmit');
+            ->addHtmlAttribute('value', $title);
+    }
+
+    public function beforeRender(): void
+    {
+        parent::beforeRender();
+        $this->addHtmlAttribute('name', $this->netteGrid['form']['addSubmit']->getName());
     }
 
     public function render($row = 0, $primary = 0): ?Html
