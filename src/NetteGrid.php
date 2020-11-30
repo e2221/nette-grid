@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace e2221\NetteGrid;
 
 use Contributte\FormsBootstrap\BootstrapForm;
+use e2221\BootstrapComponents\Pagination\Pagination;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
@@ -385,6 +386,17 @@ class NetteGrid extends Control
     }
 
     /**
+     * Signal - Paginate (change page)
+     * @param int $page
+     * @throws AbortException
+     */
+    public function handlePaginate(int $page): void
+    {
+        $this->page = $page;
+        $this->reloadItems();
+    }
+
+    /**
      * Load state
      * @param array $params
      * @throws BadRequestException
@@ -423,6 +435,8 @@ class NetteGrid extends Control
             if($this->isAddable === true)
                 $column->addAddFormInput();
         }
+
+        $this['pagination']->setPaginator($this->paginator);
     }
 
 
@@ -446,6 +460,7 @@ class NetteGrid extends Control
         $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
         $this->template->headerActions = $this->headerActions;
 
+
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
         $this->template->wholeDocumentTemplate = $this->documentTemplate->getWholeDocumentTemplate();
@@ -461,9 +476,12 @@ class NetteGrid extends Control
         $this->template->rowActionSave = $this->documentTemplate->getRowActionSave();
         $this->template->rowActionCancel = $this->documentTemplate->getRowActionCancel();
         $this->template->rowActionEdit = $this->documentTemplate->getRowActionEdit();
+        $this->template->tfootTemplate = $this->documentTemplate->getTfootTemplate();
+        $this->template->tfootContentTemplate = $this->documentTemplate->getTfootContentTemplate();
 
         $data = $this->data ?? $this->getDataFromSource();
         $this->template->columns = $this->getColumns(true);
+        $this->template->countOfColumns = $this->getCountOfPrintableColumns();
         $this->template->primaryColumn = $this->primaryColumn;
         $this->template->editRowKey = $this->editKey;
         $this->template->data = $data;
@@ -552,6 +570,19 @@ class NetteGrid extends Control
         $this->editKey = null;
         $this->editMode = false;
         $this->reloadItems();
+    }
+
+    /**
+     * Paginator component
+     * @return Pagination
+     */
+    protected function createComponentPagination(): Pagination
+    {
+        $pagination = new Pagination();
+        $pagination->setLinkCallback(function(int $page){
+            return $this->link('paginate', $page);
+        });
+        return $pagination;
     }
 
     /**

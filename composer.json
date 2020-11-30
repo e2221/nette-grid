@@ -6,6 +6,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/e2221/utils"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/e2221/bootstrap-components"
         }
     ],
     "require": {
@@ -22,6 +26,7 @@
     "license": "MIT",
     "require-dev": {
         "e2221/utils": "dev-main@dev",
+        "e2221/bootstrap-components": "dev-master@dev",
         "phpstan/phpstan-nette": "^0.12"
     },
     "scripts": {

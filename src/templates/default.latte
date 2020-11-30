@@ -214,6 +214,21 @@
                         {/snippetArea}
                     </tbody>
 
+
+                    {* <tfoot> *}
+                    {include #tfoot-open-tag}
+
+                        {* <td colspan=x> *}
+                        {include #tfoot-content-open-tag}
+
+                            {include #pagination}
+
+                        {include #tfoot-content-end-tag}
+
+                    {* </tfoot> *}
+                    {include #tfoot-end-tag}
+
+
                     {* </table> *}
                     {include #table-close-tag}
 

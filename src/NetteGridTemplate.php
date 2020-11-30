@@ -18,6 +18,8 @@ use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\HeadFilterRowTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TbodyTemplate;
+use e2221\NetteGrid\Document\Templates\TfootContentTemplate;
+use e2221\NetteGrid\Document\Templates\TfootTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
@@ -69,6 +71,8 @@ class NetteGridTemplate extends Template
     public RowActionCancel $rowActionCancel;
     public RowActionSave $rowActionSave;
     public RowActionEdit $rowActionEdit;
+    public TfootTemplate $tfootTemplate;
+    public TfootContentTemplate $tfootContentTemplate;
 
     public bool $editMode;
     public bool $showEmptyResult;
@@ -81,4 +85,5 @@ class NetteGridTemplate extends Template
     public bool $hiddenHeader;
     public bool $isAddable;
     public bool $inlineAdd;
+    public int $countOfColumns;
 }

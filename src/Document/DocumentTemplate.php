@@ -17,6 +17,8 @@ use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\HeadFilterRowTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TbodyTemplate;
+use e2221\NetteGrid\Document\Templates\TfootContentTemplate;
+use e2221\NetteGrid\Document\Templates\TfootTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
@@ -52,6 +54,8 @@ class DocumentTemplate
     protected RowActionSave $rowActionSave;
     protected RowActionInlineCancel $rowActionInlineAddCancel;
     protected RowActionInlineSave $rowActionInlineAddSave;
+    protected TfootTemplate $tfootTemplate;
+    protected TfootContentTemplate $tfootContentTemplate;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -71,6 +75,8 @@ class DocumentTemplate
         $this->rowActionSave = new RowActionSave($netteGrid);
         $this->rowActionInlineAddCancel = new RowActionInlineCancel($netteGrid);
         $this->rowActionInlineAddSave = new RowActionInlineSave($netteGrid);
+        $this->tfootTemplate = new TfootTemplate();
+        $this->tfootContentTemplate = new TfootContentTemplate($netteGrid);
     }
 
     /**
@@ -95,6 +101,24 @@ class DocumentTemplate
     {
         $this->hiddenHeader = $hiddenHeader;
         return $this;
+    }
+
+    /**
+     * Get tfoot template <tfoot>
+     * @return TfootTemplate
+     */
+    public function getTfootTemplate(): TfootTemplate
+    {
+        return $this->tfootTemplate;
+    }
+
+    /**
+     * Tfoot content <td>
+     * @return TfootContentTemplate
+     */
+    public function getTfootContentTemplate(): TfootContentTemplate
+    {
+        return $this->tfootContentTemplate;
     }
 
     /**
