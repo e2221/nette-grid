@@ -441,8 +441,6 @@ class NetteGrid extends Control
             if($this->isAddable === true)
                 $column->addAddFormInput();
         }
-
-        $this['pagination']->setPaginator($this->paginator);
     }
 
 
