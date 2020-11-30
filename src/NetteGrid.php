@@ -22,6 +22,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\Paginator;
 
 class NetteGrid extends Control
 {
@@ -96,6 +97,24 @@ class NetteGrid extends Control
 
     /** @var bool @persistent */
     public bool $inlineAdd=false;
+
+    /** @var string|null Show all option - for case null => option will not be show */
+    protected ?string $showAllOption='All';
+
+    /** @var callable|null Total items count callback function(array $filter, array $multipleFilter):int{} */
+    protected $totalItemsCountCallback=null;
+
+    /** @var int Default items per page */
+    protected int $itemsPerPage=50;
+
+    /** @var array|null Items per page selection - for case null => selection will not be show */
+    protected ?array $itemsPerPageSelection=null;
+
+    /** @var Paginator|null  */
+    protected ?Paginator $paginator=null;
+
+    /** @var int @persistent */
+    public int $page=1;
 
     public function __construct()
     {
@@ -300,10 +319,13 @@ class NetteGrid extends Control
 
     /**
      * Signal - Edit
+     * @param mixed $editKey
      * @throws AbortException
      */
-    public function handleEdit(): void
+    public function handleEdit($editKey): void
     {
+        $this->editKey = $editKey;
+        $this->editMode = true;
         $this->reloadItem();
     }
 
@@ -374,13 +396,13 @@ class NetteGrid extends Control
         if($this->isFilterable === true)
         {
             $this->filterContainer = $this['form']->addContainer('filter');
-            $this['form']['filterSubmit']->setValidationScope($this['form']['filter']);
+            $this['form']['filterSubmit']->setValidationScope([$this['form']['filter']]);
         }
 
         if($this->isEditable === true)
         {
             $this->editContainer = $this['form']->addContainer('edit');
-            $this['form']['editSubmit']->setValidationScope($this['form']['edit']);
+            $this['form']['editSubmit']->setValidationScope([$this['form']['edit']]);
             $this->editContainer->addHidden($this->primaryColumn);
             $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
             $this->reindexActions('edit', 0);
@@ -389,7 +411,7 @@ class NetteGrid extends Control
         if($this->isAddable === true)
         {
             $this->addContainer = $this['form']->addContainer('add');
-            $this['form']['addSubmit']->setValidationScope($this['form']['add']);
+            $this['form']['addSubmit']->setValidationScope([$this['form']['add']]);
         }
 
         foreach($this->columns as $columnName => $column)
@@ -473,11 +495,13 @@ class NetteGrid extends Control
     /**
      * Add from success
      * @param Button $button
-     * @param ArrayHash $values
      * @throws AbortException
+     * @internal
      */
-    public function addFormSuccess(Button $button, ArrayHash $values): void
+    public function addFormSuccess(Button $button): void
     {
+        $form = $button->getForm();
+        $values = $form->values;
         if(is_callable($this->onAddCallback))
         {
             $fn = $this->onAddCallback;
@@ -490,11 +514,13 @@ class NetteGrid extends Control
     /**
      * Edit form success
      * @param Button $button
-     * @param ArrayHash $values
      * @throws AbortException
+     * @internal
      */
-    public function editFormSuccess(Button $button, ArrayHash $values): void
+    public function editFormSuccess(Button $button): void
     {
+        $form = $button->getForm();
+        $values = $form->values;
         $editValues = $values->edit;
         $primaryColumn = $this->primaryColumn;
         $primaryValue = $editValues->$primaryColumn;
@@ -511,12 +537,13 @@ class NetteGrid extends Control
     /**
      * Filter form success
      * @param Button $button
-     * @param ArrayHash $values
      * @throws AbortException
      * @internal
      */
-    public function filterFormSuccess(Button $button, ArrayHash $values): void
+    public function filterFormSuccess(Button $button): void
     {
+        $form = $button->getForm();
+        $values = $form->values;
         $filterValues = (array)$values['filter'];
         foreach($filterValues as $key => $value)
             if(empty($value))
@@ -589,6 +616,23 @@ class NetteGrid extends Control
     }
 
     /**
+     * Set pagination
+     * @param callable $totalItemsCountCallback function(array $filter, array $multipleFilter)
+     * @param int $itemsPerPage default items per page
+     * @param array|null $itemsPerPageSelection items per page selection - if null - selection will not be shown
+     * @param string|null $showAllOption Show all option - if null - option will not be shown
+     */
+    public function setPagination(callable $totalItemsCountCallback, int $itemsPerPage=50, ?array $itemsPerPageSelection=null, ?string $showAllOption='All')
+    {
+        $this->totalItemsCountCallback = $totalItemsCountCallback;
+        $this->itemsPerPage = $itemsPerPage;
+        $this->itemsPerPageSelection = $itemsPerPageSelection;
+        $this->showAllOption = $showAllOption;
+        $this->paginator = new Paginator();
+        $this->paginator->setItemsPerPage($itemsPerPage);
+    }
+
+    /**
      * Is column exists?
      * @param string $columnName
      * @param bool $throw
@@ -651,8 +695,16 @@ class NetteGrid extends Control
         {
             $this->filter[$this->primaryColumn] = $this->editKey;
         }
+
+        if($this->paginator instanceof Paginator)
+        {
+            $itemsTotalCountFn = $this->totalItemsCountCallback;
+            $this->paginator->setItemCount($itemsTotalCountFn($this->filter, null));
+            $this->paginator->page = $this->page;
+        }
+
         $getDataFn = $this->dataSourceCallback;
-        $data = $getDataFn($this->filter);
+        $data = $getDataFn($this->filter, null, null, $this->paginator);
         if(is_countable($data) === false || count($data) == 0)
             return null;
         return $data;
