@@ -25,6 +25,10 @@ use Nette\Forms\Controls\Button;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Paginator;
 
+/**
+ * Class NetteGrid
+ * @persistent(pagination)
+ */
 class NetteGrid extends Control
 {
     const
@@ -665,6 +669,8 @@ class NetteGrid extends Control
         $this->showAllOption = $showAllOption;
         $this->paginator = new Paginator();
         $this->paginator->setItemsPerPage($itemsPerPage);
+        $this->paginator->page = $this->page;
+        $this['pagination']->setPaginator($this->paginator);
     }
 
     /**
