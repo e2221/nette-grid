@@ -393,7 +393,7 @@ class NetteGrid extends Control
     public function handlePaginate(int $page): void
     {
         $this->page = $page;
-        $this->reloadDocument();
+        $this->reloadItems();
     }
 
     /**
