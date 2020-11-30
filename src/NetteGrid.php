@@ -667,7 +667,7 @@ class NetteGrid extends Control
         $this->showAllOption = $showAllOption;
         $this->paginator = new Paginator();
         $this->paginator->setItemsPerPage($itemsPerPage);
-        $this->paginator->page = $this->page;
+        $this->paginator->page = $this['pagination']->getPaginator() ? $this['pagination']->getPaginator()->page : $this->page;
         $this['pagination']->setPaginator($this->paginator);
     }
 
