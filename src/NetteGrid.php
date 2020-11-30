@@ -579,8 +579,9 @@ class NetteGrid extends Control
     protected function createComponentPagination(): Pagination
     {
         $pagination = new Pagination();
-        $pagination->setLinkCallback(function(int $page){
-            return $this->link('paginate', $page);
+        $pagination->setOnPaginateCallback(function(Paginator $paginator){
+            $this->page = $paginator->page;
+            $this->reloadItems();
         });
         return $pagination;
     }
