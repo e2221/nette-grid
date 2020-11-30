@@ -31,7 +31,9 @@ class NetteGrid extends Control
         SNIPPET_DOCUMENT_AREA = 'documentArea',
         SNIPPET_ALL_CONTENT = 'gridContent',
         SNIPPET_TBODY = 'data',
-        SNIPPET_ITEMS_AREA = 'dataItems';
+        SNIPPET_ITEMS_AREA = 'dataItems',
+        SNIPPET_TFOOT_AREA = 'footerArea',
+        SNIPPET_TFOOT = 'footer';
 
     /** @var IColumn[] */
     protected array $columns=[];
@@ -582,6 +584,7 @@ class NetteGrid extends Control
         $pagination->setOnPaginateCallback(function(Paginator $paginator){
             $this->page = $paginator->page;
             $this->reloadItems();
+            $this->reloadFooter();
         });
         return $pagination;
     }
@@ -846,6 +849,15 @@ class NetteGrid extends Control
         }else{
             $this->presenter->redirect('this');
         }
+    }
+
+    /**
+     * Reload footer content
+     * @throws AbortException
+     */
+    public function reloadFooter(): void
+    {
+        $this->reload([self::SNIPPET_TFOOT]);
     }
 
     /**

@@ -215,18 +215,21 @@
                     </tbody>
 
 
-                    {* <tfoot> *}
-                    {include #tfoot-open-tag}
+                    <tfoot n:snippet="footer" {$tfootTemplate->getAttributes()|noescape}>
 
-                        {* <td colspan=x> *}
-                        {include #tfoot-content-open-tag}
+                        {snippetArea footerArea}
 
-                            {include #pagination}
+                            {* <td colspan=x> *}
+                            {include #tfoot-content-open-tag}
 
-                        {include #tfoot-content-end-tag}
+                                {include #pagination}
 
-                    {* </tfoot> *}
-                    {include #tfoot-end-tag}
+                            {include #tfoot-content-end-tag}
+
+
+                        {/snippetArea}
+
+                    </tfoot>
 
 
                     {* </table> *}

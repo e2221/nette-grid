@@ -147,16 +147,6 @@
     {$headerAction->render()}
 {/define}
 
-{* Tfoot template <tfoot> *}
-{define tfoot-open-tag}
-    {$tfootTemplate->renderStartTag()|noescape}
-{/define}
-
-{* Tfoot end tag </tfoot> *}
-{define tfoot-end-tag}
-    {$tfootTemplate->renderEndTag()|noescape}
-{/define}
-
 {* Tfoot cell <td colspan=x> - available parameters (int $countOfColumns) *}
 {define tfoot-content-open-tag}
     {$tfootContentTemplate->renderStartTag()|noescape}
