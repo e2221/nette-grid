@@ -454,7 +454,7 @@ class NetteGrid extends Control
         $this->template->isAddable = $this->isAddable();
         $this->template->inlineAdd = $this->inlineAdd;
         $this->template->editMode = $this->editMode;
-        $this->template->hasActionsColumn = $this->isFilterable || count($this->rowActions) > 0 || count($this->headerActions) > 0 || $this->inlineAdd;
+        $this->template->hasActionsColumn = $this->hasActionColumn();
         $this->template->rowActionsOrder = $this->rowActionsOrder;
         $this->template->rowActions = $this->rowActions;
         $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
@@ -872,5 +872,15 @@ class NetteGrid extends Control
     public function reloadItem(): void
     {
         $this->reload(self::SNIPPET_ITEMS_AREA);
+    }
+
+    /**
+     * Has grid action column?
+     * @return bool
+     * @internal
+     */
+    public function hasActionColumn(): bool
+    {
+        return $this->isFilterable || count($this->rowActions) > 0 || count($this->headerActions) > 0 || $this->inlineAdd;
     }
 }
