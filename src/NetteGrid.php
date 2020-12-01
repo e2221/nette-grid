@@ -437,7 +437,7 @@ class NetteGrid extends Control
             $this->filterContainer = $this['form']->addContainer('filter');
             $this['form']['filterSubmit']->setValidationScope([$this['form']['filter']]);
             if($this->filterAutocomplete === false)
-                foreach($this->filterContainer->components as $key => $component)
+                foreach($this->filterContainer->getComponents() as $key => $component)
                     $component->setHtmlAttribute('autocomplete', 'off');
 
         }
