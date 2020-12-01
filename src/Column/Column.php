@@ -483,6 +483,8 @@ abstract class Column implements IColumn
     {
         if(is_null($this->filterInput))
             $this->filterInput = $this->getInput();
+        if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isFilterAutocomplete() === false)
+            $this->filterInput->setHtmlAttribute('autocomplete', 'off');
         return $this->filterInput;
     }
 
@@ -497,6 +499,8 @@ abstract class Column implements IColumn
         if($this->isRequired())
             $this->editInput->setRequired();
         $this->editInput->setHtmlAttribute('placeholder', $this->label);
+        if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isEditAutocomplete() === false)
+            $this->editInput->setHtmlAttribute('autocomplete', 'off');
         return $this->editInput;
     }
 
@@ -511,6 +515,8 @@ abstract class Column implements IColumn
         if($this->isRequired())
             $this->addInput->setRequired();
         $this->addInput->setHtmlAttribute('placeholder', $this->label);
+        if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isAddAutocomplete() === false)
+            $this->addInput->setHtmlAttribute('autocomplete', 'off');
         return $this->addInput;
     }
 

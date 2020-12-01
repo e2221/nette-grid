@@ -436,10 +436,6 @@ class NetteGrid extends Control
         {
             $this->filterContainer = $this['form']->addContainer('filter');
             $this['form']['filterSubmit']->setValidationScope([$this['form']['filter']]);
-            if($this->filterAutocomplete === false)
-                foreach($this->filterContainer->getComponents() as $key => $component)
-                    $component->setHtmlAttribute('autocomplete', 'off');
-
         }
 
         if($this->isEditable === true)
@@ -449,18 +445,12 @@ class NetteGrid extends Control
             $this->editContainer->addHidden($this->primaryColumn);
             $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
             $this->reindexActions('edit', 0);
-            if($this->editAutocomplete === false)
-                foreach($this->editContainer->components as $key => $component)
-                    $component->setHtmlAttribute('autocomplete', 'off');
         }
 
         if($this->isAddable === true)
         {
             $this->addContainer = $this['form']->addContainer('add');
             $this['form']['addSubmit']->setValidationScope([$this['form']['add']]);
-            if($this->addAutocomplete === false)
-                foreach($this->addContainer->components as $key => $component)
-                    $component->setHtmlAttribute('autocomplete', 'off');
         }
 
         foreach($this->columns as $columnName => $column)
@@ -1014,5 +1004,37 @@ class NetteGrid extends Control
     {
         $this->filterAutocomplete = $filterAutocomplete;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutocomplete(): bool
+    {
+        return $this->autocomplete;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFilterAutocomplete(): bool
+    {
+        return $this->filterAutocomplete;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEditAutocomplete(): bool
+    {
+        return $this->editAutocomplete;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAddAutocomplete(): bool
+    {
+        return $this->addAutocomplete;
     }
 }
