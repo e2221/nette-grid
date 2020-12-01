@@ -278,7 +278,7 @@
                     di.getService('formLocator').getForm(frm).submit($(this).data('container'));
                 });
 
-                $(frm).on('change', '[data-paginate-submit]', function(){
+                $(frm).on('change', 'select[data-paginate-submit]', function(){
                     di.getService('formLocator').getForm(frm).submit($(this).data('container'));
                 });
             })

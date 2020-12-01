@@ -459,12 +459,15 @@ class NetteGrid extends Control
         {
             $this->paginateContainer = $this['form']->addContainer('paginate');
             $this['form']['paginateSubmit']->setValidationScope([$this['form']['paginate']]);
-            $itemsPerPageSelection = $this->itemsPerPageSelection;
+            $itemsPerPageSelection = [];
+            foreach($this->itemsPerPageSelection as $itemsPerPage)
+                $itemsPerPageSelection[$itemsPerPage] = $itemsPerPage;
             if(is_string($this->showAllOption))
                 array_push($itemsPerPageSelection, $this->showAllOption);
             $this->paginateContainer->addSelect('itemsPerPage', null, $itemsPerPageSelection)
                 ->setHtmlAttribute('data-paginate-submit')
-                ->setHtmlAttribute('data-container', 'paginate');
+                ->setHtmlAttribute('data-container', 'paginateSubmit')
+                ->setHtmlAttribute('class', 'form-control form-control-sm float-right');
         }
 
     }
@@ -619,7 +622,8 @@ class NetteGrid extends Control
         $form = $button->getForm();
         $values = $form->values->paginate;
         $this->itemsPerPage = $values->itemsPerPage;
-        $this->reloadDocument();
+        $this->reloadItems();
+        $this->reloadFooter();
     }
 
     /**
@@ -890,7 +894,6 @@ class NetteGrid extends Control
             $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
             if(is_null($snippet))
             {
-                $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
                 $this->redrawControl(self::SNIPPET_ALL_CONTENT);
             }else if (is_string($snippet)){
                 $this->redrawControl($snippet);
