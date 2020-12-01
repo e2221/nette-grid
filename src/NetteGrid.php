@@ -75,6 +75,9 @@ class NetteGrid extends Control
     /** @var Container|null Add container */
     protected ?Container $addContainer=null;
 
+    /** @var Container|null Paginate container */
+    protected ?Container $paginateContainer=null;
+
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
@@ -451,6 +454,19 @@ class NetteGrid extends Control
             if($this->isAddable === true)
                 $column->addAddFormInput();
         }
+
+        if($this->paginator instanceof Paginator)
+        {
+            $this->paginateContainer = $this['form']->addContainer('paginate');
+            $this['form']['paginateSubmit']->setValidationScope([$this['form']['paginate']]);
+            $itemsPerPageSelection = $this->itemsPerPageSelection;
+            if(is_string($this->showAllOption))
+                array_push($itemsPerPageSelection, $this->showAllOption);
+            $this->paginateContainer->addSelect('itemsPerPage', null, $itemsPerPageSelection)
+                ->setHtmlAttribute('data-paginate-submit')
+                ->setHtmlAttribute('data-container', 'paginate');
+        }
+
     }
 
 
@@ -473,6 +489,7 @@ class NetteGrid extends Control
         $this->template->rowActions = $this->rowActions;
         $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
         $this->template->headerActions = $this->headerActions;
+        $this->template->paginator = $this->paginator;
 
 
         //templates
@@ -522,6 +539,9 @@ class NetteGrid extends Control
             ->onClick[] = [$this, 'editFormSuccess'];
         $form->addSubmit('addSubmit', 'Add')
             ->onClick[] = [$this, 'addFormSuccess'];
+        $form->addSubmit('paginateSubmit')
+            ->setHtmlAttribute('class', 'd-none')
+            ->onClick[] = [$this, 'paginateFormSuccess'];
         return $form;
     }
 
@@ -586,6 +606,20 @@ class NetteGrid extends Control
         $this->editMode = false;
         $this->reloadItems();
         $this->reloadFooter();
+    }
+
+    /**
+     * Paginate form success
+     * @param Button $button
+     * @throws AbortException
+     * @internal
+     */
+    public function paginateFormSuccess(Button $button): void
+    {
+        $form = $button->getForm();
+        $values = $form->values->paginate;
+        $this->itemsPerPage = $values->itemsPerPage;
+        $this->reloadDocument();
     }
 
     /**

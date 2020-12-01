@@ -25,6 +25,7 @@ use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Utils\Paginator;
 
 
 /**
@@ -57,6 +58,7 @@ class NetteGridTemplate extends Template
     /** @var mixed[] */
     public array $filter;
 
+    public ?Paginator $paginator;
     public NetteGrid $control;
     public Presenter $presenter;
     public string $uniqueID;
