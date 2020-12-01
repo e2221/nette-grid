@@ -64,6 +64,7 @@
                                                 {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
                                             {/foreach}
                                         {/formContainer}
+                                        <th n:if="$hasActionsColumn"></th>
                                     {include #head-filter-row-end-tag}
                                 {/if}
 
