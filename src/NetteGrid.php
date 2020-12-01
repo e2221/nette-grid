@@ -387,8 +387,7 @@ class NetteGrid extends Control
     public function handleResetFilter(): void
     {
         $this->filter = [];
-        $this->reloadItems();
-        $this->reloadFooter();
+        $this->reloadDocument();
     }
 
     /**
