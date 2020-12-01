@@ -381,6 +381,17 @@ class NetteGrid extends Control
     }
 
     /**
+     * Signal - Reset filter
+     * @throws AbortException
+     */
+    public function handleResetFilter(): void
+    {
+        $this->filter = [];
+        $this->reloadItems();
+        $this->reloadFooter();
+    }
+
+    /**
      * Signal - RedrawRow
      * @param mixed $rowID
      * @throws AbortException
@@ -489,6 +500,7 @@ class NetteGrid extends Control
         $this->template->primaryColumn = $this->primaryColumn;
         $this->template->editRowKey = $this->editKey;
         $this->template->data = $data;
+        $this->template->filter = $this->filter;
         $this->template->showEmptyResult = !((bool)$data);
         $this->template->templates = $this->templates;
 

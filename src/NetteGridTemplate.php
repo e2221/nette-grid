@@ -54,6 +54,9 @@ class NetteGridTemplate extends Template
     /** @var HeaderAction[] */
     public array $headerActions;
 
+    /** @var mixed[] */
+    public array $filter;
+
     public NetteGrid $control;
     public Presenter $presenter;
     public string $uniqueID;
