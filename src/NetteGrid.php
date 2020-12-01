@@ -931,6 +931,7 @@ class NetteGrid extends Control
      */
     public function reloadDocument(): void
     {
+        $this->editKey = null;
         $this->reload(self::SNIPPET_ALL_CONTENT);
     }
 
@@ -940,6 +941,7 @@ class NetteGrid extends Control
      */
     public function reloadItems(): void
     {
+        $this->editKey = null;
         $this->reload(self::SNIPPET_TBODY);
     }
 
