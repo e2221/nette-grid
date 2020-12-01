@@ -574,6 +574,7 @@ class NetteGrid extends Control
         $this->editKey = null;
         $this->editMode = false;
         $this->reloadItems();
+        $this->reloadFooter();
     }
 
     /**
