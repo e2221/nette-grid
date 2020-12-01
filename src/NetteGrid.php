@@ -126,6 +126,14 @@ class NetteGrid extends Control
     /** @var int @persistent */
     public int $page=1;
 
+    /** @var bool All main form autocomplete */
+    protected bool $autocomplete=false;
+
+    /** @var bool Autocomplete for form parts */
+    protected bool $filterAutocomplete=false;
+    protected bool $editAutocomplete=false;
+    protected bool $addAutocomplete=false;
+
     public function __construct()
     {
         $this->documentTemplate = new DocumentTemplate($this);
@@ -428,6 +436,10 @@ class NetteGrid extends Control
         {
             $this->filterContainer = $this['form']->addContainer('filter');
             $this['form']['filterSubmit']->setValidationScope([$this['form']['filter']]);
+            if($this->filterAutocomplete === false)
+                foreach($this->filterContainer->components as $key => $component)
+                    $component->setHtmlAttribute('autocomplete', 'off');
+
         }
 
         if($this->isEditable === true)
@@ -437,12 +449,18 @@ class NetteGrid extends Control
             $this->editContainer->addHidden($this->primaryColumn);
             $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
             $this->reindexActions('edit', 0);
+            if($this->editAutocomplete === false)
+                foreach($this->editContainer->components as $key => $component)
+                    $component->setHtmlAttribute('autocomplete', 'off');
         }
 
         if($this->isAddable === true)
         {
             $this->addContainer = $this['form']->addContainer('add');
             $this['form']['addSubmit']->setValidationScope([$this['form']['add']]);
+            if($this->addAutocomplete === false)
+                foreach($this->addContainer->components as $key => $component)
+                    $component->setHtmlAttribute('autocomplete', 'off');
         }
 
         foreach($this->columns as $columnName => $column)
@@ -469,7 +487,6 @@ class NetteGrid extends Control
                 ->setHtmlAttribute('data-container', 'paginateSubmit')
                 ->setHtmlAttribute('class', 'form-control form-control-sm');
         }
-
     }
 
 
@@ -950,5 +967,49 @@ class NetteGrid extends Control
     public function hasActionColumn(): bool
     {
         return $this->isFilterable || count($this->rowActions) > 0 || count($this->headerActions) > 0 || $this->inlineAdd;
+    }
+
+    /**
+     * Set autocomplete on all form
+     * @param bool $autocomplete
+     * @return NetteGrid
+     */
+    public function setAutocomplete(bool $autocomplete=true): self
+    {
+        $this->autocomplete = $autocomplete;
+        return $this;
+    }
+
+    /**
+     * Set autocomplete for inline add container
+     * @param bool $addAutocomplete
+     * @return NetteGrid
+     */
+    public function setAddAutocomplete(bool $addAutocomplete=true): self
+    {
+        $this->addAutocomplete = $addAutocomplete;
+        return $this;
+    }
+
+    /**
+     * Set autocomplete for edit container
+     * @param bool $editAutocomplete
+     * @return NetteGrid
+     */
+    public function setEditAutocomplete(bool $editAutocomplete): self
+    {
+        $this->editAutocomplete = $editAutocomplete;
+        return $this;
+    }
+
+    /**
+     * Set autocomplete for filter container
+     * @param bool $filterAutocomplete
+     * @return NetteGrid
+     */
+    public function setFilterAutocomplete(bool $filterAutocomplete): self
+    {
+        $this->filterAutocomplete = $filterAutocomplete;
+        return $this;
     }
 }
