@@ -551,6 +551,8 @@ class NetteGrid extends Control
     protected function createComponentForm(): Form
     {
         $form = new BootstrapForm();
+        if($this->autocomplete === false)
+            $form->setHtmlAttribute('autocomplete', 'off');
         $form->setHtmlAttribute('data-reset', 'false');
         $form->addSubmit('filterSubmit')
             ->setHtmlAttribute('class', 'd-none')
