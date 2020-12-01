@@ -226,9 +226,12 @@
 
                                 <a class="btn btn-sm btn-danger float-right" n:href="resetFilter!" n:if="count($filter) > 0">Reset filter</a>
 
-                                {if $paginator instaneof Nette\Utils\Paginator}
-                                    {input paginate}
-                                {/if}
+                            {if $paginator instanceof Nette\Utils\Paginator}
+                                {formContainer paginate}
+                                    {input itemsPerPage}
+                                {/formContainer}
+                                {input paginateSubmit}
+                            {/if}
 
                             {include #tfoot-content-end-tag}
 
