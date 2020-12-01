@@ -11,12 +11,11 @@
 .nette-grid table tbody tr td.inline-edited {
     animation-name: inline-edited;
     animation-duration: 1.2s;
-    animation-delay: 0
+    animation-delay: 0;
 }
 
-.nette-grid table thead tr th {
-    font-size: 90%;
-
+.nette-grid table tbody tr th {
+    font-size: 85%;
 }
 
 .nette-grid .table-sm th, .grid .table-sm td {
