@@ -217,26 +217,34 @@
 
                     <tfoot n:snippet="footer" {$tfootTemplate->getAttributes()|noescape}>
 
-                        {snippetArea footerArea}
+                    {snippetArea footerArea}
 
-                            {* <td colspan=x> *}
-                            {include #tfoot-content-open-tag}
+                        {* <td colspan=x> *}
+                        {include #tfoot-content-open-tag}
+                        <div class="row">
+                            <div class="col col-sm-4">
 
-                                {include #pagination}
+                            </div>
+                            <div class="col col-sm-4">
+                                {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
+                                    {include #pagination}
+                                {/if}
+                            </div>
+                            <div class="col col-sm-4">
+                                <div class="input-group float-right{if count($filter) == 0} col-7{/if}">
+                                    <a class="btn btn-sm btn-danger" n:if="count($filter) > 0" n:href="resetFilter!">Reset filter</a>
+                                    {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
+                                        {formContainer paginate}
+                                            {input itemsPerPage}
+                                        {/formContainer}
+                                        {input paginateSubmit}
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        {include #tfoot-content-end-tag}
 
-                                <a class="btn btn-sm btn-danger float-right" n:href="resetFilter!" n:if="count($filter) > 0">Reset filter</a>
-
-                            {if $paginator instanceof Nette\Utils\Paginator}
-                                {formContainer paginate}
-                                    {input itemsPerPage}
-                                {/formContainer}
-                                {input paginateSubmit}
-                            {/if}
-
-                            {include #tfoot-content-end-tag}
-
-
-                        {/snippetArea}
+                    {/snippetArea}
 
                     </tfoot>
 

@@ -467,7 +467,7 @@ class NetteGrid extends Control
             $this->paginateContainer->addSelect('itemsPerPage', null, $itemsPerPageSelection)
                 ->setHtmlAttribute('data-paginate-submit')
                 ->setHtmlAttribute('data-container', 'paginateSubmit')
-                ->setHtmlAttribute('class', 'form-control form-control-sm float-right');
+                ->setHtmlAttribute('class', 'form-control form-control-sm');
         }
 
     }
