@@ -588,6 +588,8 @@ class NetteGrid extends Control
             $this->reloadItems();
             $this->reloadFooter();
         });
+        $pagination->setWidth(Pagination::SMALL);
+        $pagination->setAlign(Pagination::ALIGN_CENTER);
         return $pagination;
     }
 
