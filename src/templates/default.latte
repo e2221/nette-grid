@@ -258,94 +258,94 @@
                 {/form}
 
         {$wholeDocumentTemplate->renderEndTag()|noescape}
+
+        <script type="application/javascript">
+            (window._stack = window._stack || []).push(function(di) {
+
+                //autosubmit filter
+                var tmr = null;
+                di.getService('page').getSnippet({form.id form})
+                    .setup(function(frm) {
+                        $(frm).on('keyup', 'input[data-autosubmit]', function(e) {
+                            var code;
+                            code = e.which || e.keyCode || 0;
+                            if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
+                                return;
+                            }
+                            var $this = $(this);
+                            tmr && window.clearTimeout(tmr);
+                            tmr = window.setTimeout(function(_this) {
+                                di.getService('formLocator').getForm(frm).submit($this.data('container'));
+                            }(this), 200);
+                        });
+
+                        $(frm).on('click', '[data-submit]', function(){
+                            di.getService('formLocator').getForm(frm).submit($(this).data('container'));
+                        });
+
+                        $(frm).on('change', 'select[data-paginate-submit]', function(){
+                            di.getService('formLocator').getForm(frm).submit($(this).data('container'));
+                        });
+                    })
+                    .teardown(function() {
+                        tmr && window.clearTimeout(tmr);
+                        tmr = null;
+                    });
+
+                di.getService('page').getSnippet({snippet.id data})
+                    .setup(function(col) {
+                        $(col).on('dblclick', 'td[data-column-editable]', function() {
+                            var input, cell, editableLink, editValue, columnName, editInputTag;
+                            cell = $(this);
+                            editableLink = $(this).data('editable-link');
+                            editValue = $(this).data('edit-value');
+                            columnName = $(this).data('column-editable');
+                            editInputTag = $(this).data('edit-input');
+
+                            //support for textarea
+                            if(editInputTag === 'textarea')
+                            {
+                                input = $('<textarea class="form-control">' + editValue + '</textarea>');
+                                let cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
+                                let cell_height = cell.outerHeight();
+                                let line_height = Math.round(parseFloat(cell.css('line-height')));
+                                let cell_lines = (cell_height - (2 * cell_padding)) / line_height;
+                                input.attr('rows', Math.round(cell_lines));
+                            }
+                            if(typeof input == "undefined" || input == null)
+                            {
+                                console.log('Usupported input type. ['+editInputTag+']');
+                                return;
+                            }
+                            input.on('blur', function(){
+                                let newValue = $(this).val();
+                                if(newValue !== editValue)
+                                {
+                                    di.getService("ajax")
+                                        .post(editableLink, { value: newValue, columnName: columnName })
+                                        .then(
+                                            function(payload){
+                                                newValue = payload.getPayload()._netteGrid_editColumn_newValue;
+                                                console.log(newValue);
+                                                cell.html(newValue);
+                                                return cell.addClass('inline-edited');
+                                            },
+                                            function(err){
+                                                console.log(err);
+                                            }
+                                        );
+                                }else{
+                                    cell.html(editValue);
+                                }
+                            })
+                            cell.html(input);
+                            input.focus();
+                        });
+                    })
+                    .teardown(function() {
+                    });
+            });
+        </script>
+
     {/snippet}
 {/snippetArea}
-
-
-<script type="application/javascript">
-    (window._stack = window._stack || []).push(function(di) {
-
-        //autosubmit filter
-        var tmr = null;
-        di.getService('page').getSnippet({form.id form})
-            .setup(function(frm) {
-                $(frm).on('keyup', 'input[data-autosubmit]', function(e) {
-                    var code;
-                    code = e.which || e.keyCode || 0;
-                    if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
-                        return;
-                    }
-                    var $this = $(this);
-                    tmr && window.clearTimeout(tmr);
-                    tmr = window.setTimeout(function(_this) {
-                        di.getService('formLocator').getForm(frm).submit($this.data('container'));
-                    }(this), 200);
-                });
-
-                $(frm).on('click', '[data-submit]', function(){
-                    di.getService('formLocator').getForm(frm).submit($(this).data('container'));
-                });
-
-                $(frm).on('change', 'select[data-paginate-submit]', function(){
-                    di.getService('formLocator').getForm(frm).submit($(this).data('container'));
-                });
-            })
-            .teardown(function() {
-                tmr && window.clearTimeout(tmr);
-                tmr = null;
-            });
-
-        di.getService('page').getSnippet({snippet.id data})
-            .setup(function(col) {
-                $(col).on('dblclick', 'td[data-column-editable]', function() {
-                    var input, cell, editableLink, editValue, columnName, editInputTag;
-                    cell = $(this);
-                    editableLink = $(this).data('editable-link');
-                    editValue = $(this).data('edit-value');
-                    columnName = $(this).data('column-editable');
-                    editInputTag = $(this).data('edit-input');
-
-                    //support for textarea
-                    if(editInputTag === 'textarea')
-                    {
-                        input = $('<textarea class="form-control">' + editValue + '</textarea>');
-                        let cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
-                        let cell_height = cell.outerHeight();
-                        let line_height = Math.round(parseFloat(cell.css('line-height')));
-                        let cell_lines = (cell_height - (2 * cell_padding)) / line_height;
-                        input.attr('rows', Math.round(cell_lines));
-                    }
-                    if(typeof input == "undefined" || input == null)
-                    {
-                        console.log('Usupported input type. ['+editInputTag+']');
-                        return;
-                    }
-                    input.on('blur', function(){
-                        let newValue = $(this).val();
-                        if(newValue !== editValue)
-                        {
-                            di.getService("ajax")
-                                .post(editableLink, { value: newValue, columnName: columnName })
-                                .then(
-                                    function(payload){
-                                        newValue = payload.getPayload()._netteGrid_editColumn_newValue;
-                                        console.log(newValue);
-                                        cell.html(newValue);
-                                        return cell.addClass('inline-edited');
-                                    },
-                                    function(err){
-                                        console.log(err);
-                                    }
-                                );
-                        }else{
-                            cell.html(editValue);
-                        }
-                    })
-                    cell.html(input);
-                    input.focus();
-                });
-            })
-            .teardown(function() {
-            });
-    });
-</script>
