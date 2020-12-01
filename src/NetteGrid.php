@@ -217,8 +217,8 @@ class NetteGrid extends Control
      */
     public function addHeaderDataUpdateAction(string $name='_updateGrid', ?string $title='Update'): HeaderAction
     {
-        $headerAction = $this->addHeaderAction($name, $title)
-            ->addIconElement('fas fa-sync-alt', [], true);
+        $headerAction = $this->addHeaderAction($name, $title);
+        $headerAction->addIconElement('fas fa-sync-alt', [], true);
         $this->onAnchor[] = function() use ($headerAction){
             $headerAction->setLink($this->link('redrawData!'));
         };
