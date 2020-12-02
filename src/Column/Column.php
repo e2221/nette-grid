@@ -108,28 +108,12 @@ abstract class Column implements IColumn
     }
 
     /**
-     * Get sort icon
-     * @return Html|null
+     * Get sort direction
+     * @return string
      */
-    public function getSortIcon(): ?Html
+    public function getSortDirection(): string
     {
-        if(empty($this->sortDirection))
-            return null;
-        $el = Html::el('span');
-        $em = Html::el('em');
-        $el->addHtml($em);
-        switch($this->sortDirection)
-        {
-            case self::SORT_ASC:
-                $em->setText('&#9650;');
-                break;
-            case self::SORT_DESC:
-                $em->setText('&#9660;');
-                break;
-            default:
-                return null;
-        }
-        return $el;
+        return $this->sortDirection;
     }
 
     /**

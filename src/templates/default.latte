@@ -32,14 +32,18 @@
                                                 {include #title-col-open-tag column => $column, columnName => $columnName}
 
                                                     {if $column->isSortable() === true}
-                                                        <a n:href="sortColumn! [$columnName, $column->getNextSortDirection()]">
+                                                        <a n:href="sortColumn! $columnName, $column->getNextSortDirection()">
                                                     {/if}
 
-                                                    {include #column-title column => $column, columnName => $columnName}
+                                                    {include #column-title column => $column, columnName => $columnName, columnTitle => $column->getLabel()}
 
                                                     {if $column->isSortable() === true}
-                                                            {$column->getSortIcon()()|noescape}
                                                         </a>
+                                                        {if $column->getSortableDirection() == 'ASC'}
+                                                            <span><em>&#9650;</em></span>
+                                                        {else $column->getSortableDirection() == 'DESC'}
+                                                            <span><em>&#9660;</em></span>
+                                                        {/if}
                                                     {/if}
 
                                                 {include #title-col-end-tag column => $column, columnName => $columnName}

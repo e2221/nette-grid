@@ -10,6 +10,7 @@
 {varType e2221\NetteGrid\Actions\RowAction\RowAction $action}
 {varType e2221\NetteGrid\Actions\HeaderActions\HeaderAction $headerAction}
 {varType e2221\NetteGrid\Column\IColumn $column}
+{varType string $columnTitle}
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
@@ -31,9 +32,9 @@
     {$column->getTitleColTemplate()->renderEndTag()|noescape}
 {/define}
 
-{* Column title - available parameters (IColumn $column, string $columnName) *}
+{* Column title - available parameters (IColumn $column, string $columnName, string $columnTitle) *}
 {define column-title}
-    {$columnName}
+    {$columnTitle}
 {/define}
 
 {* Empty data row <tr> *}
