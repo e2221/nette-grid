@@ -37,7 +37,7 @@ class RowAction extends BaseAction
     /** @var bool is multi action (has action items?) */
     protected bool $isMultiAction=false;
 
-    /** @var self[] */
+    /** @var MultiActionItem[] */
     protected array $actions=[];
 
     protected Html $dropdownMenu;
@@ -131,7 +131,7 @@ class RowAction extends BaseAction
      */
     public function renderMultiActions($row, $primary): ?Html
     {
-        $dropdown = $this->dropdown;
+        $dropdown = clone $this->dropdown;
         $dropdown->addHtml(parent::render());
         $dropdownMenu = $this->dropdownMenu;
         foreach($this->actions as $actionName => $action)
