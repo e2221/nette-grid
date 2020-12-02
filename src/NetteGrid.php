@@ -37,7 +37,10 @@ class NetteGrid extends Control
         SNIPPET_TBODY = 'data',
         SNIPPET_ITEMS_AREA = 'dataItems',
         SNIPPET_TFOOT_AREA = 'footerArea',
-        SNIPPET_TFOOT = 'footer';
+        SNIPPET_TFOOT = 'footer',
+        SNIPPET_HEADER = 'head',
+        SNIPPET_HEADER_AREA = 'headItems',
+        SNIPPET_HEAD_TITLES = 'headTitles';
 
     /** @var IColumn[] */
     protected array $columns=[];
@@ -133,6 +136,9 @@ class NetteGrid extends Control
     protected bool $filterAutocomplete=false;
     protected bool $editAutocomplete=false;
     protected bool $addAutocomplete=false;
+
+    /** @var mixed[]|null Sort columns [columnName => ASC (DESC), columnName => ASC (DESC)] */
+    public ?array $sortColumns=null;
 
     public function __construct()
     {
@@ -424,6 +430,20 @@ class NetteGrid extends Control
     }
 
     /**
+     * Signal - sort by column
+     * @param string $columnName
+     * @param string $direction
+     * @throws AbortException
+     */
+    public function handleSortColumn(string $columnName, string $direction='ASC')
+    {
+        $this->sortColumns[$columnName] = $direction;
+        $this->columns[$columnName]->setSortDirection($direction);
+        $this->reloadHeaderTitles();
+        $this->reloadItems();
+    }
+
+    /**
      * Load state
      * @param array $params
      * @throws BadRequestException
@@ -500,7 +520,7 @@ class NetteGrid extends Control
         $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
         $this->template->headerActions = $this->headerActions;
         $this->template->paginator = $this->paginator;
-
+        $this->template->sortColumns = $this->sortColumns;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -805,7 +825,7 @@ class NetteGrid extends Control
         }
 
         $getDataFn = $this->dataSourceCallback;
-        $data = $getDataFn($this->filter, null, null, $this->paginator);
+        $data = $getDataFn($this->filter, null, $this->sortColumns, $this->paginator);
         if(is_countable($data) === false || count($data) == 0)
             return null;
         return $data;
@@ -917,12 +937,30 @@ class NetteGrid extends Control
     }
 
     /**
+     * Reload header
+     * @throws AbortException
+     */
+    public function reloadHeader(): void
+    {
+        $this->reload([self::SNIPPET_HEADER, self::SNIPPET_HEADER_AREA]);
+    }
+
+    /**
+     * Reload header titles
+     * @throws AbortException
+     */
+    public function reloadHeaderTitles(): void
+    {
+        $this->reload(self::SNIPPET_HEAD_TITLES);
+    }
+
+    /**
      * Reload footer content
      * @throws AbortException
      */
     public function reloadFooter(): void
     {
-        $this->reload([self::SNIPPET_TFOOT]);
+        $this->reload(self::SNIPPET_TFOOT);
     }
 
     /**

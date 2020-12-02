@@ -15,10 +15,15 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\Html;
 
 abstract class Column implements IColumn
 {
      use SmartObject;
+
+     const
+        SORT_ASC = 'ASC',
+        SORT_DESC = 'DESC';
 
     /** @var string Name of column */
     public string $name;
@@ -80,6 +85,9 @@ abstract class Column implements IColumn
     /** @var BaseControl|null Add input */
     protected ?BaseControl $addInput=null;
 
+    /** @var string Sort direction could be ['', 'ASC', 'DESC'] */
+    protected string $sortDirection='';
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
         $this->netteGrid = $netteGrid;
@@ -87,6 +95,41 @@ abstract class Column implements IColumn
         $this->label = $label ?? ucfirst($this->name);
         $this->titleColTemplate = $this->defaultTitleColTemplate();
         $this->setStickyHeader();
+    }
+
+    /**
+     * @param string $direction
+     * @return Column
+     */
+    public function setSortDirection(string $direction): self
+    {
+        $this->sortDirection = $direction;
+        return $this;
+    }
+
+    /**
+     * Get sort icon
+     * @return Html|null
+     */
+    public function getSortIcon(): ?Html
+    {
+        if(empty($this->sortDirection))
+            return null;
+        $el = Html::el('span');
+        $em = Html::el('em');
+        $el->addHtml($em);
+        switch($this->sortDirection)
+        {
+            case self::SORT_ASC:
+                $em->setText('&#9650;');
+                break;
+            case self::SORT_DESC:
+                $em->setText('&#9660;');
+                break;
+            default:
+                return null;
+        }
+        return $el;
     }
 
     /**
@@ -388,6 +431,24 @@ abstract class Column implements IColumn
     public function isSortable(): bool
     {
         return $this->sortable;
+    }
+
+    /**
+     * Get next sort direction
+     * @return string
+     * @internal
+     */
+    public function getNextSortDirection(): string
+    {
+        switch ($this->sortDirection)
+        {
+            case self::SORT_ASC:
+                return self::SORT_DESC;
+            case self::SORT_DESC:
+                return '';
+            default:
+                return self::SORT_ASC;
+        }
     }
 
     /**

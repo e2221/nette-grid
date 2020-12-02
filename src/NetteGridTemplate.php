@@ -58,6 +58,9 @@ class NetteGridTemplate extends Template
     /** @var mixed[] */
     public array $filter;
 
+    /** @var mixed[]|null */
+    public ?array $sortColumns;
+
     public ?Paginator $paginator;
     public NetteGrid $control;
     public Presenter $presenter;

@@ -18,58 +18,72 @@
 
                         {* <thead> *}
                         {if $hiddenHeader === false}
-                            {include #thead-open-tag}
 
-                                {* <tr> *}
-                                {include #titles-row-open-tag}
+                            <thead n:snippet=head" {$theadTemplate->getAttributes()|noescape}>
+                                {snippetArea headItems}
 
-                                    {* columns cols <td>Column title</td> *}
-                                    {foreach $columns as $columnName => $column}
-                                        {ifset #title-col-$columnName}
-                                            {include #"title-col-{$columnName}"}
-                                        {else}
-                                            {$column->getTitleColTemplate()|noescape}
-                                        {/ifset}
-                                    {/foreach}
+                                    <tr n:snippet="headTitles">
 
-                                    {* header actions *}
-                                    {if $hasActionsColumn === true}
-                                        {include #head-actions-column-open-tag}
-                                            {foreach $headerActions as $headerActionName => $headerAction}
-                                                {ifset #header-action-$headerActionName}
-                                                    {include #"header-action-{$headerActionName}"}
-                                                {else}
-                                                    {include #header-action headerAction => $headerAction}
-                                                {/ifset}
-                                            {/foreach}
-                                        {include #head-actions-column-end-tag}
+                                        {* columns cols <td>Column title</td> *}
+                                        {foreach $columns as $columnName => $column}
+                                            {ifset #title-col-$columnName}
+                                                {include #"title-col-{$columnName}"}
+                                            {else}
+                                                {include #title-col-open-tag column => $column, columnName => $columnName}
+
+                                                    {if $column->isSortable() === true}
+                                                        <a n:href="sortColumn! [$columnName, $column->getNextSortDirection()]">
+                                                    {/if}
+
+                                                    {include #column-title column => $column, columnName => $columnName}
+
+                                                    {if $column->isSortable() === true}
+                                                            {$column->getSortIcon()()|noescape}
+                                                        </a>
+                                                    {/if}
+
+                                                {include #title-col-end-tag column => $column, columnName => $columnName}
+                                            {/ifset}
+                                        {/foreach}
+
+                                        {* header actions *}
+                                        {if $hasActionsColumn === true}
+                                            {include #head-actions-column-open-tag}
+                                                {foreach $headerActions as $headerActionName => $headerAction}
+                                                    {ifset #header-action-$headerActionName}
+                                                        {include #"header-action-{$headerActionName}"}
+                                                    {else}
+                                                        {include #header-action headerAction => $headerAction}
+                                                    {/ifset}
+                                                {/foreach}
+                                            {include #head-actions-column-end-tag}
+                                        {/if}
+
+                                    </tr>
+
+                                    {* head filter *}
+                                    {if $isFilterable === true}
+                                        {include #head-filter-row-open-tag}
+                                            {formContainer filter}
+                                                {foreach $columns as $columnName => $column}
+                                                    {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                                    {if $column->isFilterable()}
+                                                        {ifset #filter-input-$columnName}
+                                                            {include #"filter-input-{$columnName}"}
+                                                        {else}
+                                                            {include #filter-input columnName => $columnName}
+                                                        {/ifset}
+                                                    {/if}
+                                                    {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                                {/foreach}
+                                            {/formContainer}
+                                            <th n:if="$hasActionsColumn"></th>
+                                        {include #head-filter-row-end-tag}
                                     {/if}
 
-                                {* </tr> *}
-                                {include #titles-row-end-tag}
+                            {/snippetArea}
+                        </thead>
 
-                                {* head filter *}
-                                {if $isFilterable === true}
-                                    {include #head-filter-row-open-tag}
-                                        {formContainer filter}
-                                            {foreach $columns as $columnName => $column}
-                                                {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
-                                                {if $column->isFilterable()}
-                                                    {ifset #filter-input-$columnName}
-                                                        {include #"filter-input-{$columnName}"}
-                                                    {else}
-                                                        {include #filter-input columnName => $columnName}
-                                                    {/ifset}
-                                                {/if}
-                                                {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
-                                            {/foreach}
-                                        {/formContainer}
-                                        <th n:if="$hasActionsColumn"></th>
-                                    {include #head-filter-row-end-tag}
-                                {/if}
-
-                        {* </thead> *}
-                        {include #thead-close-tag}
                     {/if}
 
                     {* <tbody> *}

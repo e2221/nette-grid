@@ -9,6 +9,7 @@
 {varType mixed $row}
 {varType e2221\NetteGrid\Actions\RowAction\RowAction $action}
 {varType e2221\NetteGrid\Actions\HeaderActions\HeaderAction $headerAction}
+{varType e2221\NetteGrid\Column\IColumn $column}
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
@@ -20,24 +21,19 @@
     {$tableTemplate->renderEndTag()|noescape}
 {/define}
 
-{* Thead open tag <thead> *}
-{define thead-open-tag}
-    {$theadTemplate->renderStartTag()|noescape}
+{* Title col start tag - available parameters (IColumn $column, string $columnName, array $sortColumns) *}
+{define title-col-open-tag}
+    {$column->getTitleColTemplate()->renderStartTag()|noescape}
 {/define}
 
-{* Thead close tag </thead> *}
-{define thead-close-tag}
-    {$theadTemplate->renderEndTag()|noescape}
+{* Title col end tag - available parameters (IColumn $column, string $columnName, array $sortColumns) *}
+{define title-col-end-tag}
+    {$column->getTitleColTemplate()->renderEndTag()|noescape}
 {/define}
 
-{* Thead - titles row start tag <tr> *}
-{define titles-row-open-tag}
-    {$theadTitlesRowTemplate->renderStartTag()|noescape}
-{/define}
-
-{* Thead - titles row end tag </tr> *}
-{define titles-row-end-tag}
-    {$theadTitlesRowTemplate->renderEndTag()|noescape}
+{* Column title - available parameters (IColumn $column, string $columnName) *}
+{define column-title}
+    {$columnName}
 {/define}
 
 {* Empty data row <tr> *}
