@@ -39,9 +39,9 @@
 
                                                     {if $column->isSortable() === true}
                                                         </a>
-                                                        {if $column->getSortableDirection() == 'ASC'}
+                                                        {if $column->getSortDirection() == 'ASC'}
                                                             <span><em>&#9650;</em></span>
-                                                        {else $column->getSortableDirection() == 'DESC'}
+                                                        {elseif $column->getSortDirection() == 'DESC'}
                                                             <span><em>&#9660;</em></span>
                                                         {/if}
                                                     {/if}

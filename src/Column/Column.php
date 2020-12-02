@@ -15,7 +15,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Html;
 
 abstract class Column implements IColumn
 {

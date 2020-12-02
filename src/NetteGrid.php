@@ -10,6 +10,7 @@ use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
+use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
 use e2221\NetteGrid\Column\IColumn;
@@ -137,8 +138,11 @@ class NetteGrid extends Control
     protected bool $editAutocomplete=false;
     protected bool $addAutocomplete=false;
 
-    /** @var mixed[]|null Sort columns [columnName => ASC (DESC), columnName => ASC (DESC)] */
-    public ?array $sortColumns=null;
+    /** @var string|null @persistent Sort by column */
+    public ?string $sortByColumn=null;
+
+    /** @var string|null @persistent Sort direction */
+    public ?string $sortDirection=null;
 
     public function __construct()
     {
@@ -437,7 +441,8 @@ class NetteGrid extends Control
      */
     public function handleSortColumn(string $columnName, string $direction='ASC')
     {
-        $this->sortColumns[$columnName] = $direction;
+        $this->sortDirection = $direction;
+        $this->sortByColumn = $columnName;
         $this->columns[$columnName]->setSortDirection($direction);
         $this->reloadHeaderTitles();
         $this->reloadItems();
@@ -825,7 +830,7 @@ class NetteGrid extends Control
         }
 
         $getDataFn = $this->dataSourceCallback;
-        $data = $getDataFn($this->filter, null, $this->sortColumns, $this->paginator);
+        $data = $getDataFn($this->filter, null, (is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null), $this->paginator);
         if(is_countable($data) === false || count($data) == 0)
             return null;
         return $data;
