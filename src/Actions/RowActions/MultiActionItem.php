@@ -19,6 +19,7 @@ class MultiActionItem extends RowAction
         parent::__construct($netteGrid, $name, $title);
         $this->setTextContent($title);
         $this->rowAction = $rowAction;
+        $this->setLink('#');
     }
 
     /**
@@ -30,19 +31,5 @@ class MultiActionItem extends RowAction
         return $this->rowAction;
     }
 
-    /**
-     * Render rewrite
-     * @param mixed|null $row
-     * @param int|string|mixed|null $primary
-     * @return Html|null
-     */
-    public function render($row=null, $primary=null): ?Html
-    {
-        if(is_null($row) === true || is_null($primary) === true)
-            return null;
-        $this->row = $row;
-        $this->primary = $primary;
-        return parent::render();
-    }
 
 }

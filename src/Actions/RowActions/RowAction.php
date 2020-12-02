@@ -134,7 +134,7 @@ class RowAction extends BaseAction
     {
         $dropdown = clone $this->dropdown;
         $dropdown->addHtml(parent::render());
-        $dropdownMenu = $this->dropdownMenu;
+        $dropdownMenu = clone $this->dropdownMenu;
         foreach($this->actions as $actionName => $action)
         {
             $dropdownMenu->addHtml($action->render($row, $primary));
