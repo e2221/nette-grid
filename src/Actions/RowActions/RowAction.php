@@ -65,7 +65,8 @@ class RowAction extends BaseAction
             ->addHtmlAttribute('role', 'button')
             ->addHtmlAttribute('data-toggle', 'dropdown')
             ->addHtmlAttribute('aria-haspopup', 'true')
-            ->addHtmlAttribute('aria-expanded', 'false');
+            ->addHtmlAttribute('aria-expanded', 'false')
+            ->setLink('#');
         return $this->actions[$name] = new MultiActionItem($this->netteGrid, $this, $name, $title);
     }
 

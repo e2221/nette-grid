@@ -17,6 +17,7 @@ class MultiActionItem extends RowAction
     public function __construct(NetteGrid $netteGrid, RowAction $rowAction, string $name, ?string $title = null)
     {
         parent::__construct($netteGrid, $name, $title);
+        $this->setTextContent($title);
         $this->rowAction = $rowAction;
     }
 
