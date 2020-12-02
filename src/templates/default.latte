@@ -32,16 +32,24 @@
                                                 {include #title-col-open-tag column => $column, columnName => $columnName}
 
                                                     {if $column->isSortable() === true}
-                                                        <a n:href="sortColumn! $columnName, $column->getNextSortDirection()">
+                                                        {var string $direction='ASC'}
+                                                        {if $columnName == $sortByColumn}
+                                                            {if $sortDirection == 'ASC'}
+                                                                {php $direction = 'DESC'}
+                                                            {elseif $sortDirection == 'DESC'}
+                                                                {php $direction = ''}
+                                                            {/if}
+                                                        {/if}
+                                                        <a n:href="sortColumn! $columnName, $direction">
                                                     {/if}
 
                                                     {include #column-title column => $column, columnName => $columnName, columnTitle => $column->getLabel()}
 
-                                                    {if $column->isSortable() === true}
+                                                    {if $column->isSortable() === true && $columnName == $sortByColumn}
                                                         </a>
-                                                        {if $column->getSortDirection() == 'ASC'}
+                                                        {if $direction == 'ASC'}
                                                             <span><em>&#9650;</em></span>
-                                                        {elseif $column->getSortDirection() == 'DESC'}
+                                                        {elseif $direction == 'DESC'}
                                                             <span><em>&#9660;</em></span>
                                                         {/if}
                                                     {/if}

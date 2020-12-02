@@ -58,8 +58,6 @@ class NetteGridTemplate extends Template
     /** @var mixed[] */
     public array $filter;
 
-    /** @var mixed[]|null */
-    public ?array $sortColumns;
 
     public ?Paginator $paginator;
     public NetteGrid $control;
@@ -94,4 +92,6 @@ class NetteGridTemplate extends Template
     public bool $isAddable;
     public bool $inlineAdd;
     public int $countOfColumns;
+    public ?string $sortByColumn;
+    public ?string $sortDirection;
 }

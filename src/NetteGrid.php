@@ -525,7 +525,8 @@ class NetteGrid extends Control
         $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
         $this->template->headerActions = $this->headerActions;
         $this->template->paginator = $this->paginator;
-        $this->template->sortColumns = $this->sortColumns;
+        $this->template->sortByColumn = $this->sortByColumn;
+        $this->template->sortDirection = $this->sortDirection;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;

@@ -417,24 +417,6 @@ abstract class Column implements IColumn
     }
 
     /**
-     * Get next sort direction
-     * @return string
-     * @internal
-     */
-    public function getNextSortDirection(): string
-    {
-        switch ($this->sortDirection)
-        {
-            case self::SORT_ASC:
-                return self::SORT_DESC;
-            case self::SORT_DESC:
-                return '';
-            default:
-                return self::SORT_ASC;
-        }
-    }
-
-    /**
      * @return bool
      */
     public function isFilterable(): bool
