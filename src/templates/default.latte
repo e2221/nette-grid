@@ -47,9 +47,9 @@
 
                                                     {if $column->isSortable() === true && $columnName == $sortByColumn}
                                                         </a>
-                                                        {if $direction == 'ASC'}
+                                                        {if $sortDirection == 'ASC'}
                                                             <span><em>&#9650;</em></span>
-                                                        {elseif $direction == 'DESC'}
+                                                        {elseif $sortDirection == 'DESC'}
                                                             <span><em>&#9660;</em></span>
                                                         {/if}
                                                     {/if}
