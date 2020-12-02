@@ -11,6 +11,7 @@ use Nette\Application\UI\InvalidLinkException;
 class RowActionCancel extends RowAction
 {
     public string $class='btn-warning';
+    protected bool $couldHaveMultiAction=false;
 
     public function __construct(NetteGrid $netteGrid, string $name='cancel', ?string $title = 'Cancel')
     {

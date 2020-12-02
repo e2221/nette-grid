@@ -6,6 +6,7 @@ namespace e2221\NetteGrid\Actions\RowAction;
 
 
 use e2221\NetteGrid\Actions\BaseAction;
+use e2221\NetteGrid\Exceptions\NetteGridException;
 use e2221\NetteGrid\NetteGrid;
 use Nette\Utils\Html;
 
@@ -37,6 +38,9 @@ class RowAction extends BaseAction
     /** @var bool is multi action (has action items?) */
     protected bool $isMultiAction=false;
 
+    /** @var bool Could this row has multi action? */
+    protected bool $couldHaveMultiAction=true;
+
     /** @var MultiActionItem[] */
     protected array $actions=[];
 
@@ -56,9 +60,12 @@ class RowAction extends BaseAction
      * @param string $name
      * @param string $title
      * @return MultiActionItem
+     * @throws NetteGridException
      */
     public function addMultiActionItem(string $name, string $title): MultiActionItem
     {
+        if($this->couldHaveMultiAction === false)
+            throw new NetteGridException(sprintf('%s could not have multi-action.', $name));
         $this->isMultiAction = true;
         $this->defaultClass = 'btn btn-xs dropdown-toggle';
         $this

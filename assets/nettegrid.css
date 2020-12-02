@@ -52,6 +52,8 @@
     border-radius: .25rem;
 }
 
-.nette-grid .dropdown-item {
+.nette-grid .dropdown-smaller-item {
+    padding: 3px 20px;
+    line-height: 1.42857143;
     font-size: 12px;
 }

@@ -10,6 +10,7 @@ use Nette\Utils\Html;
 class RowActionSave extends RowAction
 {
     public string $class = 'btn-primary';
+    protected bool $couldHaveMultiAction=false;
 
     public function __construct(NetteGrid $netteGrid,string $name='save', string $title = 'Save')
     {

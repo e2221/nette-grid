@@ -9,6 +9,8 @@ use Nette\Utils\Html;
 
 class RowActionInlineCancel extends RowAction
 {
+    protected bool $couldHaveMultiAction=false;
+
     public function __construct(NetteGrid $netteGrid, string $name='__inlineCancel', ?string $title = 'Cancel')
     {
         parent::__construct($netteGrid, $name, $title);

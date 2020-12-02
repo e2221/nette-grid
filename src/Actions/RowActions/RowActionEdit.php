@@ -10,6 +10,7 @@ use Nette\Application\UI\InvalidLinkException;
 class RowActionEdit extends RowAction
 {
     public string $class = 'btn btn-xs btn-secondary';
+    protected bool $couldHaveMultiAction=false;
 
     public function __construct(NetteGrid $netteGrid, string $name='edit', ?string $title = 'Edit')
     {

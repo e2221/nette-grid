@@ -5,12 +5,12 @@ namespace e2221\NetteGrid\Actions\RowAction;
 
 
 use e2221\NetteGrid\NetteGrid;
-use Nette\Utils\Html;
 
 class MultiActionItem extends RowAction
 {
-    public string $defaultClass='dropdown-item';
+    public string $defaultClass='dropdown-item dropdown-smaller-item';
     public string $class='';
+    protected bool $couldHaveMultiAction = false;
 
     protected RowAction $rowAction;
 

@@ -10,6 +10,7 @@ use Nette\Utils\Html;
 class RowActionInlineSave extends RowAction
 {
     public string $class = 'btn-primary';
+    protected bool $couldHaveMultiAction=false;
 
     public function __construct(NetteGrid $netteGrid,string $name='__inlineSave', string $title = 'Add')
     {
