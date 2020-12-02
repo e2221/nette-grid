@@ -52,7 +52,7 @@ class RowAction extends BaseAction
         parent::__construct($name, $title);
         $this->netteGrid = $netteGrid;
         $this->dropdownMenu = Html::el('div class="dropdown-menu"');
-        $this->dropdown = Html::el('div class=dropdown');
+        $this->dropdown = Html::el('div class=btn-group');
     }
 
     /**
