@@ -51,3 +51,7 @@
     list-style: none;
     border-radius: .25rem;
 }
+
+.nette-grid .dropdown-item {
+    font-size: 12px;
+}
