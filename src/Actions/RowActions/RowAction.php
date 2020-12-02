@@ -34,10 +34,39 @@ class RowAction extends BaseAction
     /** @var null|callable function($row, $primary){}: string|null  */
     protected $confirmationCallback=null;
 
+    /** @var bool is multi action (has action items?) */
+    protected bool $isMultiAction=false;
+
+    /** @var self[] */
+    protected array $actions=[];
+
+    protected Html $dropdownMenu;
+    protected Html $dropdown;
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $title=null)
     {
         parent::__construct($name, $title);
         $this->netteGrid = $netteGrid;
+        $this->dropdownMenu = Html::el('div class="dropdown-menu"');
+        $this->dropdown = Html::el('div class=dropdown');
+    }
+
+    /**
+     * Add multi action
+     * @param string $name
+     * @param string $title
+     * @return MultiActionItem
+     */
+    public function addMultiActionItem(string $name, string $title): MultiActionItem
+    {
+        $this->isMultiAction = true;
+        $this->defaultClass = 'btn btn-xs dropdown-toggle';
+        $this
+            ->addHtmlAttribute('role', 'button')
+            ->addHtmlAttribute('data-toggle', 'dropdown')
+            ->addHtmlAttribute('aria-haspopup', 'true')
+            ->addHtmlAttribute('aria-expanded', 'false');
+        return $this->actions[$name] = new MultiActionItem($this->netteGrid, $this, $name, $title);
     }
 
     public function beforeRender(): void
@@ -87,7 +116,30 @@ class RowAction extends BaseAction
             return null;
         $this->row = $row;
         $this->primary = $primary;
+
+        if($this->isMultiAction === true)
+            return $this->renderMultiActions($row, $primary);
+
         return parent::render();
+    }
+
+    /**
+     * Render multi actions
+     * @param $row
+     * @param $primary
+     * @return Html|null
+     */
+    public function renderMultiActions($row, $primary): ?Html
+    {
+        $dropdown = $this->dropdown;
+        $dropdown->addHtml(parent::render());
+        $dropdownMenu = $this->dropdownMenu;
+        foreach($this->actions as $actionName => $action)
+        {
+            $dropdownMenu->addHtml($action->render($row, $primary));
+        }
+        $dropdown->addHtml($dropdownMenu);
+        return $dropdown;
     }
 
     /**
@@ -134,5 +186,22 @@ class RowAction extends BaseAction
         return $this;
     }
 
+    /**
+     * Get dropdown menu
+     * @return Html
+     */
+    public function getDropdownMenu(): Html
+    {
+        return $this->dropdownMenu;
+    }
+
+    /**
+     * Get dropdown
+     * @return Html
+     */
+    public function getDropdown(): Html
+    {
+        return $this->dropdown;
+    }
 
 }
