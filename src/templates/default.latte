@@ -24,6 +24,14 @@
 
                                     <tr n:snippet="headTitles">
 
+                                        {if $hasGlobalAction === true}
+
+                                            <th>
+                                                <input type="checkbox" class="form-check-input" title="Check all">
+                                            </th>
+
+                                        {/if}
+
                                         {* columns cols <td>Column title</td> *}
                                         {foreach $columns as $columnName => $column}
                                             {ifset #title-col-$columnName}
@@ -76,6 +84,12 @@
                                     {* head filter *}
                                     {if $isFilterable === true}
                                         {include #head-filter-row-open-tag}
+
+                                            {if $hasGlobalAction === true}
+                                                <th>
+                                                </th>
+                                            {/if}
+
                                             {formContainer filter}
                                                 {foreach $columns as $columnName => $column}
                                                     {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
@@ -120,6 +134,12 @@
                                 {* Inline add *}
                                 {if $isAddable === true && $inlineAdd === true}
                                     <tr {$emptyDataRowTemplate->getAttributes()|noescape}>
+
+                                        {if $hasGlobalAction === true}
+                                            <th>
+                                            </th>
+                                        {/if}
+
                                         {formContainer add}
 
                                             {foreach $columns as $columnName => $column}
@@ -149,6 +169,14 @@
                                     {* <tr> *}
                                     <tr n:snippet="data-$primaryValue" {$dataRowTemplate->getAttributes()|noescape}>
                                     {*include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate*}
+
+                                        {if $hasGlobalAction === true}
+                                            <td>
+                                                {formContainer globalActions}
+                                                    {input rowCheck:$primaryValue}
+                                                {/formContainer}
+                                            </td>
+                                        {/if}
 
                                         {* columns *}
                                         {foreach $columns as $columnName => $column}

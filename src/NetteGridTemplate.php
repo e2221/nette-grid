@@ -23,6 +23,7 @@ use e2221\NetteGrid\Document\Templates\TfootTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
+use e2221\NetteGrid\GlobalActions\GlobalAction;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Utils\Paginator;
@@ -58,6 +59,8 @@ class NetteGridTemplate extends Template
     /** @var mixed[] */
     public array $filter;
 
+    /** @var GlobalAction[] */
+    public array $globalActions;
 
     public ?Paginator $paginator;
     public NetteGrid $control;
@@ -94,4 +97,5 @@ class NetteGridTemplate extends Template
     public int $countOfColumns;
     public ?string $sortByColumn;
     public ?string $sortDirection;
+    public bool $hasGlobalAction;
 }

@@ -16,6 +16,7 @@ use e2221\NetteGrid\Column\ColumnText;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
+use e2221\NetteGrid\GlobalActions\GlobalAction;
 use e2221\utils\Html\BaseElement;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -82,6 +83,9 @@ class NetteGrid extends Control
     /** @var Container|null Paginate container */
     protected ?Container $paginateContainer=null;
 
+    /** @var Container|null Global actions container */
+    protected ?Container $globalActionsContainer=null;
+
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
@@ -143,6 +147,9 @@ class NetteGrid extends Control
 
     /** @var string|null @persistent Sort direction */
     public ?string $sortDirection=null;
+
+    /** @var GlobalAction[] */
+    protected array $globalActions=[];
 
     public function __construct()
     {
@@ -318,6 +325,23 @@ class NetteGrid extends Control
     private function onAddRowAction(string $name): void
     {
         $this->rowActionsOrder[] = $name;
+    }
+
+    /**
+     * GLOBAL ACTIONS
+     * ******************************************************************************
+     *
+     */
+
+    /**
+     * Add global action
+     * @param string $name
+     * @param string|null $label
+     * @return GlobalAction
+     */
+    public function addGlobalAction(string $name, ?string $label=null)
+    {
+        return $this->globalActions[$name] = new GlobalAction($this, $name, $label);
     }
 
 
@@ -502,6 +526,12 @@ class NetteGrid extends Control
                 ->setHtmlAttribute('data-container', 'paginateSubmit')
                 ->setHtmlAttribute('class', 'form-control form-control-sm');
         }
+
+        if(count($this->globalActions) > 0)
+        {
+            $this->globalActionsContainer = $this['form']->addContainer('globalActions');
+            $this->globalActionsContainer->addCheckbox('rowCheck');
+        }
     }
 
 
@@ -527,6 +557,8 @@ class NetteGrid extends Control
         $this->template->paginator = $this->paginator;
         $this->template->sortByColumn = $this->sortByColumn;
         $this->template->sortDirection = $this->sortDirection;
+        $this->template->hasGlobalAction = (bool)count($this->globalActions);
+        $this->template->globalActions = $this->globalActions;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
