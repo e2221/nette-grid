@@ -530,7 +530,7 @@ class NetteGrid extends Control
         if(count($this->globalActions) > 0)
         {
             $this->globalActionsContainer = $this['form']->addContainer('globalActions');
-            $this->globalActionsContainer->addCheckbox('rowCheck');
+            $this->globalActionsContainer->addCheckboxList('rowCheck', '', []);
         }
     }
 
