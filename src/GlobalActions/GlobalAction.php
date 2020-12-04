@@ -26,7 +26,7 @@ class GlobalAction
     {
         $this->netteGrid = $netteGrid;
         $this->name = $name;
-        $this->label = $label;
+        $this->label = $label ?? ucfirst($name);
         $this->containerName = sprintf('global_%s', $name);
         $this->formContainer = $netteGrid['form']->addContainer($this->containerName);
         $this->actionSubmit = $this->formContainer->addSubmit('submit', 'Execute');
@@ -70,5 +70,22 @@ class GlobalAction
     {
         return $this->formContainer;
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
 
 }

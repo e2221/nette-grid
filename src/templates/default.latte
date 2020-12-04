@@ -16,10 +16,22 @@
                     {* <table> *}
                     {include #table-open-tag}
 
-                        {* <thead> *}
-                        {if $hiddenHeader === false}
+                        <thead n:snippet=head" {$theadTemplate->getAttributes()|noescape}>
 
-                            <thead n:snippet=head" {$theadTemplate->getAttributes()|noescape}>
+                            {if $hasGlobalAction === true}
+
+                                <tr>
+                                    <th colspan="{$countOfColumns}">
+                                        <select n:inner-foreach="$globalActions as $globalActionName => $globalAction">
+                                            <option value="{$globalActionName}">{$globalAction->getLabel()}</option>
+                                        </select>
+                                    </th>
+                                </tr>
+
+                            {/if}
+
+                            {* <thead> *}
+                            {if $hiddenHeader === false}
 
                                 <tr n:snippet="headTitles">
 
@@ -106,200 +118,201 @@
                                     {include #head-filter-row-end-tag}
                                 {/if}
 
+                            {/if}
                         </thead>
 
-                    {/if}
 
-                    {* <tbody> *}
-                    {*include #tbody-open-tag*}
-                    <tbody n:snippet="data" {$tbodyTemplate->getAttributes()|noescape}>
-                        {snippetArea dataItems}
 
-                            {* Empty data *}
-                            {if $showEmptyResult === true}
+                        {* <tbody> *}
+                        {*include #tbody-open-tag*}
+                        <tbody n:snippet="data" {$tbodyTemplate->getAttributes()|noescape}>
+                            {snippetArea dataItems}
 
-                                {* <tr> *}
-                                {include #emptyData-row-open-tag}
-
-                                    {* <td> </td> *}
-                                    {include #emptyData}
-
-                                {* </tr> *}
-                                {include #emptyData-row-end-tag}
-
-                            {else}
-
-                                {* Inline add *}
-                                {if $isAddable === true && $inlineAdd === true}
-                                    <tr {$emptyDataRowTemplate->getAttributes()|noescape}>
-
-                                        {if $hasGlobalAction === true}
-                                            <th>
-                                            </th>
-                                        {/if}
-
-                                        {formContainer add}
-
-                                            {foreach $columns as $columnName => $column}
-                                                <td>
-                                                    {if $column->isAddable() === true}
-                                                        {input $columnName}
-                                                    {/if}
-                                                </td>
-                                            {/foreach}
-
-                                            <td>
-                                                {$documentTemplate->getRowActionInlineAddSave()->render()}
-                                                {$documentTemplate->getRowActionInlineAddCancel()->render()}
-                                            </td>
-
-                                        {/formContainer}
-                                    </tr>
-                                {/if}
-
-                                {foreach $data as $dataKey => $row}
-                                    {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
-                                    {var string|int $primaryValue = $control->getRowPrimaryValue($row)}
-                                    {php
-                                        $dataRowTemplate->prepareElement($primaryValue);
-                                    }
+                                {* Empty data *}
+                                {if $showEmptyResult === true}
 
                                     {* <tr> *}
-                                    <tr n:snippet="data-$primaryValue" {$dataRowTemplate->getAttributes()|noescape}>
-                                    {*include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate*}
+                                    {include #emptyData-row-open-tag}
 
-                                        {if $hasGlobalAction === true}
-                                            <td>
-                                                {formContainer globalActions}
-                                                    {input rowCheck:$primaryValue}
-                                                {/formContainer}
-                                            </td>
-                                        {/if}
+                                        {* <td> </td> *}
+                                        {include #emptyData}
 
-                                        {* columns *}
-                                        {foreach $columns as $columnName => $column}
+                                    {* </tr> *}
+                                    {include #emptyData-row-end-tag}
 
-                                            {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row, $primaryValue)}
-                                            {var $cell = $column->getCellValueForRendering($row)}
+                                {else}
 
-                                            {* <td> *}
-                                            {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell, primary => $primaryValue, columnName => $columnName}
+                                    {* Inline add *}
+                                    {if $isAddable === true && $inlineAdd === true}
+                                        <tr {$emptyDataRowTemplate->getAttributes()|noescape}>
 
-                                                {if $dataColTemplate->isHidden() === false}
+                                            {if $hasGlobalAction === true}
+                                                <th>
+                                                </th>
+                                            {/if}
 
-                                                    {* edit - print input *}
-                                                    {if $editMode === true && $column->isEditable() === true && $editRowKey == $primaryValue}
-                                                        {var $editValue = $column->getEditCellValue($row, $cell)}
+                                            {formContainer add}
 
-                                                            {formContainer edit}
+                                                {foreach $columns as $columnName => $column}
+                                                    <td>
+                                                        {if $column->isAddable() === true}
+                                                            {input $columnName}
+                                                        {/if}
+                                                    </td>
+                                                {/foreach}
 
-                                                                {ifset #data-edit-$columnName}
-                                                                    {include #"data-edit-{$columnName}"}
-                                                                {else}
-                                                                    {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
-                                                                {/ifset}
+                                                <td>
+                                                    {$documentTemplate->getRowActionInlineAddSave()->render()}
+                                                    {$documentTemplate->getRowActionInlineAddCancel()->render()}
+                                                </td>
 
-                                                            {/formContainer}
+                                            {/formContainer}
+                                        </tr>
+                                    {/if}
 
-                                                    {* print cell value *}
-                                                    {else}
+                                    {foreach $data as $dataKey => $row}
+                                        {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
+                                        {var string|int $primaryValue = $control->getRowPrimaryValue($row)}
+                                        {php
+                                            $dataRowTemplate->prepareElement($primaryValue);
+                                        }
 
-                                                        {* ifset block with name #data-columnName replace it *}
-                                                        {ifset #data-$columnName}
-                                                            {include #"data-{$columnName}"}
+                                        {* <tr> *}
+                                        <tr n:snippet="data-$primaryValue" {$dataRowTemplate->getAttributes()|noescape}>
+                                        {*include #data-row-open-tag row => $row, dataRowTemplate => $dataRowTemplate*}
+
+                                            {if $hasGlobalAction === true}
+                                                <td>
+                                                    {formContainer globalActions}
+                                                        {input rowCheck:$primaryValue}
+                                                    {/formContainer}
+                                                </td>
+                                            {/if}
+
+                                            {* columns *}
+                                            {foreach $columns as $columnName => $column}
+
+                                                {var e2221\NetteGrid\Document\Templates\Cols\DataColTemplate $dataColTemplate = $column->getDataColTemplateForRendering($row, $primaryValue)}
+                                                {var $cell = $column->getCellValueForRendering($row)}
+
+                                                {* <td> *}
+                                                {include #data-col-open-tag dataColTemplate => $dataColTemplate, row => $row, cell => $cell, primary => $primaryValue, columnName => $columnName}
+
+                                                    {if $dataColTemplate->isHidden() === false}
+
+                                                        {* edit - print input *}
+                                                        {if $editMode === true && $column->isEditable() === true && $editRowKey == $primaryValue}
+                                                            {var $editValue = $column->getEditCellValue($row, $cell)}
+
+                                                                {formContainer edit}
+
+                                                                    {ifset #data-edit-$columnName}
+                                                                        {include #"data-edit-{$columnName}"}
+                                                                    {else}
+                                                                        {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
+                                                                    {/ifset}
+
+                                                                {/formContainer}
+
+                                                        {* print cell value *}
                                                         {else}
-                                                            {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
-                                                        {/ifset}
+
+                                                            {* ifset block with name #data-columnName replace it *}
+                                                            {ifset #data-$columnName}
+                                                                {include #"data-{$columnName}"}
+                                                            {else}
+                                                                {include #data-cell row => $row, cell => $cell, primary => $primaryValue}
+                                                            {/ifset}
+
+                                                        {/if}
 
                                                     {/if}
 
-                                                {/if}
+                                                {* </td> *}
+                                                {include #data-col-end-tag dataColTemplate => $dataColTemplate}
 
-                                            {* </td> *}
-                                            {include #data-col-end-tag dataColTemplate => $dataColTemplate}
+                                            {/foreach}
 
-                                        {/foreach}
+                                            {if $hasActionsColumn === true}
 
-                                        {if $hasActionsColumn === true}
+                                                {* <td> *}
+                                                {include #data-actions-column-open-tag}
 
-                                            {* <td> *}
-                                            {include #data-actions-column-open-tag}
+                                                    {if $editMode === true && $editRowKey == $primaryValue}
 
-                                                {if $editMode === true && $editRowKey == $primaryValue}
+                                                        {* primary hidden input *}
+                                                        {formContainer edit}
+                                                            {input $primaryColumn value => $primaryValue}
+                                                        {/formContainer}
 
-                                                    {* primary hidden input *}
-                                                    {formContainer edit}
-                                                        {input $primaryColumn value => $primaryValue}
-                                                    {/formContainer}
+                                                        {* save button *}
+                                                        {include #data-action-save row => $row, primary => $primaryValue}
 
-                                                    {* save button *}
-                                                    {include #data-action-save row => $row, primary => $primaryValue}
+                                                        {* cancel button *}
+                                                        {include #data-action-cancel row => $row, primary => $primaryValue}
 
-                                                    {* cancel button *}
-                                                    {include #data-action-cancel row => $row, primary => $primaryValue}
+                                                    {elseif count($rowActions) > 0}
 
-                                                {elseif count($rowActions) > 0}
+                                                        {foreach $rowActionsOrder as $index => $action}
 
-                                                    {foreach $rowActionsOrder as $index => $action}
+                                                            {ifset #data-action-$action}
+                                                                {include #"data-action-{$action}" row => $row, primary => $primaryValue}
+                                                            {else}
+                                                                {include #data-action action => $rowActions[$action], row => $row, primary => $primaryValue}
+                                                            {/ifset}
 
-                                                        {ifset #data-action-$action}
-                                                            {include #"data-action-{$action}" row => $row, primary => $primaryValue}
-                                                        {else}
-                                                            {include #data-action action => $rowActions[$action], row => $row, primary => $primaryValue}
-                                                        {/ifset}
+                                                        {/foreach}
 
-                                                    {/foreach}
+                                                    {/if}
 
-                                                {/if}
+                                                {* </td> *}
+                                                {include #data-actions-column-end-tag}
 
-                                            {* </td> *}
-                                            {include #data-actions-column-end-tag}
+                                            {/if}
 
-                                        {/if}
+                                        {* </tr> *}
+                                        </tr>
 
-                                    {* </tr> *}
-                                    </tr>
+                                    {/foreach}
 
-                                {/foreach}
-
-                            {/if}
-
-                        {/snippetArea}
-                    </tbody>
-
-
-                    <tfoot n:snippet="footer" {$tfootTemplate->getAttributes()|noescape}>
-
-                    {snippetArea footerArea}
-
-                        {* <td colspan=x> *}
-                        {include #tfoot-content-open-tag}
-                        <div class="row">
-                            <div class="col col-sm-4">
-
-                            </div>
-                            <div class="col col-sm-4">
-                                {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
-                                    {include #pagination}
                                 {/if}
-                            </div>
-                            <div class="col col-sm-4">
-                                <div class="input-group float-right{if count($filter) == 0} col-7{/if}">
-                                    <a class="btn btn-sm btn-danger" n:if="count($filter) > 0" n:href="resetFilter!">Reset filter</a>
+
+                            {/snippetArea}
+                        </tbody>
+
+
+                        <tfoot n:snippet="footer" {$tfootTemplate->getAttributes()|noescape}>
+
+                        {snippetArea footerArea}
+
+                            {* <td colspan=x> *}
+                            {include #tfoot-content-open-tag}
+                            <div class="row">
+                                <div class="col col-sm-4">
+
+                                </div>
+                                <div class="col col-sm-4">
                                     {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
-                                        {formContainer paginate}
-                                            {input itemsPerPage}
-                                        {/formContainer}
-                                        {input paginateSubmit}
+                                        {include #pagination}
                                     {/if}
                                 </div>
+                                <div class="col col-sm-4">
+                                    <div class="input-group float-right{if count($filter) == 0} col-7{/if}">
+                                        <a class="btn btn-sm btn-danger" n:if="count($filter) > 0" n:href="resetFilter!">Reset filter</a>
+                                        {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
+                                            {formContainer paginate}
+                                                {input itemsPerPage}
+                                            {/formContainer}
+                                            {input paginateSubmit}
+                                        {/if}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        {include #tfoot-content-end-tag}
+                            {include #tfoot-content-end-tag}
 
-                    {/snippetArea}
+                        {/snippetArea}
 
-                    </tfoot>
+                        </tfoot>
 
 
                     {* </table> *}
