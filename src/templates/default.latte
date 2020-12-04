@@ -33,11 +33,15 @@
                                                 </option>
                                             </select>
                                         </div>
-                                        <div class="col col-sm-9" data-global-action-container n:snippet="global-action-container">
+                                        <div class="col col-sm-9 form-inline" data-global-action-container n:snippet="global-action-container">
                                             {ifset $selectedGlobalAction}
                                                 {formContainer $globalActionContainerName}
-                                                    {foreach $globalActionContainer->getControls() as $control}
-                                                        {input $contorl}
+                                                    {foreach $globalActionContainer->getControls() as $inputControl}
+                                                        {continueIf $inputControl instanceof Nette\Forms\Controls\SubmitButton}
+                                                        {input $inputControl}
+                                                    {/foreach}
+                                                    {foreach $globalActionContainer->getComponents(false, 'Nette\Forms\Controls\SubmitButton') as $submitControl}
+                                                        {input $submitControl class => 'btn btn-sm btn-outline-primary'}
                                                     {/foreach}
                                                 {/formContainer}
                                             {/ifset}
@@ -59,9 +63,7 @@
                                                                 'POST'
                                                             )
                                                         }else{
-                                                            $(head).find('[data-global-action-container]').contents().filter(function(){
-                                                                return this.nodeType === 3;
-                                                            }).remove();
+                                                            $(head).find('[data-global-action-container]').contents().remove();
                                                         }
                                                     });
                                                 });
