@@ -38,7 +38,11 @@
                                                 {formContainer $globalActionContainerName}
                                                     {foreach $globalActionContainer->getControls() as $inputControl}
                                                         {continueIf $inputControl instanceof Nette\Forms\Controls\SubmitButton}
-                                                        {input $inputControl}
+                                                        {if $inputControl instanceof Nette\Forms\Controls\TextInput || $inputControl instanceof Nette\Forms\Controls\SelectBox}
+                                                            {input $inputControl class => 'form-control form-control-sm'}
+                                                        {else}
+                                                            {input $inputControl}
+                                                        {/if}
                                                     {/foreach}
                                                     {foreach $globalActionContainer->getComponents(false, 'Nette\Forms\Controls\SubmitButton') as $submitControl}
                                                         {input $submitControl class => 'btn btn-sm btn-outline-primary'}

@@ -551,6 +551,8 @@ class NetteGrid extends Control
 
             $this->documentTemplate->getTbodyTemplate()->makeJQuerySelectable($this->jQuerySelectable);
             $this->documentTemplate->getDataRowTemplate()->makeJQuerySelectable($this->jQuerySelectable);
+
+
         }
     }
 
