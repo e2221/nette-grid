@@ -5,10 +5,10 @@ namespace e2221\NetteGrid\GlobalActions;
 
 
 use e2221\NetteGrid\NetteGrid;
+use Nette\Application\AbortException;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Utils\ArrayHash;
 
 class GlobalAction
 {
@@ -19,7 +19,7 @@ class GlobalAction
     protected SubmitButton $actionSubmit;
     protected string $containerName;
 
-    /** @var callable|null on submit callback function(ArrayHash $selectedRows) */
+    /** @var callable|null on submit callback function(ArrayHash $selectedRows, ArrayHash $containerValues, NetteGrid $netteGrid) */
     protected $onSubmit=null;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label)
@@ -46,18 +46,22 @@ class GlobalAction
     }
 
     /**
-     * @internal
      * @param Button $button
+     * @throws AbortException
+     * @internal
      */
     public function onSubmitContainer(Button $button): void
     {
         $form = $button->getForm();
-        $values = $form->getHttpData($form::DATA_TEXT, 'globalActions[rowCheck][]');
+        $checkedRows = $form->getHttpData($form::DATA_TEXT, 'globalActions[rowCheck][]');
+        $containerName = $this->containerName;
+        $containerValues = $form->getValues()->$containerName;
 
+        $this->netteGrid->reload(NetteGrid::SNIPPET_DOCUMENT_AREA);
         if(is_callable($this->onSubmit))
         {
             $onSubmitFn = $this->onSubmit;
-            $onSubmitFn($values);
+            $onSubmitFn($checkedRows, $containerValues, $this->netteGrid);
         }
     }
 
