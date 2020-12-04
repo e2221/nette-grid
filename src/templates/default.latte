@@ -18,68 +18,72 @@
 
                         <thead n:snippet="head" {$theadTemplate->getAttributes()|noescape}>
 
-                        {if $hasGlobalAction === true}
+                            {if $hasGlobalAction === true || $hasMultipleFilter === true}
 
-                            <tr>
-                                <th colspan="{$tableColspan}">
-                                    <div class="row ">
-                                        <div class="col form-inline">
-                                            <label class="my-1 mr-2">Group actions:</label>
-                                            <select class="form-control form-control-sm" data-change-global-action>
-                                                <option>...select...</option>
-                                                <option n:foreach="$globalActions as $globalActionName => $globalAction"
-                                                        value="{$globalActionName}"
-                                                        data-link="{link selectGlobalAction! $globalActionName}">
-                                                    {$globalAction->getLabel()}
-                                                </option>
-                                            </select>
-                                            <div data-global-action-container n:snippet="global-action-container">
-                                                {ifset $selectedGlobalAction}
-                                                    {formContainer $globalActionContainerName}
-                                                        {foreach $globalActionContainer->getControls() as $inputControl}
-                                                            {continueIf $inputControl instanceof Nette\Forms\Controls\SubmitButton}
-                                                            {if $inputControl instanceof Nette\Forms\Controls\TextInput || $inputControl instanceof Nette\Forms\Controls\SelectBox}
-                                                                {input $inputControl class => 'form-control form-control-sm'}
-                                                            {else}
-                                                                {input $inputControl}
-                                                            {/if}
-                                                        {/foreach}
-                                                        {foreach $globalActionContainer->getComponents(false, 'Nette\Forms\Controls\SubmitButton') as $submitControl}
-                                                            {input $submitControl class => 'btn btn-sm btn-outline-primary'}
-                                                        {/foreach}
-                                                    {/formContainer}
-                                                {/ifset}
+                                <tr>
+                                    <th colspan="{$tableColspan}">
+                                        <div class="row">
+
+                                            {* Global actions *}
+                                            <div class="col form-inline" n:if="$hasGlobalAction === true">
+                                                <label class="my-1 mr-2">Group actions:</label>
+                                                <select class="form-control form-control-sm" data-change-global-action>
+                                                    <option>...select...</option>
+                                                    <option n:foreach="$globalActions as $globalActionName => $globalAction"
+                                                            value="{$globalActionName}"
+                                                            data-link="{link selectGlobalAction! $globalActionName}">
+                                                        {$globalAction->getLabel()}
+                                                    </option>
+                                                </select>
+                                                <div data-global-action-container n:snippet="global-action-container">
+                                                    {ifset $selectedGlobalAction}
+                                                        {formContainer $globalActionContainerName}
+                                                            {foreach $globalActionContainer->getControls() as $inputControl}
+                                                                {continueIf $inputControl instanceof Nette\Forms\Controls\SubmitButton}
+                                                                {if $inputControl instanceof Nette\Forms\Controls\TextInput || $inputControl instanceof Nette\Forms\Controls\SelectBox}
+                                                                    {input $inputControl class => 'form-control form-control-sm'}
+                                                                {else}
+                                                                    {input $inputControl}
+                                                                {/if}
+                                                            {/foreach}
+                                                            {foreach $globalActionContainer->getComponents(false, 'Nette\Forms\Controls\SubmitButton') as $submitControl}
+                                                                {input $submitControl class => 'btn btn-sm btn-outline-primary'}
+                                                            {/foreach}
+                                                        {/formContainer}
+                                                    {/ifset}
+                                                </div>
+                                                <script type="application/javascript">
+                                                    (window._stack = window._stack || []).push(function(di) {
+                                                        di.getService('page').getSnippet({snippet.id head})
+                                                            .setup(function(head){
+                                                                $(head).on('change', '[data-change-global-action]', function(){
+                                                                    let selectedOption = this.selectedIndex;
+                                                                    let containerContent = $(head).find('[data-global-action-container]');
+                                                                    containerContent.contents().remove();
+                                                                    if(selectedOption && selectedOption > 0)
+                                                                    {
+                                                                        let link = this.options.item(selectedOption).dataset.link;
+                                                                        di.getService('page').open(link, 'POST')
+                                                                    }
+                                                                });
+                                                            });
+                                                    });
+                                                </script>
+                                            </div>
+
+                                            {* Multiple filter *}
+                                            <div class="col form-inline" n:if="$hasMultipleFilter ==== true">
+                                                {foreach $multipleFilterContainer->getComponents(true) as $multipleContainerComponent}
+                                                    {input $multipleContainerComponent}
+                                                {/foreach}
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <script type="application/javascript">
-                                        (window._stack = window._stack || []).push(function(di) {
-                                            di.getService('page').getSnippet({snippet.id head})
-                                                .setup(function(head){
-                                                    $(head).on('change', '[data-change-global-action]', function(){
-                                                        let value = this.value;
-                                                        let selectedOption = this.selectedIndex;
-                                                        let containerContent = $(head).find('[data-global-action-container]');
-                                                        containerContent.contents().remove();
-                                                        if(selectedOption && selectedOption > 0)
-                                                        {
-                                                            let link = this.options.item(selectedOption).dataset.link;
-                                                            di.getService('page').open(
-                                                                link,
-                                                                'POST'
-                                                            )
-                                                        }else{
-                                                            containerContent.contents().remove();
-                                                        }
-                                                    });
-                                                });
-                                        });
-                                    </script>
-                                </th>
-                            </tr>
 
-                        {/if}
+                                    </th>
+                                </tr>
+
+                            {/if}
 
                             {* <thead> *}
                             {if $hiddenHeader === false}
@@ -172,10 +176,6 @@
                             {/if}
                         </thead>
 
-
-
-                        {* <tbody> *}
-                        {*include #tbody-open-tag*}
                         <tbody n:snippet="data" {$tbodyTemplate->getAttributes()|noescape}>
                             {snippetArea dataItems}
 
@@ -321,7 +321,6 @@
 
                                             {/if}
 
-                                        {* </tr> *}
                                         </tr>
 
                                     {/foreach}
@@ -334,34 +333,34 @@
 
                         <tfoot n:snippet="footer" {$tfootTemplate->getAttributes()|noescape}>
 
-                        {snippetArea footerArea}
+                            {snippetArea footerArea}
 
-                            {* <td colspan=x> *}
-                            {include #tfoot-content-open-tag}
-                            <div class="row">
-                                <div class="col col-sm-4">
+                                {* <td colspan=x> *}
+                                {include #tfoot-content-open-tag}
+                                <div class="row">
+                                    <div class="col col-sm-4">
 
-                                </div>
-                                <div class="col col-sm-4">
-                                    {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
-                                        {include #pagination}
-                                    {/if}
-                                </div>
-                                <div class="col col-sm-4">
-                                    <div class="input-group float-right{if count($filter) == 0} col-7{/if}">
-                                        <a class="btn btn-sm btn-danger" n:if="count($filter) > 0" n:href="resetFilter!">Reset filter</a>
+                                    </div>
+                                    <div class="col col-sm-4">
                                         {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
-                                            {formContainer paginate}
-                                                {input itemsPerPage}
-                                            {/formContainer}
-                                            {input paginateSubmit}
+                                            {include #pagination}
                                         {/if}
                                     </div>
+                                    <div class="col col-sm-4">
+                                        <div class="input-group float-right{if count($filter) == 0} col-7{/if}">
+                                            <a class="btn btn-sm btn-danger" n:if="count($filter) > 0" n:href="resetFilter!">Reset filter</a>
+                                            {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
+                                                {formContainer paginate}
+                                                    {input itemsPerPage}
+                                                {/formContainer}
+                                                {input paginateSubmit}
+                                            {/if}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            {include #tfoot-content-end-tag}
+                                {include #tfoot-content-end-tag}
 
-                        {/snippetArea}
+                            {/snippetArea}
 
                         </tfoot>
 

@@ -10,6 +10,7 @@ use Contributte\FormsBootstrap\Inputs\TextInput;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
+use e2221\NetteGrid\GlobalActions\MultipleFilter;
 use e2221\NetteGrid\NetteGrid;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
@@ -87,6 +88,9 @@ abstract class Column implements IColumn
     /** @var string Sort direction could be ['', 'ASC', 'DESC'] */
     protected string $sortDirection='';
 
+    /** @var MultipleFilter[] */
+    protected array $multipleFilters=[];
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
         $this->netteGrid = $netteGrid;
@@ -94,6 +98,17 @@ abstract class Column implements IColumn
         $this->label = $label ?? ucfirst($this->name);
         $this->titleColTemplate = $this->defaultTitleColTemplate();
         $this->setStickyHeader();
+    }
+
+    /**
+     * Add multiple filter
+     * @param MultipleFilter $multipleFilter
+     * @return Column
+     */
+    public function addMultipleFilter(MultipleFilter $multipleFilter): self
+    {
+        $this->multipleFilters[$multipleFilter->getName()] = $multipleFilter;
+        return $this;
     }
 
     /**

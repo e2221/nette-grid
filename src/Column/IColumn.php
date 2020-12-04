@@ -7,15 +7,16 @@ namespace e2221\NetteGrid\Column;
 
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
+use e2221\NetteGrid\GlobalActions\MultipleFilter;
 
 interface IColumn
 {
-
     /**
-     * PUBLIC
-     * *****************************************************
-     *
+     * Add multiple filter
+     * @param MultipleFilter $multipleFilter
+     * @return $this
      */
+    public function addMultipleFilter(MultipleFilter $multipleFilter): self;
 
     /**
      * Get data col template

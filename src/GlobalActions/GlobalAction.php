@@ -9,6 +9,7 @@ use Nette\Application\AbortException;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\SmartObject;
 
 class GlobalAction
 {
@@ -21,6 +22,8 @@ class GlobalAction
 
     /** @var callable|null on submit callback function(ArrayHash $selectedRows, ArrayHash $containerValues, NetteGrid $netteGrid) */
     protected $onSubmit=null;
+
+    use SmartObject;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label)
     {

@@ -24,6 +24,7 @@ use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use e2221\NetteGrid\GlobalActions\GlobalAction;
+use e2221\NetteGrid\GlobalActions\MultipleFilter;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
@@ -62,6 +63,9 @@ class NetteGridTemplate extends Template
 
     /** @var GlobalAction[] */
     public array $globalActions;
+
+    /** @var MultipleFilter[] */
+    public array $multipleFilters;
 
     public ?Paginator $paginator;
     public NetteGrid $control;
@@ -103,4 +107,7 @@ class NetteGridTemplate extends Template
     public ?string $selectedGlobalAction;
     public ?string $globalActionContainerName;
     public ?Container $globalActionContainer;
+    public bool $hasMultipleFilter;
+    public ?Container $multipleFilterContainer;
+
 }

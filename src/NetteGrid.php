@@ -17,6 +17,7 @@ use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use e2221\NetteGrid\GlobalActions\GlobalAction;
+use e2221\NetteGrid\GlobalActions\MultipleFilter;
 use e2221\utils\Html\BaseElement;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -86,6 +87,9 @@ class NetteGrid extends Control
     /** @var Container|null Global actions container */
     protected ?Container $globalActionsContainer=null;
 
+    /** @var Container|null Multiple filter container */
+    protected ?Container $multipleFilter=null;
+
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
 
@@ -153,6 +157,9 @@ class NetteGrid extends Control
 
     /** @var bool jQuery - selectable rows */
     protected bool $jQuerySelectable=true;
+
+    /** @var MultipleFilter[] Multiple filters  */
+    public array $multipleFilters=[];
 
     public function __construct()
     {
@@ -342,9 +349,26 @@ class NetteGrid extends Control
      * @param string|null $label
      * @return GlobalAction
      */
-    public function addGlobalAction(string $name, ?string $label=null)
+    public function addGlobalAction(string $name, ?string $label=null): GlobalAction
     {
         return $this->globalActions[$name] = new GlobalAction($this, $name, $label);
+    }
+
+
+    /**
+     * MULTIPLE FILTER
+     * ******************************************************************************
+     *
+     */
+
+    /**
+     * Add multiple filter
+     * @param string $name
+     * @return MultipleFilter
+     */
+    public function addMultipleFilter(string $name): MultipleFilter
+    {
+        return $this->multipleFilters[$name] = new MultipleFilter($this, $name);
     }
 
 
@@ -582,6 +606,9 @@ class NetteGrid extends Control
         $this->template->hasGlobalAction = $this->hasGlobalAction();
         $this->template->globalActions = $this->globalActions;
         $this->template->tableColspan = $this->getTableColspan();
+        $this->template->hasMultipleFilter = $this->hasMultipleFilter();
+        $this->template->multipleFilters = $this->multipleFilters;
+        $this->template->multipleFilterContainer = $this->multipleFilter;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -1177,4 +1204,27 @@ class NetteGrid extends Control
     {
         return (bool)count($this->globalActions);
     }
+
+    /**
+     * Has multiple filter?
+     * @return bool
+     */
+    public function hasMultipleFilter(): bool
+    {
+        return (bool)count($this->multipleFilters);
+    }
+
+    /**
+     * Get multiple filter container
+     * @return Container|null
+     */
+    public function getMultipleFilter(): ?Container
+    {
+        $this->multipleFilter = $this->multipleFilter ?? $this['form']->addContainer('multipleFilter');
+        return $this->multipleFilter;
+    }
+
+
+
+
 }
