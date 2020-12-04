@@ -150,6 +150,9 @@ class NetteGrid extends Control
     /** @var GlobalAction[] */
     protected array $globalActions=[];
 
+    /** @var bool jQuery - selectable rows */
+    protected bool $jQuerySelectable=true;
+
     public function __construct()
     {
         $this->documentTemplate = new DocumentTemplate($this);
@@ -531,6 +534,9 @@ class NetteGrid extends Control
             $this->globalActionsContainer = $this['form']->addContainer('globalActions');
             $this->globalActionsContainer->addCheckboxList('rowCheck', '', [])
                 ->setHtmlAttribute('data-row-selector');
+
+            $this->documentTemplate->getTbodyTemplate()->makeJQuerySelectable($this->jQuerySelectable);
+            $this->documentTemplate->getDataRowTemplate()->makeJQuerySelectable($this->jQuerySelectable);
         }
     }
 
@@ -1114,5 +1120,16 @@ class NetteGrid extends Control
     public function isAddAutocomplete(): bool
     {
         return $this->addAutocomplete;
+    }
+
+    /**
+     * Set jQuery selectable - it is enabled by default, you can disable it
+     * @param bool $jQuerySelectable
+     * @return NetteGrid
+     */
+    public function setJQuerySelectable(bool $jQuerySelectable=true): self
+    {
+        $this->jQuerySelectable = $jQuerySelectable;
+        return $this;
     }
 }
