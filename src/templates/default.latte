@@ -21,8 +21,8 @@
                             {if $hasGlobalAction === true}
 
                                 <tr>
-                                    <th colspan="{$countOfColumns}">
-                                        <select n:inner-foreach="$globalActions as $globalActionName => $globalAction">
+                                    <th colspan="{$tableColspan}">
+                                        <select class="form-control form-control-sm" data-change-global-action n:inner-foreach="$globalActions as $globalActionName => $globalAction">
                                             <option value="{$globalActionName}">{$globalAction->getLabel()}</option>
                                         </select>
                                     </th>

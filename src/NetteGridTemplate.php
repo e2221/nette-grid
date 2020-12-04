@@ -98,4 +98,5 @@ class NetteGridTemplate extends Template
     public ?string $sortByColumn;
     public ?string $sortDirection;
     public bool $hasGlobalAction;
+    public int $tableColspan;
 }

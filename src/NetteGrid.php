@@ -563,8 +563,9 @@ class NetteGrid extends Control
         $this->template->paginator = $this->paginator;
         $this->template->sortByColumn = $this->sortByColumn;
         $this->template->sortDirection = $this->sortDirection;
-        $this->template->hasGlobalAction = (bool)count($this->globalActions);
+        $this->template->hasGlobalAction = $this->hasGlobalAction();
         $this->template->globalActions = $this->globalActions;
+        $this->template->tableColspan = $this->getTableColspan();
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -1131,5 +1132,24 @@ class NetteGrid extends Control
     {
         $this->jQuerySelectable = $jQuerySelectable;
         return $this;
+    }
+
+    /**
+     * Get table full colspan
+     * @return int
+     */
+    public function getTableColspan(): int
+    {
+        return
+            $this->getCountOfPrintableColumns() + (int)$this->hasActionColumn() + (int)$this->hasGlobalAction();
+    }
+
+    /**
+     * Has global action?
+     * @return bool
+     */
+    public function hasGlobalAction(): bool
+    {
+        return (bool)count($this->globalActions);
     }
 }
