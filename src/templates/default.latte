@@ -73,9 +73,19 @@
 
                                             {* Multiple filter *}
                                             <div class="col form-inline" n:if="$hasMultipleFilter === true">
-                                                {foreach $multipleFilterContainer->getComponents(true) as $multipleContainerComponent}
-                                                    {input $multipleContainerComponent}
-                                                {/foreach}
+                                                {formContainer multipleFilter}
+                                                    {foreach $multipleFilters as $multipleFitlerName => $multipleFilter}
+
+                                                        {formContainer $multipleFitlerName}
+
+                                                            {foreach $multipleFilter->getContainer()->getControls() as $multipleFilterControl}
+                                                                {input $multipleFilterControl}
+                                                            {/foreach}
+
+                                                        {/formContainer}
+
+                                                    {/foreach}
+                                                {/formContainer}
                                             </div>
                                         </div>
 
