@@ -52,13 +52,12 @@ class GlobalAction
     public function onSubmitContainer(Button $button): void
     {
         $form = $button->getForm();
-        $values = $form->getValues();
-        $values = $values->globalActions;
+        $values = $form->getHttpData($form::DATA_TEXT, 'globalActions[rowCheck][]');
 
         if(is_callable($this->onSubmit))
         {
             $onSubmitFn = $this->onSubmit;
-            $onSubmitFn($values->rowCheck ?? ArrayHash::from([]));
+            $onSubmitFn($values);
         }
     }
 
