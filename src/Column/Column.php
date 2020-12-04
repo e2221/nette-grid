@@ -40,9 +40,6 @@ abstract class Column implements IColumn
     /** @var bool is column filterable */
     protected bool $filterable=false;
 
-    /** @var bool is column multiple-filterable */
-    protected bool $multipleFilterable=false;
-
     /** @var bool is column editable */
     protected bool $editable=false;
 
@@ -107,6 +104,8 @@ abstract class Column implements IColumn
      */
     public function addMultipleFilter(MultipleFilter $multipleFilter): self
     {
+        if(isset($this->netteGrid->multipleFilters[$multipleFilter->getName()]) == false)
+            $this->netteGrid->multipleFilters[$multipleFilter->getName()] = $multipleFilter;
         $this->multipleFilters[$multipleFilter->getName()] = $multipleFilter;
         return $this;
     }
@@ -337,17 +336,6 @@ abstract class Column implements IColumn
     }
 
     /**
-     * Set multiple filterable
-     * @param bool $multipleFilterable
-     * @return Column
-     */
-    public function setMultipleFilterable(bool $multipleFilterable=true): self
-    {
-        $this->multipleFilterable = $multipleFilterable;
-        return $this;
-    }
-
-    /**
      * Set editable
      * @param bool $editable
      * @return Column
@@ -439,13 +427,6 @@ abstract class Column implements IColumn
         return $this->filterable;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMultipleFilterable(): bool
-    {
-        return $this->multipleFilterable;
-    }
 
     /**
      * @return bool

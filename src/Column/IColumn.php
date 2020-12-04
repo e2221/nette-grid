@@ -71,14 +71,6 @@ interface IColumn
 
 
     /**
-     * Set this column multiple filterable
-     * @param bool $multipleFilterable
-     * @return IColumn
-     */
-    public function setMultipleFilterable(bool $multipleFilterable=true): self;
-
-
-    /**
      * Set this column editable
      * @param bool $editable
      * @return IColumn
@@ -118,7 +110,6 @@ interface IColumn
 
     public function isSortable(): bool;
     public function isFilterable(): bool;
-    public function isMultipleFilterable(): bool;
     public function isEditable(): bool;
     public function isRequired(): bool;
     public function isHidden(): bool;

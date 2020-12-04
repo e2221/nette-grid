@@ -20,7 +20,7 @@ class MultipleFilter
     {
         $this->name = $name;
         $this->netteGrid = $netteGrid;
-        $this->netteGrid->getMultipleFilter()->addContainer($name);
+        $this->container = $this->netteGrid->getMultipleFilter()->addContainer($name);
     }
 
     /**

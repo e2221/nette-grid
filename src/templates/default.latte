@@ -72,7 +72,7 @@
                                             </div>
 
                                             {* Multiple filter *}
-                                            <div class="col form-inline" n:if="$hasMultipleFilter ==== true">
+                                            <div class="col form-inline" n:if="$hasMultipleFilter === true">
                                                 {foreach $multipleFilterContainer->getComponents(true) as $multipleContainerComponent}
                                                     {input $multipleContainerComponent}
                                                 {/foreach}

@@ -1216,9 +1216,9 @@ class NetteGrid extends Control
 
     /**
      * Get multiple filter container
-     * @return Container|null
+     * @return Container
      */
-    public function getMultipleFilter(): ?Container
+    public function getMultipleFilter(): Container
     {
         $this->multipleFilter = $this->multipleFilter ?? $this['form']->addContainer('multipleFilter');
         return $this->multipleFilter;
