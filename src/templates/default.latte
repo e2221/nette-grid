@@ -20,94 +20,92 @@
                         {if $hiddenHeader === false}
 
                             <thead n:snippet=head" {$theadTemplate->getAttributes()|noescape}>
-                                {snippetArea headItems}
 
-                                    <tr n:snippet="headTitles">
+                                <tr n:snippet="headTitles">
 
-                                        {if $hasGlobalAction === true}
+                                    {if $hasGlobalAction === true}
 
-                                            <th>
-                                                <input type="checkbox" class="form-check-input" title="Check all">
-                                            </th>
+                                        <th>
+                                            <input type="checkbox" title="Select all" data-select-all>
+                                        </th>
 
-                                        {/if}
-
-                                        {* columns cols <td>Column title</td> *}
-                                        {foreach $columns as $columnName => $column}
-                                            {ifset #title-col-$columnName}
-                                                {include #"title-col-{$columnName}"}
-                                            {else}
-                                                {include #title-col-open-tag column => $column, columnName => $columnName}
-
-                                                    {if $column->isSortable() === true}
-                                                        {var string $direction='ASC'}
-                                                        {if $columnName == $sortByColumn}
-                                                            {if $sortDirection == 'ASC'}
-                                                                {php $direction = 'DESC'}
-                                                            {elseif $sortDirection == 'DESC'}
-                                                                {php $direction = ''}
-                                                            {/if}
-                                                        {/if}
-                                                        <a n:href="sortColumn! $columnName, $direction">
-                                                    {/if}
-
-                                                    {include #column-title column => $column, columnName => $columnName, columnTitle => $column->getLabel()}
-
-                                                    {if $column->isSortable() === true && $columnName == $sortByColumn}
-                                                        </a>
-                                                        {if $sortDirection == 'ASC'}
-                                                            <span><em>&#9650;</em></span>
-                                                        {elseif $sortDirection == 'DESC'}
-                                                            <span><em>&#9660;</em></span>
-                                                        {/if}
-                                                    {/if}
-
-                                                {include #title-col-end-tag column => $column, columnName => $columnName}
-                                            {/ifset}
-                                        {/foreach}
-
-                                        {* header actions *}
-                                        {if $hasActionsColumn === true}
-                                            {include #head-actions-column-open-tag}
-                                                {foreach $headerActions as $headerActionName => $headerAction}
-                                                    {ifset #header-action-$headerActionName}
-                                                        {include #"header-action-{$headerActionName}"}
-                                                    {else}
-                                                        {include #header-action headerAction => $headerAction}
-                                                    {/ifset}
-                                                {/foreach}
-                                            {include #head-actions-column-end-tag}
-                                        {/if}
-
-                                    </tr>
-
-                                    {* head filter *}
-                                    {if $isFilterable === true}
-                                        {include #head-filter-row-open-tag}
-
-                                            {if $hasGlobalAction === true}
-                                                <th>
-                                                </th>
-                                            {/if}
-
-                                            {formContainer filter}
-                                                {foreach $columns as $columnName => $column}
-                                                    {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
-                                                    {if $column->isFilterable()}
-                                                        {ifset #filter-input-$columnName}
-                                                            {include #"filter-input-{$columnName}"}
-                                                        {else}
-                                                            {include #filter-input columnName => $columnName}
-                                                        {/ifset}
-                                                    {/if}
-                                                    {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
-                                                {/foreach}
-                                            {/formContainer}
-                                            <th n:if="$hasActionsColumn"></th>
-                                        {include #head-filter-row-end-tag}
                                     {/if}
 
-                            {/snippetArea}
+                                    {* columns cols <td>Column title</td> *}
+                                    {foreach $columns as $columnName => $column}
+                                        {ifset #title-col-$columnName}
+                                            {include #"title-col-{$columnName}"}
+                                        {else}
+                                            {include #title-col-open-tag column => $column, columnName => $columnName}
+
+                                                {if $column->isSortable() === true}
+                                                    {var string $direction='ASC'}
+                                                    {if $columnName == $sortByColumn}
+                                                        {if $sortDirection == 'ASC'}
+                                                            {php $direction = 'DESC'}
+                                                        {elseif $sortDirection == 'DESC'}
+                                                            {php $direction = ''}
+                                                        {/if}
+                                                    {/if}
+                                                    <a n:href="sortColumn! $columnName, $direction">
+                                                {/if}
+
+                                                {include #column-title column => $column, columnName => $columnName, columnTitle => $column->getLabel()}
+
+                                                {if $column->isSortable() === true && $columnName == $sortByColumn}
+                                                    </a>
+                                                    {if $sortDirection == 'ASC'}
+                                                        <span><em>&#9650;</em></span>
+                                                    {elseif $sortDirection == 'DESC'}
+                                                        <span><em>&#9660;</em></span>
+                                                    {/if}
+                                                {/if}
+
+                                            {include #title-col-end-tag column => $column, columnName => $columnName}
+                                        {/ifset}
+                                    {/foreach}
+
+                                    {* header actions *}
+                                    {if $hasActionsColumn === true}
+                                        {include #head-actions-column-open-tag}
+                                            {foreach $headerActions as $headerActionName => $headerAction}
+                                                {ifset #header-action-$headerActionName}
+                                                    {include #"header-action-{$headerActionName}"}
+                                                {else}
+                                                    {include #header-action headerAction => $headerAction}
+                                                {/ifset}
+                                            {/foreach}
+                                        {include #head-actions-column-end-tag}
+                                    {/if}
+
+                                </tr>
+
+                                {* head filter *}
+                                {if $isFilterable === true}
+                                    {include #head-filter-row-open-tag}
+
+                                        {if $hasGlobalAction === true}
+                                            <th>
+                                            </th>
+                                        {/if}
+
+                                        {formContainer filter}
+                                            {foreach $columns as $columnName => $column}
+                                                {include head-filter-col-open-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                                {if $column->isFilterable()}
+                                                    {ifset #filter-input-$columnName}
+                                                        {include #"filter-input-{$columnName}"}
+                                                    {else}
+                                                        {include #filter-input columnName => $columnName}
+                                                    {/ifset}
+                                                {/if}
+                                                {include head-filter-col-end-tag columnName => $columnName, headFilterColTemplate => $column->getHeadFilterColTemplate()}
+                                            {/foreach}
+                                        {/formContainer}
+                                        <th n:if="$hasActionsColumn"></th>
+                                    {include #head-filter-row-end-tag}
+                                {/if}
+
                         </thead>
 
                     {/if}
@@ -317,7 +315,7 @@
         <script type="application/javascript">
             (window._stack = window._stack || []).push(function(di) {
 
-                //autosubmit filter
+                {* atosubmit filter form *}
                 var tmr = null;
                 di.getService('page').getSnippet({form.id form})
                     .setup(function(frm) {
@@ -347,6 +345,70 @@
                         tmr = null;
                     });
 
+
+                {* check all selectors after clicking check all *}
+                di.getService('page').getSnippet({snippet.id gridContent})
+                    .setup(function(gridContent){
+                        $(gridContent).on('change', 'input[data-select-all]', function(){
+                            let selectors = $(gridContent).find('input[data-row-selector]');
+                            if(this.checked){
+                                selectors.each(function(){
+                                    $(this).prop("checked", true);
+                                    let tr = this.closest('tr[data-selectable-row]');
+                                    let tbody = $(this).closest('tbody');
+                                    tr.classList.add("ui-selecting");
+                                    tbody.data("ui-selectable")._mouseStop(null);
+                                });
+                            }else{
+                                selectors.each(function(){
+                                    $(this).prop("checked", false);
+                                    let tr = this.closest('tr[data-selectable-row]');
+                                    let tbody = $(this).closest('tbody');
+                                    tr.classList.remove("ui-selected");
+                                    tr.classList.remove("table-success");
+                                    tbody.data("ui-selectable")._mouseStop(null);
+                                });
+                            }
+                        })
+                    });
+
+                {* make rows selectable *}
+                di.getService('page').getSnippet({snippet.id data})
+                    .setup(function(selectableRow) {
+                        $(selectableRow).on('change','[data-row-selector]', function(){
+                            let tr = this.closest('tr[data-selectable-row]');
+                            let thead = $(this).closest('tbody');
+                            if(this.checked){
+                                tr.classList.add("ui-selecting");
+                                thead.data("ui-selectable")._mouseStop(null);
+                            } else {
+                                tr.classList.remove("ui-selected");
+                                tr.classList.remove("table-success");
+                                thead.data("ui-selectable")._mouseStop(null);
+                            }
+                        });
+
+                        $('[data-tbody-selectable]').selectable({
+                            filter: 'tr',
+                            cancel: 'a,.btn,input,[data-editable-link],[data-no-select]',
+                            classes: {
+                                "ui-selecting": "table-info",
+                                "ui-selected": "table-success"
+                            },
+                            stop: function(){
+                                $( ".ui-selected", this ).find("input:checkbox:first").each(function() {
+                                    $(this).prop( "checked", true );
+                                });
+                            },
+                            unselected: function(event, ui){
+                                $(ui.unselected, this).find("input:checkbox:first").each(function() {
+                                    $(this).prop( "checked", false );
+                                });
+                            }
+                        });
+                    });
+
+                {* rows editable *}
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function(col) {
                         $(col).on('dblclick', 'td[data-column-editable]', function() {

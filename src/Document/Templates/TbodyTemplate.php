@@ -13,4 +13,16 @@ class TbodyTemplate extends BaseTemplate
     {
         $this->addDataAttribute('dynamic-mask', 'snippet--data-\\d+');
     }
+
+    /**
+     * Mark tbody as jQuery selector
+     * @param bool $selectable
+     * @return TbodyTemplate
+     */
+    public function makeJQuerySelectable(bool $selectable=true): self
+    {
+        if($selectable === true)
+            $this->addDataAttribute('tbody-selectable');
+        return $this;
+    }
 }

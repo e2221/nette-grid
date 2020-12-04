@@ -41,7 +41,6 @@ class NetteGrid extends Control
         SNIPPET_TFOOT_AREA = 'footerArea',
         SNIPPET_TFOOT = 'footer',
         SNIPPET_HEADER = 'head',
-        SNIPPET_HEADER_AREA = 'headItems',
         SNIPPET_HEAD_TITLES = 'headTitles';
 
     /** @var IColumn[] */
@@ -530,7 +529,8 @@ class NetteGrid extends Control
         if(count($this->globalActions) > 0)
         {
             $this->globalActionsContainer = $this['form']->addContainer('globalActions');
-            $this->globalActionsContainer->addCheckboxList('rowCheck', '', []);
+            $this->globalActionsContainer->addCheckboxList('rowCheck', '', [])
+                ->setHtmlAttribute('data-row-selector');
         }
     }
 
@@ -980,7 +980,7 @@ class NetteGrid extends Control
      */
     public function reloadHeader(): void
     {
-        $this->reload([self::SNIPPET_HEADER, self::SNIPPET_HEADER_AREA]);
+        $this->reload(self::SNIPPET_HEADER);
     }
 
     /**

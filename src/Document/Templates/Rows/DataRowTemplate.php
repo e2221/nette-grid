@@ -10,7 +10,6 @@ use e2221\NetteGrid\Document\DocumentTemplate;
 class DataRowTemplate extends BaseTemplate
 {
     protected ?string $elementName='tr';
-
     private DocumentTemplate $documentTemplate;
 
     public function __construct(DocumentTemplate $documentTemplate)
@@ -34,6 +33,18 @@ class DataRowTemplate extends BaseTemplate
     public function endTemplate(): DocumentTemplate
     {
         return $this->documentTemplate;
+    }
+
+    /**
+     * Make row jQuery selectable
+     * @param bool $selectable
+     * @return DataRowTemplate
+     */
+    public function makeJQuerySelectable(bool $selectable=true): self
+    {
+        if($selectable === true)
+            $this->addDataAttribute('selectable-row');
+        return $this;
     }
 
 }
