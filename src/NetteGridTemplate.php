@@ -26,6 +26,7 @@ use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use e2221\NetteGrid\GlobalActions\GlobalAction;
 use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Forms\Container;
 use Nette\Utils\Paginator;
 
 
@@ -99,4 +100,7 @@ class NetteGridTemplate extends Template
     public ?string $sortDirection;
     public bool $hasGlobalAction;
     public int $tableColspan;
+    public ?string $selectedGlobalAction;
+    public ?string $globalActionContainerName;
+    public ?Container $globalActionContainer;
 }

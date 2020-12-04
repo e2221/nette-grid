@@ -41,7 +41,8 @@ class NetteGrid extends Control
         SNIPPET_TFOOT_AREA = 'footerArea',
         SNIPPET_TFOOT = 'footer',
         SNIPPET_HEADER = 'head',
-        SNIPPET_HEAD_TITLES = 'headTitles';
+        SNIPPET_HEAD_TITLES = 'headTitles',
+        SNIPPET_GLOBAL_ACTION_CONTAINER = 'global-action-container';
 
     /** @var IColumn[] */
     protected array $columns=[];
@@ -472,6 +473,19 @@ class NetteGrid extends Control
         $this->columns[$columnName]->setSortDirection($direction);
         $this->reloadHeaderTitles();
         $this->reloadItems();
+    }
+
+    /**
+     * Select global action
+     * @param string $action
+     * @throws AbortException
+     */
+    public function handleSelectGlobalAction(string $action): void
+    {
+        $this->template->selectedGlobalAction = $action;
+        $this->template->globalActionContainerName = 'global_' . $action;
+        $this->template->globalActionContainer = $this->globalActions[$action]->getFormContainer();
+        $this->reloadGlobalActionContainer();
     }
 
     /**
@@ -979,6 +993,15 @@ class NetteGrid extends Control
         }else{
             $this->presenter->redirect('this');
         }
+    }
+
+    /**
+     * Reload global action container
+     * @throws AbortException
+     */
+    public function reloadGlobalActionContainer(): void
+    {
+        $this->reload(self::SNIPPET_GLOBAL_ACTION_CONTAINER);
     }
 
     /**

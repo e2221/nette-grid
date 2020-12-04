@@ -16,19 +16,61 @@
                     {* <table> *}
                     {include #table-open-tag}
 
-                        <thead n:snippet=head" {$theadTemplate->getAttributes()|noescape}>
+                        <thead n:snippet="head" {$theadTemplate->getAttributes()|noescape}>
 
-                            {if $hasGlobalAction === true}
+                        {if $hasGlobalAction === true}
 
-                                <tr>
-                                    <th colspan="{$tableColspan}">
-                                        <select class="form-control form-control-sm" data-change-global-action n:inner-foreach="$globalActions as $globalActionName => $globalAction">
-                                            <option value="{$globalActionName}">{$globalAction->getLabel()}</option>
-                                        </select>
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th colspan="{$tableColspan}">
+                                    <div class="row">
+                                        <div class="col col-sm-3">
+                                            <select class="form-control form-control-sm" data-change-global-action>
+                                                <option>Select</option>
+                                                <option n:foreach="$globalActions as $globalActionName => $globalAction"
+                                                        value="{$globalActionName}"
+                                                        data-link="{link selectGlobalAction! $globalActionName}">
+                                                    {$globalAction->getLabel()}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col col-sm-9" data-global-action-container n:snippet="global-action-container">
+                                            {ifset $selectedGlobalAction}
+                                                {formContainer $globalActionContainerName}
+                                                    {foreach $globalActionContainer->getControls() as $control}
+                                                        {input $contorl}
+                                                    {/foreach}
+                                                {/formContainer}
+                                            {/ifset}
+                                        </div>
+                                    </div>
 
-                            {/if}
+                                    <script type="application/javascript">
+                                        (window._stack = window._stack || []).push(function(di) {
+                                            di.getService('page').getSnippet({snippet.id head})
+                                                .setup(function(head){
+                                                    $(head).on('change', '[data-change-global-action]', function(){
+                                                        let value = this.value;
+                                                        let selectedOption = this.selectedIndex;
+                                                        if(selectedOption && selectedOption > 0)
+                                                        {
+                                                            let link = this.options.item(selectedOption).dataset.link;
+                                                            di.getService('page').open(
+                                                                link,
+                                                                'POST'
+                                                            )
+                                                        }else{
+                                                            $(head).find('[data-global-action-container]').contents().filter(function(){
+                                                                return this.nodeType === 3;
+                                                            }).remove();
+                                                        }
+                                                    });
+                                                });
+                                        });
+                                    </script>
+                                </th>
+                            </tr>
+
+                        {/if}
 
                             {* <thead> *}
                             {if $hiddenHeader === false}
