@@ -355,18 +355,22 @@
                                 selectors.each(function(){
                                     $(this).prop("checked", true);
                                     let tr = this.closest('tr[data-selectable-row]');
-                                    let tbody = $(this).closest('tbody');
-                                    tr.classList.add("ui-selecting");
-                                    tbody.data("ui-selectable")._mouseStop(null);
+                                    if(tr) {
+                                        let tbody = $(this).closest('tbody');
+                                        tr.classList.add("ui-selecting");
+                                        tbody.data("ui-selectable")._mouseStop(null);
+                                    }
                                 });
                             }else{
                                 selectors.each(function(){
                                     $(this).prop("checked", false);
                                     let tr = this.closest('tr[data-selectable-row]');
-                                    let tbody = $(this).closest('tbody');
-                                    tr.classList.remove("ui-selected");
-                                    tr.classList.remove("table-success");
-                                    tbody.data("ui-selectable")._mouseStop(null);
+                                    if(tr) {
+                                        let tbody = $(this).closest('tbody');
+                                        tr.classList.remove("ui-selected");
+                                        tr.classList.remove("table-success");
+                                        tbody.data("ui-selectable")._mouseStop(null);
+                                    }
                                 });
                             }
                         })
@@ -377,14 +381,17 @@
                     .setup(function(selectableRow) {
                         $(selectableRow).on('change','[data-row-selector]', function(){
                             let tr = this.closest('tr[data-selectable-row]');
-                            let thead = $(this).closest('tbody');
-                            if(this.checked){
-                                tr.classList.add("ui-selecting");
-                                thead.data("ui-selectable")._mouseStop(null);
-                            } else {
-                                tr.classList.remove("ui-selected");
-                                tr.classList.remove("table-success");
-                                thead.data("ui-selectable")._mouseStop(null);
+                            if(tr)
+                            {
+                                let thead = $(this).closest('tbody');
+                                if(this.checked){
+                                    tr.classList.add("ui-selecting");
+                                    thead.data("ui-selectable")._mouseStop(null);
+                                } else {
+                                    tr.classList.remove("ui-selected");
+                                    tr.classList.remove("table-success");
+                                    thead.data("ui-selectable")._mouseStop(null);
+                                }
                             }
                         });
 
