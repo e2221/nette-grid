@@ -88,7 +88,7 @@ class NetteGrid extends Control
     protected ?Container $globalActionsContainer=null;
 
     /** @var Container|null Multiple filter container */
-    protected ?Container $multipleFilter=null;
+    protected ?Container $multipleFilterContainer=null;
 
     /** @var null|int|string @persistent Edit key */
     public $editKey=null;
@@ -160,6 +160,9 @@ class NetteGrid extends Control
 
     /** @var MultipleFilter[] Multiple filters  */
     public array $multipleFilters=[];
+
+    /** @var array|null Multiple filter @persistent */
+    public ?array $multipleFilter=null;
 
     public function __construct()
     {
@@ -608,7 +611,7 @@ class NetteGrid extends Control
         $this->template->tableColspan = $this->getTableColspan();
         $this->template->hasMultipleFilter = $this->hasMultipleFilter();
         $this->template->multipleFilters = $this->multipleFilters;
-        $this->template->multipleFilterContainer = $this->multipleFilter;
+        $this->template->multipleFilterContainer = $this->multipleFilterContainer;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -739,6 +742,25 @@ class NetteGrid extends Control
         $form = $button->getForm();
         $values = $form->values->paginate;
         $this->itemsPerPage = $values->itemsPerPage;
+        $this->reloadItems();
+        $this->reloadFooter();
+    }
+
+    /**
+     * Multiple filter form success
+     * @param Button $button
+     * @throws AbortException
+     */
+    public function multipleFilterFormSuccess(Button $button): void
+    {
+        $form = $button->getForm();
+        $values = $form->values->multipleFilter;
+        foreach($values as $key => $value)
+            if(empty($value))
+                unset($values[$key]);
+        $this->multipleFilter = $values;
+        $this->editKey = null;
+        $this->editMode = false;
         $this->reloadItems();
         $this->reloadFooter();
     }
@@ -913,7 +935,7 @@ class NetteGrid extends Control
         }
 
         $getDataFn = $this->dataSourceCallback;
-        $data = $getDataFn($this->filter, null, (is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null), $this->paginator);
+        $data = $getDataFn($this->filter, $this->multipleFilter, (is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null), $this->paginator);
         if(is_countable($data) === false || count($data) == 0)
             return null;
         return $data;
@@ -1218,10 +1240,17 @@ class NetteGrid extends Control
      * Get multiple filter container
      * @return Container
      */
-    public function getMultipleFilter(): Container
+    public function getMultipleFilterContainer(): Container
     {
-        $this->multipleFilter = $this->multipleFilter ?? $this['form']->addContainer('multipleFilter');
-        return $this->multipleFilter;
+        if(isset($this->multipleFilterContainer) == false)
+        {
+            $this->multipleFilterContainer = $this['form']->addContainer('multipleFilter');
+            $this['form']->addSubmit('multipleFilterSubmit')
+                ->setHtmlAttribute('class', 'd-none')
+                ->setValidationScope([$this['form']['multipleFilter']])
+                ->onClick[] = [$this, 'multipleFilterFormSuccess'];
+        }
+        return $this->multipleFilterContainer;
     }
 
 
