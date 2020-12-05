@@ -73,19 +73,21 @@
 
                                             {* Multiple filter *}
                                             <div class="col form-inline" n:if="$hasMultipleFilter === true">
-                                                {formContainer multipleFilter}
-                                                    {foreach $multipleFilters as $multipleFitlerName => $multipleFilter}
+                                                <div class="input-group float-right">
+                                                    {formContainer multipleFilter}
+                                                        {foreach $multipleFilters as $multipleFitlerName => $multipleFilter}
 
-                                                        {formContainer $multipleFitlerName}
+                                                            {formContainer $multipleFitlerName}
 
-                                                            {foreach $multipleFilter->getContainer()->getControls() as $multipleFilterControl}
-                                                                {input $multipleFilterControl}
-                                                            {/foreach}
+                                                                {foreach $multipleFilter->getContainer()->getControls() as $multipleFilterControl}
+                                                                    {input $multipleFilterControl}
+                                                                {/foreach}
 
-                                                        {/formContainer}
+                                                            {/formContainer}
 
-                                                    {/foreach}
-                                                {/formContainer}
+                                                        {/foreach}
+                                                    {/formContainer}
+                                                </div>
                                             </div>
                                         </div>
 
