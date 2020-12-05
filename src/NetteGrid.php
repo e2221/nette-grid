@@ -754,11 +754,32 @@ class NetteGrid extends Control
     public function multipleFilterFormSuccess(Button $button): void
     {
         $form = $button->getForm();
-        $values = $form->values->multipleFilter;
-        foreach($values as $key => $value)
-            if(empty($value))
-                unset($values[$key]);
-        $this->multipleFilter = $values;
+        $multipleValues = $form->values->multipleFilter;
+        $multiple = [];
+        foreach($this->multipleFilters as $multipleFilterName => $multipleFilter)
+        {
+            foreach($multipleFilter->getColumns() as $columnName => $column)
+            {
+                foreach($multipleValues->$multipleFilterName as $inputKey => $inputValue)
+                {
+                    if(empty($inputValue))
+                        continue;
+                    if(isset($multiple[$columnName]))
+                    {
+                        if(is_string($multiple[$columnName]))
+                        {
+                            $multiple[$columnName] = [$multiple[$columnName], $inputValue];
+                        }else{
+                            array_push($multiple[$columnName], $inputValue);
+                        }
+                    }else{
+                        $multiple[$columnName] = $inputValue;
+                    }
+                }
+            }
+        }
+
+        $this->multipleFilter = $multiple;
         $this->editKey = null;
         $this->editMode = false;
         $this->reloadItems();

@@ -107,6 +107,7 @@ abstract class Column implements IColumn
         if(isset($this->netteGrid->multipleFilters[$multipleFilter->getName()]) == false)
             $this->netteGrid->multipleFilters[$multipleFilter->getName()] = $multipleFilter;
         $this->multipleFilters[$multipleFilter->getName()] = $multipleFilter;
+        $multipleFilter->onAddColumn($this);
         return $this;
     }
 
