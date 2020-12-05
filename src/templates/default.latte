@@ -25,32 +25,34 @@
                                         <div class="row">
 
                                             {* Global actions *}
-                                            <div class="col form-inline" n:if="$hasGlobalAction === true">
-                                                <label class="my-1 mr-2">Group actions:</label>
-                                                <select class="form-control form-control-sm" data-change-global-action>
-                                                    <option>...select...</option>
-                                                    <option n:foreach="$globalActions as $globalActionName => $globalAction"
-                                                            value="{$globalActionName}"
-                                                            data-link="{link selectGlobalAction! $globalActionName}">
-                                                        {$globalAction->getLabel()}
-                                                    </option>
-                                                </select>
-                                                <div data-global-action-container n:snippet="global-action-container">
-                                                    {ifset $selectedGlobalAction}
-                                                        {formContainer $globalActionContainerName}
-                                                            {foreach $globalActionContainer->getControls() as $inputControl}
-                                                                {continueIf $inputControl instanceof Nette\Forms\Controls\SubmitButton}
-                                                                {if $inputControl instanceof Nette\Forms\Controls\TextInput || $inputControl instanceof Nette\Forms\Controls\SelectBox}
-                                                                    {input $inputControl class => 'form-control form-control-sm'}
-                                                                {else}
-                                                                    {input $inputControl}
-                                                                {/if}
-                                                            {/foreach}
-                                                            {foreach $globalActionContainer->getComponents(false, 'Nette\Forms\Controls\SubmitButton') as $submitControl}
-                                                                {input $submitControl class => 'btn btn-sm btn-outline-primary'}
-                                                            {/foreach}
-                                                        {/formContainer}
-                                                    {/ifset}
+                                            <div class="col col-sm-6 form-inline" n:if="$hasGlobalAction === true">
+                                                <div class="form-inline">
+                                                    <label class="my-1 mr-2">Group actions:</label>
+                                                    <select class="form-control form-control-sm" data-change-global-action>
+                                                        <option>...select...</option>
+                                                        <option n:foreach="$globalActions as $globalActionName => $globalAction"
+                                                                value="{$globalActionName}"
+                                                                data-link="{link selectGlobalAction! $globalActionName}">
+                                                            {$globalAction->getLabel()}
+                                                        </option>
+                                                    </select>
+                                                    <div data-global-action-container n:snippet="global-action-container">
+                                                        {ifset $selectedGlobalAction}
+                                                            {formContainer $globalActionContainerName}
+                                                                {foreach $globalActionContainer->getControls() as $inputControl}
+                                                                    {continueIf $inputControl instanceof Nette\Forms\Controls\SubmitButton}
+                                                                    {if $inputControl instanceof Nette\Forms\Controls\TextInput || $inputControl instanceof Nette\Forms\Controls\SelectBox}
+                                                                        {input $inputControl class => 'form-control form-control-sm'}
+                                                                    {else}
+                                                                        {input $inputControl}
+                                                                    {/if}
+                                                                {/foreach}
+                                                                {foreach $globalActionContainer->getComponents(false, 'Nette\Forms\Controls\SubmitButton') as $submitControl}
+                                                                    {input $submitControl class => 'btn btn-sm btn-outline-primary'}
+                                                                {/foreach}
+                                                            {/formContainer}
+                                                        {/ifset}
+                                                    </div>
                                                 </div>
                                                 <script type="application/javascript">
                                                     (window._stack = window._stack || []).push(function(di) {
@@ -72,19 +74,19 @@
                                             </div>
 
                                             {* Multiple filter *}
-                                            <div class="col form-inline" n:if="$hasMultipleFilter === true">
+                                            <div class="col col-sm-6" n:if="$hasMultipleFilter === true">
                                                 <div class="input-group float-right">
                                                     {formContainer multipleFilter}
                                                         {foreach $multipleFilters as $multipleFitlerName => $multipleFilter}
-
                                                             {formContainer $multipleFitlerName}
-
                                                                 {foreach $multipleFilter->getContainer()->getControls() as $multipleFilterControl}
-                                                                    {input $multipleFilterControl}
+                                                                    {if $multipleFilterControl instanceof Nette\Forms\Controls\TextInput || $multipleFilterControl instanceof Nette\Forms\Controls\SelectBox}
+                                                                        {input $multipleFilterControl class => 'form-control form-control-sm'}
+                                                                    {else}
+                                                                        {input $multipleFilterControl}
+                                                                    {/if}
                                                                 {/foreach}
-
                                                             {/formContainer}
-
                                                         {/foreach}
                                                     {/formContainer}
                                                 </div>
