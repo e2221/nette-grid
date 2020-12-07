@@ -8,6 +8,7 @@ namespace e2221\NetteGrid\Actions\RowAction;
 use e2221\NetteGrid\Actions\BaseAction;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use e2221\NetteGrid\NetteGrid;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
 class RowAction extends BaseAction
@@ -34,6 +35,9 @@ class RowAction extends BaseAction
 
     /** @var null|callable function($row, $primary){}: string|null  */
     protected $confirmationCallback=null;
+
+    /** @var null|callable On click callback */
+    protected $onClickCallback=null;
 
     /** @var bool is multi action (has action items?) */
     protected bool $isMultiAction=false;
@@ -77,6 +81,10 @@ class RowAction extends BaseAction
         return $this->actions[$name] = new MultiActionItem($this->netteGrid, $this, $name, $title);
     }
 
+    /**
+     * @throws InvalidLinkException
+     * @internal
+     */
     public function beforeRender(): void
     {
         parent::beforeRender();
@@ -97,11 +105,17 @@ class RowAction extends BaseAction
                 $this->setConfirmation($fn($this->row, $this->primary));
         }
 
-        //link
+        //link - external handler
         if(is_callable($this->linkCallback))
         {
             $fn = $this->linkCallback;
             $this->setLink($fn($this->netteGrid, $this->row, $this->primary));
+        }
+
+        //link - callback
+        if(is_callable($this->onClickCallback))
+        {
+            $this->setLink($this->netteGrid->link('rowAction!', $this->name));
         }
 
         //show if
@@ -117,6 +131,7 @@ class RowAction extends BaseAction
      * @param mixed|null $row
      * @param int|string|mixed|null $primary
      * @return Html|null
+     * @internal
      */
     public function render($row=null, $primary=null): ?Html
     {
@@ -136,6 +151,7 @@ class RowAction extends BaseAction
      * @param $row
      * @param $primary
      * @return Html|null
+     * @internal
      */
     public function renderMultiActions($row, $primary): ?Html
     {
@@ -212,4 +228,41 @@ class RowAction extends BaseAction
         return $this->dropdown;
     }
 
+    /**
+     * Set on click callback
+     * @param callable|null $onClickCallback
+     * @return RowAction
+     */
+    public function setOnClickCallback(?callable $onClickCallback): self
+    {
+        $this->onClickCallback = $onClickCallback;
+        return $this;
+    }
+
+    /**
+     * @return callable|null
+     * @internal
+     */
+    public function getOnClickCallback(): ?callable
+    {
+        return $this->onClickCallback;
+    }
+
+    /**
+     * @return mixed
+     * @internal
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
+
+    /**
+     * @return int|mixed|string
+     * @internal
+     */
+    public function getPrimary()
+    {
+        return $this->primary;
+    }
 }

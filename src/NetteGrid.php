@@ -517,6 +517,20 @@ class NetteGrid extends Control
     }
 
     /**
+     * Signal to call row action onClickCallback(NetteGrid $this, $row, $primary): void
+     * @param string $action
+     */
+    public function handleRowAction(string $action): void
+    {
+        $action = $this->rowActions[$action];
+        $onClick = $action->getOnClickCallback();
+        if(is_callable($onClick))
+        {
+            $onClick($this, $action->getRow(), $action->getPrimary());
+        }
+    }
+
+    /**
      * Load state
      * @param array $params
      * @throws BadRequestException
