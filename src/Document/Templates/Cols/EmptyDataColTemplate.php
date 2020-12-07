@@ -22,6 +22,7 @@ class EmptyDataColTemplate extends BaseTemplate
 
     public function beforeRender(): void
     {
+        $this->addHtmlAttribute('colspan', $this->netteGrid->getTableColspan());
         if(count($this->netteGrid->filter) > 0)
             $this->addElement(
                 HrefElement::getStatic('a', [], 'Reset filter')

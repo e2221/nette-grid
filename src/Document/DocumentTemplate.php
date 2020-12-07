@@ -269,7 +269,6 @@ class DocumentTemplate
     public function getEmptyDataColTemplate(): EmptyDataColTemplate
     {
         return $this->emptyDataColTemplate
-            ->addHtmlAttribute('colspan', (string)($this->netteGrid->getCountOfPrintableColumns() + (int)$this->netteGrid->hasActionColumn()))
             ->addElement($this->getEmptyData());
     }
 
