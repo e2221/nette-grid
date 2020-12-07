@@ -394,7 +394,14 @@
         <script type="application/javascript">
             (window._stack = window._stack || []).push(function(di) {
 
+                di.getService('snippetManager').on('after-update', function () {
+                    $(function () {
+
+                    })
+                });
+
                 {* atosubmit filter form *}
+
                 var tmr = null;
                 di.getService('page').getSnippet({form.id form})
                     .setup(function(frm) {
