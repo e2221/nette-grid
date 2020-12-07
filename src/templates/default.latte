@@ -360,7 +360,7 @@
                                         {/if}
                                     </div>
                                     <div class="col col-sm-4">
-                                        <div class="input-group float-right{if $showResetFilterButton ==== false} col-7{/if}">
+                                        <div class="input-group float-right{if $showResetFilterButton === false} col-7{/if}">
                                             <a class="btn btn-sm btn-danger" n:if="$showResetFilterButton" n:href="resetFilter!">Reset filter</a>
                                             {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
                                                 {formContainer paginate}
