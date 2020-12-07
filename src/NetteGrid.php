@@ -613,7 +613,7 @@ class NetteGrid extends Control
         $this->template->hasMultipleFilter = $this->hasMultipleFilter();
         $this->template->multipleFilters = $this->multipleFilters;
         $this->template->multipleFilterContainer = $this->multipleFilterContainer;
-        $this->template->showResetFilterButton = count($this->filter) > 0 || count($this->multipleFilter) > 0;
+        $this->template->showResetFilterButton = $this->showResetFilterButton();
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -752,6 +752,7 @@ class NetteGrid extends Control
      * Multiple filter form success
      * @param Button $button
      * @throws AbortException
+     * @internal
      */
     public function multipleFilterFormSuccess(Button $button): void
     {
@@ -890,6 +891,7 @@ class NetteGrid extends Control
      * @param bool $throw
      * @return bool
      * @throws ColumnNotFoundException
+     * @internal
      */
     protected function columnExists(string $columnName, bool $throw=true): bool
     {
@@ -902,6 +904,7 @@ class NetteGrid extends Control
     /**
      * Get count of printable (non-hidden) columns
      * @return int
+     * @internal
      */
     public function getCountOfPrintableColumns(): int
     {
@@ -916,6 +919,7 @@ class NetteGrid extends Control
      * Get columns
      * @param bool $onlyVisible
      * @return IColumn[]
+     * @internal
      */
     public function getColumns($onlyVisible=false): array
     {
@@ -934,6 +938,7 @@ class NetteGrid extends Control
      * Get data from source
      * @param mixed|null $rowID
      * @return mixed[]|null
+     * @internal
      */
     protected function getDataFromSource($rowID=null)
     {
@@ -971,6 +976,7 @@ class NetteGrid extends Control
      * Get primary value from row
      * @param mixed $row
      * @return mixed
+     * @internal
      */
     public function getRowPrimaryValue($row)
     {
@@ -991,6 +997,7 @@ class NetteGrid extends Control
     /**
      * Is grid editable
      * @return bool
+     * @internal
      */
     public function isEditable(): bool
     {
@@ -1010,6 +1017,7 @@ class NetteGrid extends Control
     /**
      * Is addable?
      * @return bool
+     * @internal
      */
     public function isAddable(): bool
     {
@@ -1193,6 +1201,7 @@ class NetteGrid extends Control
 
     /**
      * @return bool
+     * @internal
      */
     public function isAutocomplete(): bool
     {
@@ -1201,6 +1210,7 @@ class NetteGrid extends Control
 
     /**
      * @return bool
+     * @internal
      */
     public function isFilterAutocomplete(): bool
     {
@@ -1209,6 +1219,7 @@ class NetteGrid extends Control
 
     /**
      * @return bool
+     * @internal
      */
     public function isEditAutocomplete(): bool
     {
@@ -1217,6 +1228,7 @@ class NetteGrid extends Control
 
     /**
      * @return bool
+     * @internal
      */
     public function isAddAutocomplete(): bool
     {
@@ -1237,6 +1249,7 @@ class NetteGrid extends Control
     /**
      * Get table full colspan
      * @return int
+     * @internal
      */
     public function getTableColspan(): int
     {
@@ -1247,6 +1260,7 @@ class NetteGrid extends Control
     /**
      * Has global action?
      * @return bool
+     * @internal
      */
     public function hasGlobalAction(): bool
     {
@@ -1256,6 +1270,7 @@ class NetteGrid extends Control
     /**
      * Has multiple filter?
      * @return bool
+     * @internal
      */
     public function hasMultipleFilter(): bool
     {
@@ -1265,6 +1280,7 @@ class NetteGrid extends Control
     /**
      * Get multiple filter container
      * @return Container
+     * @internal
      */
     public function getMultipleFilterContainer(): Container
     {
@@ -1279,7 +1295,15 @@ class NetteGrid extends Control
         return $this->multipleFilterContainer;
     }
 
-
+    /**
+     * Show reset filter button
+     * @return bool
+     * @internal
+     */
+    public function showResetFilterButton(): bool
+    {
+        return count($this->filter) > 0 || count($this->multipleFilter) > 0;
+    }
 
 
 }
