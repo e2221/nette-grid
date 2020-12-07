@@ -394,14 +394,7 @@
         <script type="application/javascript">
             (window._stack = window._stack || []).push(function(di) {
 
-                di.getService('snippetManager').on('after-update', function () {
-                    $(function () {
-
-                    })
-                });
-
                 {* atosubmit filter form *}
-
                 var tmr = null;
                 di.getService('page').getSnippet({form.id form})
                     .setup(function(frm) {
@@ -457,7 +450,11 @@
                                     if(tr) {
                                         let tbody = $(this).closest('tbody');
                                         tr.classList.add("ui-selecting");
-                                        tbody.data("ui-selectable")._mouseStop(null);
+                                        try{
+                                            tbody.data("ui-selectable")._mouseStop(null);
+                                        }catch (e) {
+                                            console.log(e);
+                                        }
                                     }
                                 });
                             }else{
@@ -468,7 +465,11 @@
                                         let tbody = $(this).closest('tbody');
                                         tr.classList.remove("ui-selected");
                                         tr.classList.remove("table-success");
-                                        tbody.data("ui-selectable")._mouseStop(null);
+                                        try{
+                                            tbody.data("ui-selectable")._mouseStop(null);
+                                        }catch (e) {
+                                            console.log(e);
+                                        }
                                     }
                                 });
                             }
@@ -482,14 +483,14 @@
                             let tr = this.closest('tr[data-selectable-row]');
                             if(tr)
                             {
-                                let thead = $(this).closest('tbody');
+                                let tbody = $(this).closest('tbody');
                                 if(this.checked){
                                     tr.classList.add("ui-selecting");
-                                    thead.data("ui-selectable")._mouseStop(null);
+                                    tbody.data("ui-selectable")._mouseStop(null);
                                 } else {
                                     tr.classList.remove("ui-selected");
                                     tr.classList.remove("table-success");
-                                    thead.data("ui-selectable")._mouseStop(null);
+                                    tbody.data("ui-selectable")._mouseStop(null);
                                 }
                             }
                         });
