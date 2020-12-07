@@ -519,14 +519,16 @@ class NetteGrid extends Control
     /**
      * Signal to call row action onClickCallback(NetteGrid $this, $row, $primary): void
      * @param string $action
+     * @param mixed $primary
      */
-    public function handleRowAction(string $action): void
+    public function handleRowAction(string $action, $primary): void
     {
         $action = $this->rowActions[$action];
         $onClick = $action->getOnClickCallback();
         if(is_callable($onClick))
         {
-            $onClick($this, $action->getRow(), $action->getPrimary());
+            $row = $this->getDataFromSource($primary);
+            $onClick($this, $action->getRow(), $row, $action->getPrimary());
         }
     }
 
@@ -977,8 +979,9 @@ class NetteGrid extends Control
 
         $getDataFn = $this->dataSourceCallback;
         $data = $getDataFn(
-            $this->filter,
-            $this->multipleFilter, (is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null),
+            is_null($rowID) ? $this->filter : [],
+            is_null($rowID) ? $this->multipleFilter : [],
+            is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null,
             $this->paginator
         );
         if(is_countable($data) === false || count($data) == 0)

@@ -115,7 +115,7 @@ class RowAction extends BaseAction
         //link - callback
         if(is_callable($this->onClickCallback))
         {
-            $this->setLink($this->netteGrid->link('rowAction!', $this->name));
+            $this->setLink($this->netteGrid->link('rowAction!', $this->name, $this->primary));
         }
 
         //show if
