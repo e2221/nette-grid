@@ -80,6 +80,18 @@ class DocumentTemplate
     }
 
     /**
+     * Set table responsive .table-responsive{-sm|-md|-lg|-xl} from Bootstrap library
+     * @param string|null $screenWidth
+     * @return $this
+     */
+    public function setResponsiveTable(?string $screenWidth=''): self
+    {
+        $this->getWholeDocumentTemplate()
+            ->setResponsiveTable($screenWidth);
+        return $this;
+    }
+
+    /**
      * Set sticky header
      * @param int $offset
      * @return DocumentTemplate
