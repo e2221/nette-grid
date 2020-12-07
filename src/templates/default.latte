@@ -361,7 +361,7 @@
                                     </div>
                                     <div class="col col-sm-4">
                                         <div class="input-group float-right{if count($filter) == 0} col-7{/if}">
-                                            <a class="btn btn-sm btn-danger" n:if="count($filter) > 0" n:href="resetFilter!">Reset filter</a>
+                                            <a class="btn btn-sm btn-danger" n:if="showResetFilterButton" n:href="resetFilter!">Reset filter</a>
                                             {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}
                                                 {formContainer paginate}
                                                     {input itemsPerPage}

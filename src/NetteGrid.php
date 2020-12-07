@@ -462,6 +462,7 @@ class NetteGrid extends Control
     public function handleResetFilter(): void
     {
         $this->filter = [];
+        $this->multipleFilter = [];
         $this->reloadDocument();
     }
 
@@ -612,6 +613,7 @@ class NetteGrid extends Control
         $this->template->hasMultipleFilter = $this->hasMultipleFilter();
         $this->template->multipleFilters = $this->multipleFilters;
         $this->template->multipleFilterContainer = $this->multipleFilterContainer;
+        $this->template->showResetFilterButton = count($this->filter) > 0 || count($this->multipleFilter) > 0;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -955,7 +957,11 @@ class NetteGrid extends Control
         }
 
         $getDataFn = $this->dataSourceCallback;
-        $data = $getDataFn($this->filter, $this->multipleFilter, (is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null), $this->paginator);
+        $data = $getDataFn(
+            $this->filter,
+            $this->multipleFilter, (is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null),
+            $this->paginator
+        );
         if(is_countable($data) === false || count($data) == 0)
             return null;
         return $data;
