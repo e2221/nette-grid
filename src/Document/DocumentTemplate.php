@@ -202,9 +202,11 @@ class DocumentTemplate
      */
     public function getWholeDocumentTemplate(): WholeDocumentTemplate
     {
-        $this->wholeDocumentTemplate
-            ->addDataAttribute('grid-name', $this->netteGrid->getUniqueId())
-            ->setDefaultClass('nette-grid');
+        $this->netteGrid->onAnchor[] = function() {
+            $this->wholeDocumentTemplate
+                ->addDataAttribute('grid-name', $this->netteGrid->getUniqueId())
+                ->setDefaultClass('nette-grid');
+        };
         return $this->wholeDocumentTemplate;
     }
 
