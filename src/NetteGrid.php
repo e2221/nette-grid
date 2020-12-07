@@ -518,6 +518,7 @@ class NetteGrid extends Control
 
     /**
      * Signal to call row action onClickCallback(NetteGrid $this, $row, $primary): void
+     * Redraw any snippet of grid should be called by callback
      * @param string $action
      * @param mixed $primary
      */
@@ -528,7 +529,11 @@ class NetteGrid extends Control
         if(is_callable($onClick))
         {
             $row = $this->getDataFromSource($primary);
-            $onClick($this, $action->getRow(), $row, $action->getPrimary());
+            foreach($row as $rowKey => $rowData)
+            {
+                $onClick($this, $rowData, $primary);
+                return;
+            }
         }
     }
 
@@ -961,32 +966,43 @@ class NetteGrid extends Control
         if(is_null($this->dataSourceCallback))
             return null;
 
-        if($rowID)
+        if(is_null($rowID) === true)
         {
-            $this->filter[$this->primaryColumn] = $rowID;
-        }else if(is_null($this->editKey) === false && $this->presenter->isAjax())
-        {
-            $this->filter[$this->primaryColumn] = $this->editKey;
-        }
+            if(is_null($this->editKey) === false && $this->presenter->isAjax())
+                $this->filter[$this->primaryColumn] = $this->editKey;
 
-        if($this->paginator instanceof Paginator)
-        {
-            $itemsTotalCountFn = $this->totalItemsCountCallback;
-            $this->paginator->setItemCount($itemsTotalCountFn($this->filter, null));
-            $this->paginator->page = $this->page;
-            $this->paginator->itemsPerPage = $this->itemsPerPage;
+            if($this->paginator instanceof Paginator)
+            {
+                $itemsTotalCountFn = $this->totalItemsCountCallback;
+                $this->paginator->setItemCount($itemsTotalCountFn($this->filter, null));
+                $this->paginator->page = $this->page;
+                $this->paginator->itemsPerPage = $this->itemsPerPage;
+            }
+        }else{
+            $filter[$this->primaryColumn] = $rowID;
         }
 
         $getDataFn = $this->dataSourceCallback;
         $data = $getDataFn(
-            is_null($rowID) ? $this->filter : [],
+            is_null($rowID) ? $this->filter : $filter,
             is_null($rowID) ? $this->multipleFilter : [],
             is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null,
-            $this->paginator
+            is_null($rowID) ? $this->paginator : null
         );
+
         if(is_countable($data) === false || count($data) == 0)
             return null;
         return $data;
+    }
+
+    /**
+     * Get single data row
+     * @param $rowID
+     * @return mixed[]|null
+     */
+    protected function getRowFromSource($rowID)
+    {
+        return $this->getDataFromSource($rowID);
     }
 
     /**

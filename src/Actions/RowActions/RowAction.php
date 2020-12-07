@@ -36,7 +36,7 @@ class RowAction extends BaseAction
     /** @var null|callable function($row, $primary){}: string|null  */
     protected $confirmationCallback=null;
 
-    /** @var null|callable On click callback */
+    /** @var null|callable On click callback function(NetteGrid $grid, $row, $primary){}: void */
     protected $onClickCallback=null;
 
     /** @var bool is multi action (has action items?) */
@@ -230,7 +230,7 @@ class RowAction extends BaseAction
 
     /**
      * Set on click callback
-     * @param callable|null $onClickCallback
+     * @param callable|null $onClickCallback function(NetteGrid $grid, $row, $primary){}: void
      * @return RowAction
      */
     public function setOnClickCallback(?callable $onClickCallback): self
