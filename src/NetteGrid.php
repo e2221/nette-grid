@@ -161,8 +161,8 @@ class NetteGrid extends Control
     /** @var MultipleFilter[] Multiple filters  */
     public array $multipleFilters=[];
 
-    /** @var array|null Multiple filter @persistent */
-    public ?array $multipleFilter=null;
+    /** @var array Multiple filter @persistent */
+    public array $multipleFilter=[];
 
     public function __construct()
     {
@@ -778,7 +778,6 @@ class NetteGrid extends Control
                 }
             }
         }
-
         $this->multipleFilter = $multiple;
         $this->editKey = null;
         $this->editMode = false;

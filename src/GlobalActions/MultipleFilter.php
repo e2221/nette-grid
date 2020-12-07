@@ -43,6 +43,11 @@ class MultipleFilter
      */
     public function getContainer(): Container
     {
+        foreach($this->container->getControls() as $containerControl)
+        {
+            $containerControl->setHtmlAttribute('data-autosubmit');
+            $containerControl->setHtmlAttribute('data-container', 'multipleFilterSubmit');
+        }
         return $this->container;
     }
 

@@ -411,6 +411,19 @@
                             }(this), 200);
                         });
 
+                        $(frm).on('change', '[data-autosubmit]', function(e) {
+                            var code;
+                            code = e.which || e.keyCode || 0;
+                            if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
+                                return;
+                            }
+                            var $this = $(this);
+                            tmr && window.clearTimeout(tmr);
+                            tmr = window.setTimeout(function(_this) {
+                                di.getService('formLocator').getForm(frm).submit($this.data('container'));
+                            }(this), 200);
+                        });
+
                         $(frm).on('click', '[data-submit]', function(){
                             di.getService('formLocator').getForm(frm).submit($(this).data('container'));
                         });
