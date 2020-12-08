@@ -10,6 +10,7 @@ use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
+use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
 use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
@@ -163,6 +164,12 @@ class NetteGrid extends Control
 
     /** @var array Multiple filter @persistent */
     public array $multipleFilter=[];
+
+    /** @var bool  */
+    protected bool $enableItemDetail=false;
+
+    /** @var mixed Item detail key @persistent */
+    public $itemDetailKey=null;
 
     public function __construct()
     {
@@ -323,6 +330,18 @@ class NetteGrid extends Control
     }
 
     /**
+     * Add row action item detail
+     * @param string $name
+     * @param string|null $title
+     * @return RowAction
+     */
+    public function addRowActionItemDetail(string $name='__itemDetail', ?string $title=null): RowAction
+    {
+        $this->enableItemDetail = true;
+        return $this->addRowActionDirectly(new RowActionItemDetail($this, $name, $title));
+    }
+
+    /**
      * Actions order in the cell
      * @param string $name
      * @param int $position
@@ -473,8 +492,7 @@ class NetteGrid extends Control
      */
     public function handleRedrawRow($rowID): void
     {
-        $this->data = $this->getDataFromSource($rowID);
-        $this->reloadItem();
+        $this->reloadRow($rowID);
     }
 
     /**
@@ -535,6 +553,17 @@ class NetteGrid extends Control
                 return;
             }
         }
+    }
+
+    /**
+     * Signal - show item detail
+     * @param $primary
+     * @throws AbortException
+     */
+    public function handleItemDetail($primary): void
+    {
+        $this->itemDetailKey = $primary;
+        $this->reloadRow($primary);
     }
 
     /**
@@ -635,6 +664,8 @@ class NetteGrid extends Control
         $this->template->multipleFilters = $this->multipleFilters;
         $this->template->multipleFilterContainer = $this->multipleFilterContainer;
         $this->template->showResetFilterButton = $this->showResetFilterButton();
+        $this->template->itemDetailKey = $this->itemDetailKey;
+        $this->template->enableItemDetail = $this->enableItemDetail;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -1176,6 +1207,17 @@ class NetteGrid extends Control
     public function reloadItem(): void
     {
         $this->reload(self::SNIPPET_ITEMS_AREA);
+    }
+
+    /**
+     * Reload one row by primary key (data will be loaded)
+     * @param $rowID
+     * @throws AbortException
+     */
+    public function reloadRow($rowID): void
+    {
+        $this->data = $this->getDataFromSource($rowID);
+        $this->reloadItem();
     }
 
     /**

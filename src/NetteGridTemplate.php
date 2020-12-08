@@ -67,6 +67,9 @@ class NetteGridTemplate extends Template
     /** @var MultipleFilter[] */
     public array $multipleFilters;
 
+    /** @var mixed */
+    public $itemDetailKey=null;
+
     public ?Paginator $paginator;
     public NetteGrid $control;
     public Presenter $presenter;
@@ -110,5 +113,6 @@ class NetteGridTemplate extends Template
     public bool $hasMultipleFilter;
     public ?Container $multipleFilterContainer;
     public bool $showResetFilterButton;
+    public bool $enableItemDetail;
 
 }

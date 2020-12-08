@@ -340,6 +340,17 @@
 
                                 {/if}
 
+                                {if $enableItemDetail === true}
+
+                                    <tr class="row-item-detail" data-no-select data-detail-id="{$primaryValue}" n:snippet="detail-$primaryValue">
+                                        <td style="display: none;" colspan="{$tableColspan}">
+                                            row item detail
+                                        </td>
+                                    </tr>
+                                    <tr class="row-stripped-helper" data-no-select></tr>
+
+                                {/if}
+
                             {/snippetArea}
                         </tbody>
 
@@ -513,6 +524,29 @@
                                 });
                             }
                         });
+                    });
+
+                {* item detail toggle *}
+                di.getService('page').getSnippet({snippet.id data})
+                    .setup(function (rows) {
+                        $(rows).on('click', 'a[data-item-detail-toggle]', function(){
+                            var btn, id, link, detailRow;
+                            btn = $(this);
+                            id = btn.data('id')
+                            link = btn.data('link');
+                            detailRow = $(rows).find('tr[data-detail-id='+id+']');
+
+                            di.getService('page')
+                                .open(link, 'GET')
+                                .then(function(){
+                                    console.log('then');
+
+                                    var itedmDetailTd;
+                                    itedmDetailTd = $(detailRow).find('td');
+                                    $(itedmDetailTd).slideToggle();
+                                });
+                        });
+
                     });
 
                 {* rows editable *}

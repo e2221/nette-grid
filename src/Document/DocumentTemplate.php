@@ -82,7 +82,7 @@ class DocumentTemplate
     /**
      * Set table responsive .table-responsive{-sm|-md|-lg|-xl} from Bootstrap library
      * @param string|null $screenWidth
-     * @return $this
+     * @return DocumentTemplate
      */
     public function setResponsiveTable(?string $screenWidth=''): self
     {
