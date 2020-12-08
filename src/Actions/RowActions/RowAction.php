@@ -11,7 +11,7 @@ use e2221\NetteGrid\NetteGrid;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
-class RowAction extends BaseAction
+class RowAction extends BaseAction implements IRowAction
 {
     protected NetteGrid $netteGrid;
 
@@ -273,4 +273,5 @@ class RowAction extends BaseAction
     {
         return $this->netteGrid;
     }
+
 }

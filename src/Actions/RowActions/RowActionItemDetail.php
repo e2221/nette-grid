@@ -22,8 +22,8 @@ class RowActionItemDetail extends RowAction
     public function beforeRender(): void
     {
         parent::beforeRender();
-        $this->setLink('#');
         $this
+            ->setLink('#')
             ->addDataAttribute('id', $this->primary)
             ->addDataAttribute('link', $this->netteGrid->link('itemDetail!', $this->primary));
     }

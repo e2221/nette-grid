@@ -338,14 +338,19 @@
 
                                         {if $enableItemDetail === true}
 
-                                            <tr class="row-item-detail" data-no-select data-detail-id="{$primaryValue}" n:snippet="itemDetail-$primaryValue">
-                                                <td style="display: none;" colspan="{$tableColspan}">
-                                                    row item detail
+                                            <tr data-no-select data-detail-id="{$primaryValue}" n:snippet="itemDetail-$primaryValue">
+                                                <td data-no-select n:class="$itemDetailKey == $primaryValue ? 'loaded' : 'd-none'" colspan="{$tableColspan}">
+                                                    {if $itemDetailKey == $primaryValue}
+
+                                                        row item detail
+
+
+                                                    {/if}
                                                 </td>
                                             </tr>
                                             <tr class="row-stripped-helper" data-no-select></tr>
 
-                                        {/if}
+                                            {/if}
 
                                     {/foreach}
 
@@ -527,26 +532,38 @@
                     });
 
                 {* item detail toggle *}
+                var btn, id, link, detailRow, itemDetailTd;
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function (rows) {
-                        $(rows).on('click', 'a[data-item-detail-toggle]', function(){
-                            var btn, id, link, detailRow;
+                        $(rows).on('click', 'a[data-item-detail-toggle]', function () {
                             btn = $(this);
                             id = btn.data('id')
                             link = btn.data('link');
-                            detailRow = $(rows).find('tr[data-detail-id='+id+']');
+                            detailRow = $(rows).find('tr[data-detail-id=' + id + ']');
+                            itemDetailTd = $(detailRow).find('td');
 
+                            //hide and return if showed
+                            if ($(itemDetailTd).hasClass('showed')) {
+                                $(itemDetailTd).slideToggle('fast');
+                                $(itemDetailTd).removeClass('showed');
+                                return;
+                            }
+                            //show and return if loaded
+                            if ($(itemDetailTd).hasClass('loaded')) {
+                                $(itemDetailTd).slideToggle('fast');
+                                $(itemDetailTd).addClass('showed');
+                                return;
+                            }
+                            //open link if content is not loaded
                             di.getService('page')
-                                .open(link, 'GET')
-                                .then(function(){
-                                    console.log('then');
-
-                                    var itedmDetailTd;
-                                    itedmDetailTd = $(detailRow).find('td');
-                                    $(itedmDetailTd).slideToggle();
+                                .open(link)
+                                .then(function () {
+                                    $(itemDetailTd).slideToggle('fast');
                                 });
                         });
-
+                    })
+                    .teardown(function () {
+                        btn = id = link = detailRow = itemDetailTd = null;
                     });
 
                 {* rows editable *}

@@ -9,6 +9,7 @@ use e2221\BootstrapComponents\Pagination\Pagination;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
+use e2221\NetteGrid\Actions\RowAction\IRowAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
 use e2221\NetteGrid\Column\Column;
@@ -304,11 +305,11 @@ class NetteGrid extends Control
 
     /**
      * Add row action with as child of RowAction
-     * @param RowAction $rowAction
-     * @return RowAction
+     * @param IRowAction $rowAction
+     * @return IRowAction
      * @internal
      */
-    public function addRowActionDirectly(RowAction $rowAction): RowAction
+    public function addRowActionDirectly(IRowAction $rowAction): IRowAction
     {
         $action = $this->rowActions[$rowAction->name] = $rowAction;
         $this->onAddRowAction($action->name);
@@ -333,12 +334,15 @@ class NetteGrid extends Control
      * Add row action item detail
      * @param string $name
      * @param string|null $title
-     * @return RowAction
+     * @return RowActionItemDetail
      */
-    public function addRowActionItemDetail(string $name='__itemDetail', ?string $title=null): RowAction
+    public function addRowActionItemDetail(string $name='__itemDetail', ?string $title=null): RowActionItemDetail
     {
+        $title = $title ?? ucfirst($name);
         $this->enableItemDetail = true;
-        return $this->addRowActionDirectly(new RowActionItemDetail($this, $name, $title));
+        $action = $this->rowActions[$name] = new RowActionItemDetail($this, $name, $title);
+        $this->onAddRowAction($name);
+        return $action;
     }
 
     /**
