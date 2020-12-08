@@ -336,7 +336,7 @@ class NetteGrid extends Control
      * @param string|null $title
      * @return RowActionItemDetail
      */
-    public function addRowActionItemDetail(string $name='__itemDetail', ?string $title=null): RowActionItemDetail
+    public function addRowActionItemDetail(string $name='__itemDetail', ?string $title='Item detail'): RowActionItemDetail
     {
         $title = $title ?? ucfirst($name);
         $this->enableItemDetail = true;

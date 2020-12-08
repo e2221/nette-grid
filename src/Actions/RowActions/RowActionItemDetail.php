@@ -9,10 +9,10 @@ use Nette\Application\UI\InvalidLinkException;
 
 class RowActionItemDetail extends RowAction
 {
-    public string $class = 'btn btn-xs btn-secondary';
+    public string $class = 'btn-secondary';
     protected bool $couldHaveMultiAction=false;
 
-    public function __construct(NetteGrid $netteGrid, string $name='edit', ?string $title = 'Edit')
+    public function __construct(NetteGrid $netteGrid, string $name='__itemDetail', ?string $title='Show detail')
     {
         parent::__construct($netteGrid, $name, $title);
         $this->addSpanElement('fa fa-eye', [], true);
@@ -27,5 +27,4 @@ class RowActionItemDetail extends RowAction
             ->addDataAttribute('id', $this->primary)
             ->addDataAttribute('link', $this->netteGrid->link('itemDetail!', $this->primary));
     }
-
 }
