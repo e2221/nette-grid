@@ -265,4 +265,12 @@ class RowAction extends BaseAction
     {
         return $this->primary;
     }
+
+    /**
+     * @return NetteGrid
+     */
+    public function getNetteGrid(): NetteGrid
+    {
+        return $this->netteGrid;
+    }
 }
