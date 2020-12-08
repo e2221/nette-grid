@@ -16,13 +16,16 @@ class RowActionItemDetail extends RowAction
     {
         parent::__construct($netteGrid, $name, $title);
         $this->addSpanElement('fa fa-eye', [], true);
-        $this->addDataAttribute('data-item-detail-toggle');
+        $this->addDataAttribute('item-detail-toggle');
     }
 
     public function beforeRender(): void
     {
         parent::beforeRender();
-        $this->setLink($this->netteGrid->link('itemDetail!', $this->primary));
+        $this->setLink('#');
+        $this
+            ->addDataAttribute('id', $this->primary)
+            ->addDataAttribute('link', $this->netteGrid->link('itemDetail!', $this->primary));
     }
 
 }

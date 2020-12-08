@@ -336,18 +336,18 @@
 
                                         </tr>
 
+                                        {if $enableItemDetail === true}
+
+                                            <tr class="row-item-detail" data-no-select data-detail-id="{$primaryValue}" n:snippet="itemDetail-$primaryValue">
+                                                <td style="display: none;" colspan="{$tableColspan}">
+                                                    row item detail
+                                                </td>
+                                            </tr>
+                                            <tr class="row-stripped-helper" data-no-select></tr>
+
+                                        {/if}
+
                                     {/foreach}
-
-                                {/if}
-
-                                {if $enableItemDetail === true}
-
-                                    <tr class="row-item-detail" data-no-select data-detail-id="{$primaryValue}" n:snippet="detail-$primaryValue">
-                                        <td style="display: none;" colspan="{$tableColspan}">
-                                            row item detail
-                                        </td>
-                                    </tr>
-                                    <tr class="row-stripped-helper" data-no-select></tr>
 
                                 {/if}
 
