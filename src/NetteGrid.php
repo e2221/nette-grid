@@ -567,6 +567,7 @@ class NetteGrid extends Control
     public function handleItemDetail($primary): void
     {
         $this->itemDetailKey = $primary;
+        $this->template->itemDetailKey = $primary;
         $this->reloadRow($primary);
     }
 
