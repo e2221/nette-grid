@@ -5,11 +5,20 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Document\Templates;
 
 
+use e2221\NetteGrid\NetteGrid;
+
 class TbodyTemplate extends BaseTemplate
 {
     protected ?string $elementName='tbody';
     public string $defaultClass = 'snippet-container';
     protected bool $sortable=false;
+    protected NetteGrid $netteGrid;
+
+    public function __construct(NetteGrid $netteGrid)
+    {
+        parent::__construct();
+        $this->netteGrid = $netteGrid;
+    }
 
     public function beforeRender(): void
     {
@@ -38,7 +47,13 @@ class TbodyTemplate extends BaseTemplate
     {
         $this->sortable = $sortable;
         if($sortable === true)
-            $this->addDataAttribute('sortable-rows');
+        {
+            $this
+                ->addDataAttribute('sortable-rows', 'true')
+                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'movedKey'))
+                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'beforeKey'))
+                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'afterKey'));
+        }
         return $this;
     }
 

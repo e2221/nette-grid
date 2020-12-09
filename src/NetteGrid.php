@@ -174,6 +174,9 @@ class NetteGrid extends Control
     /** @var RowActionItemDetail[] */
     protected array $itemDetails=[];
 
+    /** @var RowActionSortable[] */
+    protected array $rowsSortActions=[];
+
 
     public function __construct()
     {
@@ -352,6 +355,7 @@ class NetteGrid extends Control
     public function addRowActionRowsSortable(string $name='__rowsSortable', ?string $title='Sort row'): RowActionSortable
     {
         $sortableAction = new RowActionSortable($this, $name, $title);
+        $this->rowsSortActions[$name] = $sortableAction;
         $this->rowActions[$name] = $sortableAction;
         $this->getDocumentTemplate()->getTbodyTemplate()->setSortable();
         $this->onAddRowAction($name);
@@ -584,6 +588,21 @@ class NetteGrid extends Control
         $this->template->itemDetailKey = $primary;
         $this->template->itemDetailAction = $itemDetailId;
         $this->reloadItemDetail($itemDetailId, $primary);
+    }
+
+    /**
+     * Signal - rows sort
+     * @param string $sortAction
+     * @param $movedKey
+     * @param $beforeKey
+     * @param $afterKey
+     */
+    public function handleRowsSort(string $sortAction, $movedKey, $beforeKey, $afterKey): void
+    {
+        $action = $this->rowsSortActions[$sortAction];
+        $onSortCallback = $action->getOnSortCallback();
+        if(is_callable($onSortCallback))
+            $onSortCallback($this, $movedKey, $beforeKey, $afterKey);
     }
 
     /**

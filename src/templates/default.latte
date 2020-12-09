@@ -540,6 +540,7 @@
                     });
 
                 {* make rows sortable *}
+                var row;
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function(allRows) {
                         if (typeof $.fn.sortable === 'undefined') {
@@ -551,7 +552,8 @@
                                 handle: '[data-sort-handler]',
                                 items: 'tr',
                                 update: function(event, ui){
-                                    console.log("updated");
+                                    row = ui.item.closest('tr[data-id]');
+                                    console.log(ui.item);
                                 },
                                 helper: function(e, ui) {
                                     ui.children().each(function() {
