@@ -11,6 +11,7 @@
 {varType e2221\NetteGrid\Actions\HeaderActions\HeaderAction $headerAction}
 {varType e2221\NetteGrid\Column\IColumn $column}
 {varType string $columnTitle}
+{varType e2221\NetteGrid\Actions\RowAction\RowActionItemDetail $itemDetail}
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
@@ -156,4 +157,9 @@
 {* Pagination *}
 {define pagination}
     {control pagination}
+{/define}
+
+{* Universal item detail - available parameters (RowActionItemDetail $itemDetail, $row, $primary) *}
+{define #item-detail}
+    {$itemDetail->renderItemDetail()|noescape}
 {/define}

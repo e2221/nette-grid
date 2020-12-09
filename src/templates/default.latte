@@ -342,13 +342,16 @@
                                             {foreach $itemDetails as $itemDetailName => $itemDetail}
 
                                                 <tr class="row-stripped-helper" data-no-select></tr>
+
                                                 <tr data-no-select data-action-id="{$itemDetailName}" data-detail-id="{$primaryValue}" n:snippet="itemDetail-$itemDetailName-$primaryValue">
                                                     <td data-no-select n:class="$itemDetailKey == $primaryValue ? 'loaded' : 'd-none'" colspan="{$tableColspan}">
                                                         {if $itemDetailKey == $primaryValue}
 
-                                                            row item detail {$itemDetailName}
-
-
+                                                            {ifset #item-detail-$itemDetailName}
+                                                                {include #"item-detail-{$itemDetailName}" row => $row, primary => $primaryValue, itemDetail => $itemDetail}
+                                                            {else}
+                                                                {include #item-detail row => $row, primary => $primaryValue, itemDetail => $itemDetail}
+                                                            {/ifset}
                                                         {/if}
                                                     </td>
                                                 </tr>
@@ -545,7 +548,7 @@
                             id = btn.data('id')
                             link = btn.data('link');
                             actionId = btn.data('action-id');
-                            detailRow = $(rows).find('tr[data-detail-id="'+id+'"][data-action-id="'+actionId+']"');
+                            detailRow = $(rows).find('tr[data-detail-id="'+id+'"][data-action-id="'+actionId+'"]');
                             itemDetailTd = $(detailRow).find('td');
 
                             //hide and return if showed

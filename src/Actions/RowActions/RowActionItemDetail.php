@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Actions\RowAction;
 
 use e2221\NetteGrid\NetteGrid;
+use e2221\utils\Html\BaseElement;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Utils\Html;
 
 class RowActionItemDetail extends RowAction
 {
@@ -41,5 +43,20 @@ class RowActionItemDetail extends RowAction
     {
         $this->detailCallback = $detailCallback;
         return $this;
+    }
+
+    /**
+     * Get detail
+     * @return null|string|BaseElement|Html
+     * @internal
+     */
+    public function renderItemDetail()
+    {
+        if(is_callable($this->detailCallback))
+        {
+            $detailFn = $this->detailCallback;
+            return $detailFn($this->row, $this->primary);
+        }
+        return null;
     }
 }
