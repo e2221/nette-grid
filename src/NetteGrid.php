@@ -608,6 +608,7 @@ class NetteGrid extends Control
             if(is_callable($onSortCallback))
                 $onSortCallback($this, $movedKey, $beforeKey, $afterKey);
         }
+        $this->reloadDocumentArea();
     }
 
     /**
@@ -1187,6 +1188,14 @@ class NetteGrid extends Control
         }else{
             $this->presenter->redirect('this');
         }
+    }
+
+    /**
+     * Reload only document area
+     */
+    public function reloadDocumentArea(): void
+    {
+        $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
     }
 
     /**
