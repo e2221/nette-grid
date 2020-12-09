@@ -539,6 +539,29 @@
                         });
                     });
 
+                {* make rows sortable *}
+                di.getService('page').getSnippet({snippet.id data})
+                    .setup(function(allRows) {
+                        if (typeof $.fn.sortable === 'undefined') {
+                            return;
+                        }
+                        $(allRows ).find("[sortable-row]").each(function(){
+                            $(this).sortable({
+                                handle: '[data-sort-handler]',
+                                items: 'tr',
+                                update: function(event, ui){
+                                    console.log("updated");
+                                },
+                                helper: function(e, ui) {
+                                    ui.children().each(function() {
+                                        return $(this).width($(this).width());
+                                    });
+                                    return ui;
+                                }
+                            });
+                        });
+                    });
+
                 {* item detail toggle *}
                 var btn, id, link, detailRow, itemDetailTd, actionId;
                 di.getService('page').getSnippet({snippet.id data})

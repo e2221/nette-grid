@@ -12,6 +12,7 @@ use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
 use e2221\NetteGrid\Actions\RowAction\IRowAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
+use e2221\NetteGrid\Actions\RowAction\RowActionSortable;
 use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Column\ColumnPrimary;
 use e2221\NetteGrid\Column\ColumnText;
@@ -159,7 +160,7 @@ class NetteGrid extends Control
     protected array $globalActions=[];
 
     /** @var bool jQuery - selectable rows */
-    protected bool $jQuerySelectable=true;
+    protected bool $rowsSelectable=true;
 
     /** @var MultipleFilter[] Multiple filters  */
     public array $multipleFilters=[];
@@ -346,6 +347,15 @@ class NetteGrid extends Control
         $this->itemDetails[$name] = $itemDetail;
         $this->onAddRowAction($name);
         return $itemDetail;
+    }
+
+    public function addRowActionRowsSortable(string $name='__rowsSortable', ?string $title='Sort row'): RowActionSortable
+    {
+        $sortableAction = new RowActionSortable($this, $name, $title);
+        $this->rowActions[$name] = $sortableAction;
+        $this->getDocumentTemplate()->getDataRowTemplate()->setSortable();
+        $this->onAddRowAction($name);
+        return $sortableAction;
     }
 
     /**
@@ -637,8 +647,8 @@ class NetteGrid extends Control
             $this->globalActionsContainer->addCheckboxList('rowCheck', '', [])
                 ->setHtmlAttribute('data-row-selector');
 
-            $this->documentTemplate->getTbodyTemplate()->makeJQuerySelectable($this->jQuerySelectable);
-            $this->documentTemplate->getDataRowTemplate()->makeJQuerySelectable($this->jQuerySelectable);
+            $this->documentTemplate->getTbodyTemplate()->makeJQuerySelectable($this->rowsSelectable);
+            $this->documentTemplate->getDataRowTemplate()->rowsSelectable($this->rowsSelectable);
 
 
         }
@@ -1334,12 +1344,12 @@ class NetteGrid extends Control
 
     /**
      * Set jQuery selectable - it is enabled by default, you can disable it
-     * @param bool $jQuerySelectable
+     * @param bool $rowsSelectable
      * @return NetteGrid
      */
-    public function setJQuerySelectable(bool $jQuerySelectable=true): self
+    public function setRowsSelectable(bool $rowsSelectable=true): self
     {
-        $this->jQuerySelectable = $jQuerySelectable;
+        $this->rowsSelectable = $rowsSelectable;
         return $this;
     }
 
