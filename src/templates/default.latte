@@ -336,19 +336,25 @@
 
                                         </tr>
 
-                                        {if $enableItemDetail === true}
+                                        {* Item details *}
+                                        {if $hasItemDetail === true}
 
-                                            <tr data-no-select data-detail-id="{$primaryValue}" n:snippet="itemDetail-$primaryValue">
-                                                <td data-no-select n:class="$itemDetailKey == $primaryValue ? 'loaded' : 'd-none'" colspan="{$tableColspan}">
-                                                    {if $itemDetailKey == $primaryValue}
+                                            {foreach $itemDetails as $itemDetailName => $itemDetail}
 
-                                                        row item detail
+                                                <tr class="row-stripped-helper" data-no-select></tr>
+                                                <tr data-no-select data-detail-id="{$primaryValue}" n:snippet="itemDetail-$itemDetailName-$primaryValue">
+                                                    <td data-no-select n:class="$itemDetailKey == $primaryValue ? 'loaded' : 'd-none'" colspan="{$tableColspan}">
+                                                        {if $itemDetailKey == $primaryValue}
+
+                                                            row item detail {$itemDetailName}
 
 
-                                                    {/if}
-                                                </td>
-                                            </tr>
-                                            <tr class="row-stripped-helper" data-no-select></tr>
+                                                        {/if}
+                                                    </td>
+                                                </tr>
+                                                <tr class="row-stripped-helper" data-no-select></tr>
+
+                                            {/foreach}
 
                                             {/if}
 

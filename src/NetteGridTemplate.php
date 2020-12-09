@@ -8,6 +8,7 @@ use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
 use e2221\NetteGrid\Actions\RowAction\RowActionEdit;
+use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
 use e2221\NetteGrid\Actions\RowAction\RowActionSave;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
@@ -70,6 +71,9 @@ class NetteGridTemplate extends Template
     /** @var mixed */
     public $itemDetailKey=null;
 
+    /** @var RowActionItemDetail[] */
+    public array $itemDetails;
+
     public ?Paginator $paginator;
     public NetteGrid $control;
     public Presenter $presenter;
@@ -113,6 +117,6 @@ class NetteGridTemplate extends Template
     public bool $hasMultipleFilter;
     public ?Container $multipleFilterContainer;
     public bool $showResetFilterButton;
-    public bool $enableItemDetail;
+    public bool $hasItemDetail;
 
 }

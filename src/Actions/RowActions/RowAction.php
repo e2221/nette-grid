@@ -274,4 +274,19 @@ class RowAction extends BaseAction implements IRowAction
         return $this->netteGrid;
     }
 
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
 }

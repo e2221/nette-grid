@@ -45,7 +45,8 @@ class NetteGrid extends Control
         SNIPPET_TFOOT = 'footer',
         SNIPPET_HEADER = 'head',
         SNIPPET_HEAD_TITLES = 'headTitles',
-        SNIPPET_GLOBAL_ACTION_CONTAINER = 'global-action-container';
+        SNIPPET_GLOBAL_ACTION_CONTAINER = 'global-action-container',
+        SNIPPET_PATH_ITEM_DETAIL = 'itemDetail';
 
     /** @var IColumn[] */
     protected array $columns=[];
@@ -166,11 +167,11 @@ class NetteGrid extends Control
     /** @var array Multiple filter @persistent */
     public array $multipleFilter=[];
 
-    /** @var bool  */
-    protected bool $enableItemDetail=false;
-
     /** @var mixed Item detail key @persistent */
     public $itemDetailKey=null;
+
+    /** @var RowActionItemDetail[] */
+    protected array $itemDetails=[];
 
     public function __construct()
     {
@@ -311,8 +312,8 @@ class NetteGrid extends Control
      */
     public function addRowActionDirectly(IRowAction $rowAction): IRowAction
     {
-        $action = $this->rowActions[$rowAction->name] = $rowAction;
-        $this->onAddRowAction($action->name);
+        $action = $this->rowActions[$rowAction->getName()] = $rowAction;
+        $this->onAddRowAction($action->getName());
         return $action;
     }
 
@@ -336,13 +337,14 @@ class NetteGrid extends Control
      * @param string|null $title
      * @return RowActionItemDetail
      */
-    public function addRowActionItemDetail(string $name='__itemDetail', ?string $title='Item detail'): RowActionItemDetail
+    public function addRowActionItemDetail(string $name, ?string $title='Item detail'): RowActionItemDetail
     {
         $title = $title ?? ucfirst($name);
-        $this->enableItemDetail = true;
-        $action = $this->rowActions[$name] = new RowActionItemDetail($this, $name, $title);
+        $itemDetail = new RowActionItemDetail($this, $name, $title);
+        $this->rowActions[$name] = $itemDetail;
+        $this->itemDetails[$name] = $itemDetail;
         $this->onAddRowAction($name);
-        return $action;
+        return $itemDetail;
     }
 
     /**
@@ -561,14 +563,15 @@ class NetteGrid extends Control
 
     /**
      * Signal - show item detail
+     * @param string $itemDetailId
      * @param $primary
      * @throws AbortException
      */
-    public function handleItemDetail($primary): void
+    public function handleItemDetail(string $itemDetailId, $primary): void
     {
         $this->itemDetailKey = $primary;
         $this->template->itemDetailKey = $primary;
-        $this->reloadRow($primary);
+        $this->reloadItemDetail($itemDetailId, $primary);
     }
 
     /**
@@ -670,7 +673,8 @@ class NetteGrid extends Control
         $this->template->multipleFilterContainer = $this->multipleFilterContainer;
         $this->template->showResetFilterButton = $this->showResetFilterButton();
         $this->template->itemDetailKey = $this->itemDetailKey;
-        $this->template->enableItemDetail = $this->enableItemDetail;
+        $this->template->itemDetails = $this->itemDetails;
+        $this->template->hasItemDetail = $this->hasItemDetail();
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -1150,6 +1154,17 @@ class NetteGrid extends Control
     }
 
     /**
+     * Reload item detail
+     * @param string $itemDetailId
+     * @param mixed $primary
+     * @throws AbortException
+     */
+    public function reloadItemDetail(string $itemDetailId, $primary): void
+    {
+        $this->reload(sprintf('%s-%s-%s', self::SNIPPET_PATH_ITEM_DETAIL, $itemDetailId, $primary));
+    }
+
+    /**
      * Reload global action container
      * @throws AbortException
      */
@@ -1358,6 +1373,16 @@ class NetteGrid extends Control
     }
 
     /**
+     * Has item detail?
+     * @return bool
+     * @internal
+     */
+    public function hasItemDetail(): bool
+    {
+        return (bool)count($this->itemDetails);
+    }
+
+    /**
      * Get multiple filter container
      * @return Container
      * @internal
@@ -1384,6 +1409,7 @@ class NetteGrid extends Control
     {
         return count($this->filter) > 0 || count($this->multipleFilter) > 0;
     }
+
 
 
 }

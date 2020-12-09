@@ -9,6 +9,7 @@ use Nette\Utils\Html;
 
 interface IRowAction
 {
+
     /**
      * Add as multi-action item
      * @param string $name
@@ -111,4 +112,16 @@ interface IRowAction
      * @return NetteGrid
      */
     public function getNetteGrid(): NetteGrid;
+
+    /**
+     * Get action id name
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
+     * Get action title
+     * @return string|null
+     */
+    public function getTitle(): ?string;
 }
