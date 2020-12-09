@@ -64,7 +64,7 @@ class DocumentTemplate
         $this->tableTemplate = new TableTemplate();
         $this->theadTemplate = new TheadTemplate();
         $this->theadTitlesRowTemplate = new TitlesRowTemplate();
-        $this->tbodyTemplate = new TbodyTemplate();
+        $this->tbodyTemplate = new TbodyTemplate($netteGrid);
         $this->emptyDataRowTemplate = new EmptyDataRowTemplate();
         $this->emptyDataColTemplate = new EmptyDataColTemplate($netteGrid);
         $this->headFilterRowTemplate = new HeadFilterRowTemplate();
