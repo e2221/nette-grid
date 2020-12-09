@@ -353,7 +353,7 @@ class NetteGrid extends Control
     {
         $sortableAction = new RowActionSortable($this, $name, $title);
         $this->rowActions[$name] = $sortableAction;
-        $this->getDocumentTemplate()->getDataRowTemplate()->setSortable();
+        $this->getDocumentTemplate()->getTbodyTemplate()->setSortable();
         $this->onAddRowAction($name);
         return $sortableAction;
     }
@@ -647,7 +647,7 @@ class NetteGrid extends Control
             $this->globalActionsContainer->addCheckboxList('rowCheck', '', [])
                 ->setHtmlAttribute('data-row-selector');
 
-            $this->documentTemplate->getTbodyTemplate()->makeJQuerySelectable($this->rowsSelectable);
+            $this->documentTemplate->getTbodyTemplate()->makeRowsSelectable($this->rowsSelectable);
             $this->documentTemplate->getDataRowTemplate()->rowsSelectable($this->rowsSelectable);
 
 

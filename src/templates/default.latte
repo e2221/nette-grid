@@ -545,8 +545,9 @@
                         if (typeof $.fn.sortable === 'undefined') {
                             return;
                         }
-                        $(allRows ).find("[sortable-row]").each(function(){
-                            $(this).sortable({
+                        if($(allRows).data('sortable-rows'))
+                        {
+                            $(allRows).sortable({
                                 handle: '[data-sort-handler]',
                                 items: 'tr',
                                 update: function(event, ui){
@@ -559,7 +560,7 @@
                                     return ui;
                                 }
                             });
-                        });
+                        }
                     });
 
                 {* item detail toggle *}
