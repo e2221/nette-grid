@@ -118,5 +118,5 @@ class NetteGridTemplate extends Template
     public ?Container $multipleFilterContainer;
     public bool $showResetFilterButton;
     public bool $hasItemDetail;
-
+    public ?string $itemDetailAction=null;
 }

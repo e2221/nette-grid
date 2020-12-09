@@ -173,6 +173,7 @@ class NetteGrid extends Control
     /** @var RowActionItemDetail[] */
     protected array $itemDetails=[];
 
+
     public function __construct()
     {
         $this->documentTemplate = new DocumentTemplate($this);
@@ -571,6 +572,7 @@ class NetteGrid extends Control
     {
         $this->itemDetailKey = $primary;
         $this->template->itemDetailKey = $primary;
+        $this->template->itemDetailAction = $itemDetailId;
         $this->reloadItemDetail($itemDetailId, $primary);
     }
 

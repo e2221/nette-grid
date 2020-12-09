@@ -342,7 +342,7 @@
                                             {foreach $itemDetails as $itemDetailName => $itemDetail}
 
                                                 <tr class="row-stripped-helper" data-no-select></tr>
-                                                <tr data-no-select data-action-it="{$itemDetailName}" data-detail-id="{$primaryValue}" n:snippet="itemDetail-$itemDetailName-$primaryValue">
+                                                <tr data-no-select data-action-id="{$itemDetailName}" data-detail-id="{$primaryValue}" n:snippet="itemDetail-$itemDetailName-$primaryValue">
                                                     <td data-no-select n:class="$itemDetailKey == $primaryValue ? 'loaded' : 'd-none'" colspan="{$tableColspan}">
                                                         {if $itemDetailKey == $primaryValue}
 
@@ -545,7 +545,7 @@
                             id = btn.data('id')
                             link = btn.data('link');
                             actionId = btn.data('action-id');
-                            detailRow = $(rows).find('tr[data-detail-id=' + id + '][data-action-id='+actionId+']');
+                            detailRow = $(rows).find('tr[data-detail-id="'+id+'"][data-action-id="'+actionId+']"');
                             itemDetailTd = $(detailRow).find('td');
 
                             //hide and return if showed
