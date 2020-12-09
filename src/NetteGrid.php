@@ -361,7 +361,7 @@ class NetteGrid extends Control
      * @param string|null $scope Scope to connect with another sortable object
      * @return RowActionSortable
      */
-    public function addRowActionRowsSortable(string $name='__rowsSortable', ?string $title='Sort row', ?string $scope=null): RowActionSortable
+    public function addRowActionRowsSortable(string $name='__rowsSortable', ?string $title='Sort row', ?string $senderId=null, ?string $scope=null): RowActionSortable
     {
         $this->sortableScope = $scope;
         $sortableAction = new RowActionSortable($this, $name, $title);
@@ -371,6 +371,8 @@ class NetteGrid extends Control
         $tbody->addDataAttribute('sortable-rows', 'true');
         if(is_string($this->sortableScope))
             $tbody->addDataAttribute('sortable-scope', $this->sortableScope);
+        if(is_string($senderId))
+            $tbody->addDataAttribute('sortable-sender-id', $senderId);
         $this->getDocumentTemplate()->getDataRowTemplate()->addDataAttribute('sortable-row');
         $this->onAddRowAction($name);
         return $sortableAction;
@@ -614,12 +616,13 @@ class NetteGrid extends Control
         $movedKey = $request->getPost('movedKey');
         $beforeKey = $request->getPost('beforeKey');
         $afterKey = $request->getPost('afterKey');
+        $senderId = $request->getPost('senderId');
         if(is_string($sortAction))
         {
             $action = $this->rowsSortActions[$sortAction];
             $onSortCallback = $action->getOnSortCallback();
             if(is_callable($onSortCallback))
-                $onSortCallback($this, $movedKey, $beforeKey, $afterKey);
+                $onSortCallback($this, $movedKey, $beforeKey, $afterKey, $senderId);
         }
         $this->reloadDocumentArea();
     }

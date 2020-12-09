@@ -8,7 +8,7 @@ use e2221\NetteGrid\NetteGrid;
 
 class RowActionSortable extends RowAction
 {
-    /** @var null|callable Sort callback function(NetteGrid $grid, $movedKey, $beforeKey, $afterKey):void  */
+    /** @var null|callable Sort callback function(NetteGrid $grid, $movedKey, $beforeKey, $afterKey, ?string $senderId):void  */
     protected $onSortCallback=null;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $title = null)

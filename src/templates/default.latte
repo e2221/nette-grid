@@ -545,7 +545,7 @@
                     });
 
                 {* make rows sortable *}
-                var row, actionKey, movedKey, beforeKey, afterKey, postFields, handler;
+                var row, actionKey, movedKey, beforeKey, afterKey, postFields, handler, senderId;
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function(allRows) {
                         if (typeof $.fn.sortable === 'undefined') {
@@ -558,8 +558,9 @@
                         if($(allRows).data('sortable-rows'))
                         {
                             $(allRows).sortable({
-                                handle: '[data-sort-handler]',
+                                handle: 'a[data-sort-handler]',
                                 items: 'tr',
+                                placeholder: "table-info",
                                 {ifset $sortableScope}
                                     connectWith: '[data-sortable-scope={$sortableScope}]',
                                 {/ifset}
@@ -575,11 +576,15 @@
                                         if(afterKey === beforeKey)
                                             beforeKey = null;
                                     }
+                                    if(ui.sender) {
+                                        senderId = ui.sender.data('sortable-sender-id');
+                                    }
                                     postFields = {
                                         ['actionKey']: actionKey,
                                         ['movedKey']: movedKey,
                                         ['beforeKey']: beforeKey,
                                         ['afterKey']: afterKey,
+                                        ['senderId']: senderId,
                                     };
                                     di.getService('page').open({link rowsSort!}, 'POST', postFields);
                                 },
@@ -593,7 +598,7 @@
                         }
                     })
                     .teardown(function () {
-                        row = handler = actionKey = movedKey = beforeKey = afterKey = postFields = null;
+                        row = actionKey = movedKey = beforeKey = afterKey = postFields = handler = senderId = null;
                     });
 
                 {* item detail toggle *}
