@@ -20,6 +20,7 @@ class RowActionItemDetail extends RowAction
         parent::__construct($netteGrid, $name, $title);
         $this->addSpanElement('fa fa-eye', [], true);
         $this->addDataAttribute('item-detail-toggle');
+        $this->addDataAttribute('action-id', $this->name);
     }
 
     public function beforeRender(): void

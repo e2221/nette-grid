@@ -342,7 +342,7 @@
                                             {foreach $itemDetails as $itemDetailName => $itemDetail}
 
                                                 <tr class="row-stripped-helper" data-no-select></tr>
-                                                <tr data-no-select data-detail-id="{$primaryValue}" n:snippet="itemDetail-$itemDetailName-$primaryValue">
+                                                <tr data-no-select data-action-it="{$itemDetailName}" data-detail-id="{$primaryValue}" n:snippet="itemDetail-$itemDetailName-$primaryValue">
                                                     <td data-no-select n:class="$itemDetailKey == $primaryValue ? 'loaded' : 'd-none'" colspan="{$tableColspan}">
                                                         {if $itemDetailKey == $primaryValue}
 
@@ -352,7 +352,6 @@
                                                         {/if}
                                                     </td>
                                                 </tr>
-                                                <tr class="row-stripped-helper" data-no-select></tr>
 
                                             {/foreach}
 
@@ -538,14 +537,15 @@
                     });
 
                 {* item detail toggle *}
-                var btn, id, link, detailRow, itemDetailTd;
+                var btn, id, link, detailRow, itemDetailTd, actionId;
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function (rows) {
                         $(rows).on('click', 'a[data-item-detail-toggle]', function () {
                             btn = $(this);
                             id = btn.data('id')
                             link = btn.data('link');
-                            detailRow = $(rows).find('tr[data-detail-id=' + id + ']');
+                            actionId = btn.data('action-id');
+                            detailRow = $(rows).find('tr[data-detail-id=' + id + '][data-action-id='+actionId+']');
                             itemDetailTd = $(detailRow).find('td');
 
                             //hide and return if showed
@@ -569,7 +569,7 @@
                         });
                     })
                     .teardown(function () {
-                        btn = id = link = detailRow = itemDetailTd = null;
+                        btn = id = link = detailRow = itemDetailTd = actionId = null;
                     });
 
                 {* rows editable *}
