@@ -245,7 +245,7 @@ class DocumentTemplate
      */
     public function getDataRowTemplate(): DataRowTemplate
     {
-        return $this->dataRowTemplate = new DataRowTemplate($this);
+        return $this->dataRowTemplate ?? $this->dataRowTemplate = new DataRowTemplate($this);
     }
 
     /**

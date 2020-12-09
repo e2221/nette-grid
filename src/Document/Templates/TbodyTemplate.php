@@ -41,7 +41,7 @@ class TbodyTemplate extends BaseTemplate
     public function makeRowsSelectable(bool $selectable=true): self
     {
         if($selectable === true)
-            $this->addDataAttribute('tbody-selectable');
+            $this->addDataAttribute('tbody-selectable', 'true');
         return $this;
     }
 

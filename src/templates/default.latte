@@ -502,8 +502,11 @@
 
                 {* make rows selectable *}
                 di.getService('page').getSnippet({snippet.id data})
-                    .setup(function(selectableRow) {
-                        $(selectableRow).on('change','[data-row-selector]', function(){
+                    .setup(function(tbody) {
+                        if (typeof $.fn.selectable === 'undefined') {
+                            return;
+                        }
+                        $(tbody).on('change','[data-row-selector]', function(){
                             let tr = this.closest('tr[data-selectable-row]');
                             if(tr)
                             {
@@ -519,24 +522,26 @@
                             }
                         });
 
-                        $('[data-tbody-selectable]').selectable({
-                            filter: 'tr',
-                            cancel: 'a,.btn,input,[data-editable-link],[data-no-select]',
-                            classes: {
-                                "ui-selecting": "table-info",
-                                "ui-selected": "table-success"
-                            },
-                            stop: function(){
-                                $( ".ui-selected", this ).find("input:checkbox:first").each(function() {
-                                    $(this).prop( "checked", true );
-                                });
-                            },
-                            unselected: function(event, ui){
-                                $(ui.unselected, this).find("input:checkbox:first").each(function() {
-                                    $(this).prop( "checked", false );
-                                });
-                            }
-                        });
+                        if($(tbody).data('sortable-rows')) {
+                            $(tbody).selectable({
+                                filter: 'tr',
+                                cancel: 'a,.btn,input,[data-editable-link],[data-no-select]',
+                                classes: {
+                                    "ui-selecting": "table-info",
+                                    "ui-selected": "table-success"
+                                },
+                                stop: function () {
+                                    $(".ui-selected", this).find("input:checkbox:first").each(function () {
+                                        $(this).prop("checked", true);
+                                    });
+                                },
+                                unselected: function (event, ui) {
+                                    $(ui.unselected, this).find("input:checkbox:first").each(function () {
+                                        $(this).prop("checked", false);
+                                    });
+                                }
+                            });
+                        }
                     });
 
                 {* make rows sortable *}
@@ -556,14 +561,14 @@
                                     actionBtn = $(row).find('[data-sort-handler]');
                                     actionKey = $(actionBtn).data('action-id');
                                     movedKey = $(row).data('id');
-                                    if (row.prev().length) {
-                                        beforeKey = row.prev().data('id');
+                                    if (row.prevAll("[data-sortable-row]").first().length) {
+                                        beforeKey = row.prevAll("[data-sortable-row]").first().data('id');
                                     }
-                                    if (row.next().length) {
-                                        afterKey = row.next().data('id');
+                                    if (row.nextAll("[data-sortable-row]").first().length) {
+                                        afterKey = row.nextAll("[data-sortable-row]").first().data('id');
                                     }
-                                    console.log({link rowsSort!});
-                                    console.log(actionKey);
+                                    {*}console.log({link rowsSort!});{*}
+                                    //console.log(actionKey);
                                     console.log(movedKey);
                                     console.log(beforeKey);
                                     console.log(afterKey);
@@ -577,6 +582,9 @@
                                 }
                             });
                         }
+                    })
+                    .teardown(function () {
+                        row = actionBtn = actionKey = movedKey = beforeKey = afterKey = null;
                     });
 
                 {* item detail toggle *}

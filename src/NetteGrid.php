@@ -358,6 +358,7 @@ class NetteGrid extends Control
         $this->rowsSortActions[$name] = $sortableAction;
         $this->rowActions[$name] = $sortableAction;
         $this->getDocumentTemplate()->getTbodyTemplate()->setSortable();
+        $this->getDocumentTemplate()->getDataRowTemplate()->addDataAttribute('sortable-row');
         $this->onAddRowAction($name);
         return $sortableAction;
     }
