@@ -540,7 +540,7 @@
                     });
 
                 {* make rows sortable *}
-                var row;
+                var row, actionBtn, actionKey, movedKey, beforeKey, afterKey;
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function(allRows) {
                         if (typeof $.fn.sortable === 'undefined') {
@@ -553,7 +553,21 @@
                                 items: 'tr',
                                 update: function(event, ui){
                                     row = ui.item.closest('tr[data-id]');
-                                    console.log(ui.item);
+                                    actionBtn = $(row).find('[data-sort-handler]');
+                                    actionKey = $(actionBtn).data('action-id');
+                                    movedKey = $(row).data('id');
+                                    if (row.prev().length) {
+                                        beforeKey = row.prev().data('id');
+                                    }
+                                    if (row.next().length) {
+                                        afterKey = row.next().data('id');
+                                    }
+                                    console.log({link rowsSort!});
+                                    console.log(actionKey);
+                                    console.log(movedKey);
+                                    console.log(beforeKey);
+                                    console.log(afterKey);
+
                                 },
                                 helper: function(e, ui) {
                                     ui.children().each(function() {

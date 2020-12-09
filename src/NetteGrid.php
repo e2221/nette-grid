@@ -592,12 +592,12 @@ class NetteGrid extends Control
 
     /**
      * Signal - rows sort
-     * @param string $sortAction
-     * @param $movedKey
-     * @param $beforeKey
-     * @param $afterKey
+     * @param string|null $sortAction
+     * @param mixed $movedKey
+     * @param mixed $beforeKey
+     * @param mixed $afterKey
      */
-    public function handleRowsSort(string $sortAction, $movedKey, $beforeKey, $afterKey): void
+    public function handleRowsSort(string $sortAction=null, $movedKey=null, $beforeKey=null, $afterKey=null): void
     {
         $action = $this->rowsSortActions[$sortAction];
         $onSortCallback = $action->getOnSortCallback();
