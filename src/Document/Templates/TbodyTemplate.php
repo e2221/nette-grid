@@ -23,6 +23,14 @@ class TbodyTemplate extends BaseTemplate
     public function beforeRender(): void
     {
         $this->addDataAttribute('dynamic-mask', 'snippet--data-\\d+');
+        if($this->sortable === true)
+        {
+            $this
+                ->addDataAttribute('sortable-rows', 'true')
+                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'movedKey'))
+                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'beforeKey'))
+                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'afterKey'));
+        }
     }
 
     /**
@@ -46,14 +54,6 @@ class TbodyTemplate extends BaseTemplate
     public function setSortable(bool $sortable=true): self
     {
         $this->sortable = $sortable;
-        if($sortable === true)
-        {
-            $this
-                ->addDataAttribute('sortable-rows', 'true')
-                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'movedKey'))
-                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'beforeKey'))
-                ->addDataAttribute('sortable-moved-key', sprintf('%s-%s', $this->netteGrid->getUniqueId(), 'afterKey'));
-        }
         return $this;
     }
 
