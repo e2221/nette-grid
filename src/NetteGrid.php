@@ -357,7 +357,7 @@ class NetteGrid extends Control
         $sortableAction = new RowActionSortable($this, $name, $title);
         $this->rowsSortActions[$name] = $sortableAction;
         $this->rowActions[$name] = $sortableAction;
-        $this->getDocumentTemplate()->getTbodyTemplate()->setSortable();
+        $this->getDocumentTemplate()->getTbodyTemplate()->addDataAttribute('sortable-rows', 'true');
         $this->getDocumentTemplate()->getDataRowTemplate()->addDataAttribute('sortable-row');
         $this->onAddRowAction($name);
         return $sortableAction;
@@ -593,17 +593,21 @@ class NetteGrid extends Control
 
     /**
      * Signal - rows sort
-     * @param string|null $sortAction
-     * @param mixed $movedKey
-     * @param mixed $beforeKey
-     * @param mixed $afterKey
      */
-    public function handleRowsSort(string $sortAction=null, $movedKey=null, $beforeKey=null, $afterKey=null): void
+    public function handleRowsSort(): void
     {
-        $action = $this->rowsSortActions[$sortAction];
-        $onSortCallback = $action->getOnSortCallback();
-        if(is_callable($onSortCallback))
-            $onSortCallback($this, $movedKey, $beforeKey, $afterKey);
+        $request = $this->getPresenter()->getRequest();
+        $sortAction = $request->getPost('actionKey');
+        $movedKey = $request->getPost('movedKey');
+        $beforeKey = $request->getPost('beforeKey');
+        $afterKey = $request->getPost('afterKey');
+        if(is_string($sortAction))
+        {
+            $action = $this->rowsSortActions[$sortAction];
+            $onSortCallback = $action->getOnSortCallback();
+            if(is_callable($onSortCallback))
+                $onSortCallback($this, $movedKey, $beforeKey, $afterKey);
+        }
     }
 
     /**

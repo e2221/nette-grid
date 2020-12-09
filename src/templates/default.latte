@@ -545,7 +545,7 @@
                     });
 
                 {* make rows sortable *}
-                var row, actionBtn, actionKey, movedKey, beforeKey, afterKey;
+                var row, actionBtn, actionKey, movedKey, beforeKey, afterKey, postFields;
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function(allRows) {
                         if (typeof $.fn.sortable === 'undefined') {
@@ -566,13 +566,16 @@
                                     }
                                     if (row.nextAll("[data-sortable-row]").first().length) {
                                         afterKey = row.nextAll("[data-sortable-row]").first().data('id');
+                                        if(afterKey === beforeKey)
+                                            beforeKey = null;
                                     }
-                                    {*}console.log({link rowsSort!});{*}
-                                    //console.log(actionKey);
-                                    console.log(movedKey);
-                                    console.log(beforeKey);
-                                    console.log(afterKey);
-
+                                    postFields = {
+                                        ['actionKey']: actionKey,
+                                        ['movedKey']: movedKey,
+                                        ['beforeKey']: beforeKey,
+                                        ['afterKey']: afterKey,
+                                    };
+                                    di.getService('page').open({link rowsSort!}, 'POST', postFields);
                                 },
                                 helper: function(e, ui) {
                                     ui.children().each(function() {
@@ -584,7 +587,7 @@
                         }
                     })
                     .teardown(function () {
-                        row = actionBtn = actionKey = movedKey = beforeKey = afterKey = null;
+                        row = actionBtn = actionKey = movedKey = beforeKey = afterKey = postFields = null;
                     });
 
                 {* item detail toggle *}
