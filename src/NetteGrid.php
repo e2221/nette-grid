@@ -177,6 +177,9 @@ class NetteGrid extends Control
     /** @var RowActionSortable[] */
     protected array $rowsSortActions=[];
 
+    /** @var string|null Sortable scope to connect with another sortable objects */
+    protected ?string $sortableScope=null;
+
 
     public function __construct()
     {
@@ -352,12 +355,22 @@ class NetteGrid extends Control
         return $itemDetail;
     }
 
-    public function addRowActionRowsSortable(string $name='__rowsSortable', ?string $title='Sort row'): RowActionSortable
+    /**
+     * @param string $name
+     * @param string|null $title
+     * @param string|null $scope Scope to connect with another sortable object
+     * @return RowActionSortable
+     */
+    public function addRowActionRowsSortable(string $name='__rowsSortable', ?string $title='Sort row', ?string $scope=null): RowActionSortable
     {
+        $this->sortableScope = $scope;
         $sortableAction = new RowActionSortable($this, $name, $title);
         $this->rowsSortActions[$name] = $sortableAction;
         $this->rowActions[$name] = $sortableAction;
-        $this->getDocumentTemplate()->getTbodyTemplate()->addDataAttribute('sortable-rows', 'true');
+        $tbody = $this->getDocumentTemplate()->getTbodyTemplate();
+        $tbody->addDataAttribute('sortable-rows', 'true');
+        if(is_string($this->sortableScope))
+            $tbody->addDataAttribute('sortable-scope', $this->sortableScope);
         $this->getDocumentTemplate()->getDataRowTemplate()->addDataAttribute('sortable-row');
         $this->onAddRowAction($name);
         return $sortableAction;
@@ -712,6 +725,7 @@ class NetteGrid extends Control
         $this->template->itemDetailKey = $this->itemDetailKey;
         $this->template->itemDetails = $this->itemDetails;
         $this->template->hasItemDetail = $this->hasItemDetail();
+        $this->template->sortableScope = $this->sortableScope;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;

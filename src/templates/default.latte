@@ -560,6 +560,9 @@
                             $(allRows).sortable({
                                 handle: '[data-sort-handler]',
                                 items: 'tr',
+                                {ifset $sortableScope}
+                                    connectWith: '[data-sortable-scope={$sortableScope}]',
+                                {/ifset}
                                 update: function(event, ui){
                                     row = ui.item.closest('tr[data-id]');
                                     actionKey = $(handler).data('action-id');

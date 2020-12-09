@@ -119,4 +119,5 @@ class NetteGridTemplate extends Template
     public bool $showResetFilterButton;
     public bool $hasItemDetail;
     public ?string $itemDetailAction=null;
+    public ?string $sortableScope;
 }
