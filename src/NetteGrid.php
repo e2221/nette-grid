@@ -222,6 +222,7 @@ class NetteGrid extends Control
         $this->droppableScope = $droppableScope;
         $this->droppableEffect = $droppableEffect;
         $this->getDocumentTemplate()->getDataRowTemplate()->addDataAttribute('droppable-row');
+        $this->getDocumentTemplate()->getEmptyDataRowTemplate()->addDataAttribute('droppable-row');
     }
 
     public function setEmptyDataContent()
