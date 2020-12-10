@@ -37,6 +37,7 @@ class RowActionDraggable extends RowAction
     public function setHelperCallback(?callable $helperCallback): self
     {
         $this->helperCallback = $helperCallback;
+        $this->netteGrid->getDocumentTemplate()->getDataRowTemplate()->setDraggableHelperCallback($helperCallback);
         return $this;
     }
 

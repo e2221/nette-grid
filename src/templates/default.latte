@@ -238,7 +238,7 @@
                                         {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
                                         {var string|int $primaryValue = $control->getRowPrimaryValue($row)}
                                         {php
-                                            $dataRowTemplate->prepareElement($primaryValue);
+                                            $dataRowTemplate->prepareElement($row, $primaryValue);
                                         }
 
                                         {* <tr> *}
@@ -550,28 +550,26 @@
                         if (typeof $.fn.draggable  === 'undefined') {
                             return;
                         }
-                        if ($(allRows).data('draggable-rows')) {
-                            $(allRows).draggable({
-                                handle: 'a[data-drag-handler]',
-                                scope: {$draggableScope},
-                                revert: 'invalid',
-                                zIndex: 20000,
-                                helper: function(e, ui){
-                                    let helper, helperText;
-                                    helper=$(this);
-                                    helperText = helper.data('helper-text');
-                                    if(helperText)
-                                    {
-                                        return $("<div class='ui-widget-header'>"+helperText+"</div>");
-                                    }else{
-                                        return $(this).clone();
-                                    }
-                                },
-                                opacity: 0.8,
-                                cursor: "move",
-                                cursorAt: { top: 0, left: 0 },
-                            });
-                        }
+                        $(allRows).find('tr[data-draggable-row]').draggable({
+                            handle: 'a[data-drag-handler]',
+                            scope: {$draggableScope},
+                            revert: 'invalid',
+                            zIndex: 20000,
+                            helper: function(e, ui){
+                                let helper, helperText;
+                                helper=$(this);
+                                helperText = helper.data('helper-text');
+                                if(helperText)
+                                {
+                                    return $("<div class='ui-widget-header'>"+helperText+"</div>");
+                                }else{
+                                    return $(this).clone();
+                                }
+                            },
+                            opacity: 0.8,
+                            cursor: "move",
+                            cursorAt: { top: 0, left: 0 },
+                        });
                     });
 
 

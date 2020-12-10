@@ -403,8 +403,8 @@ class NetteGrid extends Control
         $this->rowsDragActions[$name] = $draggableAction;
         $this->rowActions[$name] = $draggableAction;
         $this->onAddRowAction($name);
-        $tbody = $this->getDocumentTemplate()->getTbodyTemplate();
-        $tbody->addDataAttribute('draggable-rows', 'true');
+        $this->getDocumentTemplate()->getDataRowTemplate()
+            ->addDataAttribute('draggable-row');
         return $draggableAction;
     }
 
