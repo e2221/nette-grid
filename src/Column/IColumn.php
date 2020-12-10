@@ -11,6 +11,22 @@ use e2221\NetteGrid\GlobalActions\MultipleFilter;
 
 interface IColumn
 {
+
+    /**
+     * Set export value callback
+     * @param callable|null $exportValueCallback
+     * @return $this
+     */
+    public function setExportCellValueCallback(?callable $exportValueCallback): self;
+
+    /**
+     * Get export value
+     * @param mixed $row
+     * @return mixed
+     * @internal
+     */
+    public function getExportCellValue($row);
+
     /**
      * Add multiple filter
      * @param MultipleFilter $multipleFilter

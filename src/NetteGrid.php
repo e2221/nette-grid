@@ -1627,7 +1627,7 @@ class NetteGrid extends Control
                         if($includeHiddenColumns === false)
                             if($column->isHidden() === true)
                                 continue;
-                        $row[] = $column->getCellValueForRendering($data);
+                        $row[] = $column->getExportCellValue($data);
                     }
                     $dataToExport[] = $row;
                 }

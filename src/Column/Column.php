@@ -88,6 +88,9 @@ abstract class Column implements IColumn
     /** @var MultipleFilter[] */
     protected array $multipleFilters=[];
 
+    /** @var null|callable Export value callback: function($row, $cell): ?string  */
+    protected $exportValueCallback=null;
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
         $this->netteGrid = $netteGrid;
@@ -95,6 +98,35 @@ abstract class Column implements IColumn
         $this->label = $label ?? ucfirst($this->name);
         $this->titleColTemplate = $this->defaultTitleColTemplate();
         $this->setStickyHeader();
+    }
+
+    /**
+     * Set export value callback
+     * @param callable|null $exportValueCallback
+     * @return Column
+     */
+    public function setExportCellValueCallback(?callable $exportValueCallback): self
+    {
+        $this->exportValueCallback = $exportValueCallback;
+        return $this;
+    }
+
+    /**
+     * Get export value
+     * @param mixed $row
+     * @return mixed
+     * @internal
+     */
+    public function getExportCellValue($row)
+    {
+        $cellValue = $this->getCellValue($row);
+        if(is_callable($this->exportValueCallback))
+        {
+            $fn = $this->exportValueCallback;
+            return $fn($row, $cellValue);
+        }else{
+            return $cellValue;
+        }
     }
 
     /**
