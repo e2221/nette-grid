@@ -651,7 +651,7 @@ class NetteGrid extends Control
             foreach($row as $rowKey => $rowData)
             {
                 $onClick($this, $rowData, $primary);
-                return;
+                break;
             }
         }
         $this->reloadDocumentArea();
