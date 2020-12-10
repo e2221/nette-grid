@@ -51,7 +51,8 @@ class NetteGrid extends Control
         SNIPPET_HEADER = 'head',
         SNIPPET_HEAD_TITLES = 'headTitles',
         SNIPPET_GLOBAL_ACTION_CONTAINER = 'global-action-container',
-        SNIPPET_PATH_ITEM_DETAIL = 'itemDetail';
+        SNIPPET_PATH_ITEM_DETAIL = 'itemDetail',
+        SNIPPET_HEAD_ACTIONS = 'headActions';
 
     /** @var IColumn[] */
     protected array $columns=[];
@@ -967,6 +968,7 @@ class NetteGrid extends Control
         $this->editMode = false;
         $this->reloadItems();
         $this->reloadFooter();
+        $this->reloadHeadActions();
     }
 
     /**
@@ -1022,6 +1024,7 @@ class NetteGrid extends Control
         $this->editMode = false;
         $this->reloadItems();
         $this->reloadFooter();
+        $this->reloadHeadActions();
     }
 
     /**
@@ -1423,6 +1426,15 @@ class NetteGrid extends Control
     {
         $this->data = $this->getDataFromSource($rowID);
         $this->reloadItem();
+    }
+
+    /**
+     * Reload hader actions
+     * @throws AbortException
+     */
+    public function reloadHeadActions(): void
+    {
+        $this->reload(self::SNIPPET_HEAD_ACTIONS);
     }
 
     /**
