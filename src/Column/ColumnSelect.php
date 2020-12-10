@@ -74,7 +74,7 @@ class ColumnSelect extends Column
     public function getInput(): BaseControl
     {
         $input = new SelectBox(null, $this->selection);
-        $input->setHtmlAttribute('class', 'form-control-sm');
+        $input->setHtmlAttribute('class', 'form-control form-control-sm');
         return $input;
     }
 
