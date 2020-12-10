@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace e2221\NetteGrid;
 
+use Contributte\Application\Response\CSVResponse;
 use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\BootstrapComponents\Pagination\Pagination;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
+use e2221\NetteGrid\Actions\HeaderActions\HeaderActionExport;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
 use e2221\NetteGrid\Actions\RowAction\IRowAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
@@ -197,6 +199,9 @@ class NetteGrid extends Control
     /** @var null|callable function(NetteGrid $netteGrid, $movedId, $movedToId):void */
     protected $onDropCallback=null;
 
+    /** @var HeaderActionExport[] */
+    protected array $exportActions=[];
+
     public function __construct()
     {
         $this->documentTemplate = new DocumentTemplate($this);
@@ -334,6 +339,69 @@ class NetteGrid extends Control
     public function addHeaderInlineAddAction(string $name='_inlineAdd', ?string $title='Add'): HeaderActionInlineAdd
     {
         return $this->headerActions[$name] = new HeaderActionInlineAdd($this, $name, $title);
+    }
+
+    /**
+     * Add header action - export
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderActionExport
+     */
+    public function addHeaderExportAction(string $name='_export', ?string $title='Export'): HeaderActionExport
+    {
+        $exportAction = new HeaderActionExport($this, $name, $title);
+        $this->headerActions[$name] = $exportAction;
+        $this->exportActions[$name] = $exportAction;
+        return $exportAction;
+    }
+
+    /**
+     * Signal - export
+     * @param string $exportKey
+     * @throws AbortException
+     */
+    public function handleExport(string $exportKey): void
+    {
+        $this->csvExport($this->exportActions[$exportKey]);
+    }
+
+    /**
+     * Csv export
+     * @param HeaderActionExport $actionExport
+     * @throws AbortException
+     */
+    protected function csvExport(HeaderActionExport $actionExport)
+    {
+        $dataToExport = [];
+        $includeHiddenColumns = $actionExport->isExportHiddenColumns();
+        $columnsToExport = is_array($actionExport->getColumnsToExport()) ? $actionExport->getColumnsToExport() : $this->columns;
+        if($actionExport->isExportWithHeader())
+        {
+            //Header
+            foreach($columnsToExport as $columnName => $column)
+            {
+                if($includeHiddenColumns === false)
+                    if($column->isHidden() === true)
+                        continue;
+                $dataToExport[0][] = $column->getLabel();
+            }
+            //Data
+            foreach($this->getDataFromSource(null, false, $actionExport->isRespectFilter()) as $dataKey => $data)
+            {
+                $row = [];
+                foreach($columnsToExport as $columnName => $column)
+                {
+                    if($includeHiddenColumns === false)
+                        if($column->isHidden() === true)
+                            continue;
+                    $row[] = $column->getCellValueForRendering($row);
+                }
+                $dataToExport[] = $row;
+            }
+            $exportResponse = new CSVResponse($dataToExport, $actionExport->getExportFileName(), $actionExport->getEncoding(), $actionExport->getDelimiter(), true);
+            $this->getPresenter()->sendResponse($exportResponse);
+        }
+
     }
 
 
@@ -1143,10 +1211,12 @@ class NetteGrid extends Control
     /**
      * Get data from source
      * @param mixed|null $rowID
+     * @param bool $usePaginator
+     * @param bool $useFilter
      * @return mixed[]|null
      * @internal
      */
-    protected function getDataFromSource($rowID=null)
+    protected function getDataFromSource($rowID=null, bool $usePaginator=true, bool $useFilter=true): ?array
     {
         if(is_null($this->dataSourceCallback))
             return null;
@@ -1156,7 +1226,7 @@ class NetteGrid extends Control
             if(is_null($this->editKey) === false && $this->presenter->isAjax())
                 $this->filter[$this->primaryColumn] = $this->editKey;
 
-            if($this->paginator instanceof Paginator)
+            if($this->paginator instanceof Paginator && $usePaginator === true)
             {
                 $itemsTotalCountFn = $this->totalItemsCountCallback;
                 $this->paginator->setItemCount($itemsTotalCountFn($this->filter, null));
@@ -1169,10 +1239,10 @@ class NetteGrid extends Control
 
         $getDataFn = $this->dataSourceCallback;
         $data = $getDataFn(
-            is_null($rowID) ? $this->filter : $filter,
-            is_null($rowID) ? $this->multipleFilter : [],
+            is_null($rowID) ? ($useFilter === true ? $this->filter : []) : $filter,
+            is_null($rowID) ? ($useFilter === true ? $this->multipleFilter : []) : [],
             is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null,
-            is_null($rowID) ? $this->paginator : null
+            is_null($rowID) ? ($usePaginator === true ? $this->paginator : null) : null
         );
 
         if(is_countable($data) === false || count($data) == 0)
@@ -1185,7 +1255,7 @@ class NetteGrid extends Control
      * @param $rowID
      * @return mixed[]|null
      */
-    protected function getRowFromSource($rowID)
+    protected function getRowFromSource($rowID): ?array
     {
         return $this->getDataFromSource($rowID);
     }
