@@ -5,6 +5,7 @@ namespace e2221\NetteGrid\Actions\HeaderActions;
 
 
 use e2221\NetteGrid\Column\IColumn;
+use e2221\NetteGrid\NetteGrid;
 
 class HeaderActionExport extends HeaderAction
 {
@@ -28,6 +29,12 @@ class HeaderActionExport extends HeaderAction
 
     /** @var string Set csv delimiter */
     protected string $delimiter=';';
+
+    public function __construct(NetteGrid $netteGrid, string $name, ?string $title = null)
+    {
+        parent::__construct($netteGrid, $name, $title);
+        $this->addIconElement('fas fa-file-export', [], true);
+    }
 
     /**
      * Add column to export
