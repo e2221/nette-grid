@@ -11,6 +11,7 @@ use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
 use e2221\NetteGrid\Actions\RowAction\IRowAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
+use e2221\NetteGrid\Actions\RowAction\RowActionDraggable;
 use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
 use e2221\NetteGrid\Actions\RowAction\RowActionSortable;
 use e2221\NetteGrid\Column\Column;
@@ -179,6 +180,15 @@ class NetteGrid extends Control
 
     /** @var string|null Sortable scope to connect with another sortable objects */
     protected ?string $sortableScope=null;
+
+    /** @var string|null Draggable scope to connect with droppable objects */
+    protected ?string $draggableScope=null;
+
+    /** @var RowActionDraggable[] */
+    protected array $rowsDragActions=[];
+
+    /** @var string|null Droppable scope to connect with draggable objects */
+    protected ?string $droppableScope=null;
 
 
     public function __construct()
@@ -358,7 +368,8 @@ class NetteGrid extends Control
     /**
      * @param string $name
      * @param string|null $title
-     * @param string|null $scope Scope to connect with another sortable object
+     * @param string|null $senderId Sender identification
+     * @param string|null $scope Scope to connect with another sortable objects
      * @return RowActionSortable
      */
     public function addRowActionRowsSortable(string $name='__rowsSortable', ?string $title='Sort row', ?string $senderId=null, ?string $scope=null): RowActionSortable
@@ -376,6 +387,25 @@ class NetteGrid extends Control
         $this->getDocumentTemplate()->getDataRowTemplate()->addDataAttribute('sortable-row');
         $this->onAddRowAction($name);
         return $sortableAction;
+    }
+
+    /**
+     * Add draggable action
+     * @param string $name
+     * @param string|null $title
+     * @param string|null $scope Scope to connect with another droppable objects
+     * @return RowActionDraggable
+     */
+    public function addRowActionDraggable(string $name='__rowsDraggable', ?string $title='Move', ?string $scope=null): RowActionDraggable
+    {
+        $this->draggableScope = $scope;
+        $draggableAction = new RowActionDraggable($this, $name, $title);
+        $this->rowsDragActions[$name] = $draggableAction;
+        $this->rowActions[$name] = $draggableAction;
+        $this->onAddRowAction($name);
+        $tbody = $this->getDocumentTemplate()->getTbodyTemplate();
+        $tbody->addDataAttribute('draggable-rows', 'true');
+        return $draggableAction;
     }
 
     /**
@@ -611,20 +641,23 @@ class NetteGrid extends Control
      */
     public function handleRowsSort(): void
     {
-        $request = $this->getPresenter()->getRequest();
-        $sortAction = $request->getPost('actionKey');
-        $movedKey = $request->getPost('movedKey');
-        $beforeKey = $request->getPost('beforeKey');
-        $afterKey = $request->getPost('afterKey');
-        $senderId = $request->getPost('senderId');
-        if(is_string($sortAction))
+        if($this->getPresenter()->isAjax())
         {
-            $action = $this->rowsSortActions[$sortAction];
-            $onSortCallback = $action->getOnSortCallback();
-            if(is_callable($onSortCallback))
-                $onSortCallback($this, $movedKey, $beforeKey, $afterKey, $senderId);
+            $request = $this->getPresenter()->getRequest();
+            $sortAction = $request->getPost('actionKey');
+            $movedKey = $request->getPost('movedKey');
+            $beforeKey = $request->getPost('beforeKey');
+            $afterKey = $request->getPost('afterKey');
+            $senderId = $request->getPost('senderId');
+            if(is_string($sortAction))
+            {
+                $action = $this->rowsSortActions[$sortAction];
+                $onSortCallback = $action->getOnSortCallback();
+                if(is_callable($onSortCallback))
+                    $onSortCallback($this, $movedKey, $beforeKey, $afterKey, $senderId);
+            }
+            $this->reloadDocumentArea();
         }
-        $this->reloadDocumentArea();
     }
 
     /**
@@ -729,6 +762,7 @@ class NetteGrid extends Control
         $this->template->itemDetails = $this->itemDetails;
         $this->template->hasItemDetail = $this->hasItemDetail();
         $this->template->sortableScope = $this->sortableScope;
+        $this->template->draggableScope = $this->draggableScope;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;

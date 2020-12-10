@@ -120,4 +120,5 @@ class NetteGridTemplate extends Template
     public bool $hasItemDetail;
     public ?string $itemDetailAction=null;
     public ?string $sortableScope;
+    public ?string $draggableScope;
 }
