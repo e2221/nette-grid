@@ -18,8 +18,14 @@ use e2221\NetteGrid\Actions\RowAction\RowActionDraggable;
 use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
 use e2221\NetteGrid\Actions\RowAction\RowActionSortable;
 use e2221\NetteGrid\Column\Column;
+use e2221\NetteGrid\Column\ColumnDate;
+use e2221\NetteGrid\Column\ColumnEmail;
+use e2221\NetteGrid\Column\ColumnNumber;
+use e2221\NetteGrid\Column\ColumnPassword;
 use e2221\NetteGrid\Column\ColumnPrimary;
+use e2221\NetteGrid\Column\ColumnSelect;
 use e2221\NetteGrid\Column\ColumnText;
+use e2221\NetteGrid\Column\ColumnTextarea;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
@@ -245,10 +251,10 @@ class NetteGrid extends Control
      */
 
     /**
-     * Add column
+     * Add custom column
      * @param string $name
      * @param IColumn $column
-     * @return IColumn
+     * @return mixed
      */
     public function addColumn(string $name, IColumn $column)
     {
@@ -275,6 +281,72 @@ class NetteGrid extends Control
     public function addColumnText(string $name, ?string $label=null): ColumnText
     {
         return $this->columns[$name] = new ColumnText($this, $name, $label);
+    }
+
+    /**
+     * Add Column date
+     * @param string $name
+     * @param string|null $label
+     * @return ColumnDate
+     */
+    public function addColumnDate(string $name, ?string $label=null): ColumnDate
+    {
+        return $this->columns[$name] = new ColumnDate($this, $name, $label);
+    }
+
+    /**
+     * Add Column email
+     * @param string $name
+     * @param string|null $label
+     * @return ColumnEmail
+     */
+    public function addColumnEmail(string $name, ?string $label=null): ColumnEmail
+    {
+        return $this->columns[$name] = new ColumnEmail($this, $name, $label);
+    }
+
+    /**
+     * Add Column number
+     * @param string $name
+     * @param string|null $label
+     * @return ColumnNumber
+     */
+    public function addColumnNumber(string $name, ?string $label=null): ColumnNumber
+    {
+        return $this->columns[$name] = new ColumnNumber($this, $name, $label);
+    }
+
+    /**
+     * Add Column password
+     * @param string $name
+     * @param string|null $label
+     * @return ColumnPassword
+     */
+    public function addColumnPassword(string $name, ?string $label=null): ColumnPassword
+    {
+        return $this->columns[$name] = new ColumnPassword($this, $name, $label);
+    }
+
+    /**
+     * Add Column select
+     * @param string $name
+     * @param string|null $label
+     * @return ColumnSelect
+     */
+    public function addColumnSelect(string $name, ?string $label=null): ColumnSelect
+    {
+        return $this->columns[$name] = new ColumnSelect($this, $name, $label);
+    }
+
+    /**
+     * Add column textarea
+     * @param string $name
+     * @param string|null $label
+     * @return ColumnTextarea
+     */
+    public function addColumnTextarea(string $name, ?string $label=null): ColumnTextarea
+    {
+        return $this->columns[$name] = new ColumnTextarea($this, $name, $label);
     }
 
     /**

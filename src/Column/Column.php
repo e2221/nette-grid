@@ -112,24 +112,6 @@ abstract class Column implements IColumn
     }
 
     /**
-     * Get export value
-     * @param mixed $row
-     * @return mixed
-     * @internal
-     */
-    public function getExportCellValue($row)
-    {
-        $cellValue = $this->getCellValue($row);
-        if(is_callable($this->exportValueCallback))
-        {
-            $fn = $this->exportValueCallback;
-            return $fn($row, $cellValue);
-        }else{
-            return $cellValue;
-        }
-    }
-
-    /**
      * Add multiple filter
      * @param MultipleFilter $multipleFilter
      * @return Column
@@ -245,6 +227,24 @@ abstract class Column implements IColumn
         if(is_callable($this->cellValueCallback))
         {
             $fn = $this->cellValueCallback;
+            return $fn($row, $cellValue);
+        }else{
+            return $cellValue;
+        }
+    }
+
+    /**
+     * Get export value
+     * @param mixed $row
+     * @return mixed
+     * @internal
+     */
+    public function getExportCellValue($row)
+    {
+        $cellValue = $this->getCellValue($row);
+        if(is_callable($this->exportValueCallback))
+        {
+            $fn = $this->exportValueCallback;
             return $fn($row, $cellValue);
         }else{
             return $cellValue;
