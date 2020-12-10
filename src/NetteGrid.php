@@ -355,55 +355,6 @@ class NetteGrid extends Control
         return $exportAction;
     }
 
-    /**
-     * Signal - export
-     * @param string $exportKey
-     * @throws AbortException
-     */
-    public function handleExport(string $exportKey): void
-    {
-        $this->csvExport($this->exportActions[$exportKey]);
-    }
-
-    /**
-     * Csv export
-     * @param HeaderActionExport $actionExport
-     * @throws AbortException
-     */
-    protected function csvExport(HeaderActionExport $actionExport)
-    {
-        $dataToExport = [];
-        $includeHiddenColumns = $actionExport->isExportHiddenColumns();
-        $columnsToExport = is_array($actionExport->getColumnsToExport()) ? $actionExport->getColumnsToExport() : $this->columns;
-        if($actionExport->isExportWithHeader())
-        {
-            //Header
-            foreach($columnsToExport as $columnName => $column)
-            {
-                if($includeHiddenColumns === false)
-                    if($column->isHidden() === true)
-                        continue;
-                $dataToExport[0][] = $column->getLabel();
-            }
-            //Data
-            foreach($this->getDataFromSource(null, false, $actionExport->isRespectFilter()) as $dataKey => $data)
-            {
-                $row = [];
-                foreach($columnsToExport as $columnName => $column)
-                {
-                    if($includeHiddenColumns === false)
-                        if($column->isHidden() === true)
-                            continue;
-                    $row[] = $column->getCellValueForRendering($row);
-                }
-                $dataToExport[] = $row;
-            }
-            $exportResponse = new CSVResponse($dataToExport, $actionExport->getExportFileName(), $actionExport->getEncoding(), $actionExport->getDelimiter(), true);
-            $this->getPresenter()->sendResponse($exportResponse);
-        }
-
-    }
-
 
     /**
      * ROW ACTIONS
@@ -782,6 +733,17 @@ class NetteGrid extends Control
             $this->reloadDocumentArea();
         }
     }
+
+    /**
+     * Signal - export
+     * @param string $exportKey
+     * @throws AbortException
+     */
+    public function handleExport(string $exportKey): void
+    {
+        $this->csvExport($this->exportActions[$exportKey]);
+    }
+
 
     /**
      * Load state
@@ -1213,10 +1175,10 @@ class NetteGrid extends Control
      * @param mixed|null $rowID
      * @param bool $usePaginator
      * @param bool $useFilter
-     * @return mixed[]|null
+     * @return mixed
      * @internal
      */
-    protected function getDataFromSource($rowID=null, bool $usePaginator=true, bool $useFilter=true): ?array
+    protected function getDataFromSource($rowID=null, bool $usePaginator=true, bool $useFilter=true)
     {
         if(is_null($this->dataSourceCallback))
             return null;
@@ -1253,9 +1215,9 @@ class NetteGrid extends Control
     /**
      * Get single data row
      * @param $rowID
-     * @return mixed[]|null
+     * @return mixed
      */
-    protected function getRowFromSource($rowID): ?array
+    protected function getRowFromSource($rowID)
     {
         return $this->getDataFromSource($rowID);
     }
@@ -1633,6 +1595,43 @@ class NetteGrid extends Control
         return count($this->filter) > 0 || count($this->multipleFilter) > 0;
     }
 
+    /**
+     * Csv export
+     * @param HeaderActionExport $actionExport
+     * @throws AbortException
+     */
+    protected function csvExport(HeaderActionExport $actionExport)
+    {
+        $dataToExport = [];
+        $includeHiddenColumns = $actionExport->isExportHiddenColumns();
+        $columnsToExport = is_array($actionExport->getColumnsToExport()) ? $actionExport->getColumnsToExport() : $this->columns;
+        if($actionExport->isExportWithHeader())
+        {
+            //Header
+            foreach($columnsToExport as $columnName => $column)
+            {
+                if($includeHiddenColumns === false)
+                    if($column->isHidden() === true)
+                        continue;
+                $dataToExport[0][] = $column->getLabel();
+            }
+            //Data
+            foreach($this->getDataFromSource(null, false, $actionExport->isRespectFilter()) as $dataKey => $data)
+            {
+                $row = [];
+                foreach($columnsToExport as $columnName => $column)
+                {
+                    if($includeHiddenColumns === false)
+                        if($column->isHidden() === true)
+                            continue;
+                    $row[] = $column->getCellValueForRendering($row);
+                }
+                $dataToExport[] = $row;
+            }
+            $exportResponse = new CSVResponse($dataToExport, $actionExport->getExportFileName(), $actionExport->getEncoding(), $actionExport->getDelimiter(), true);
+            $this->getPresenter()->sendResponse($exportResponse);
+        }
 
+    }
 
 }
