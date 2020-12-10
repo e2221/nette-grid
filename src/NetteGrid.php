@@ -11,6 +11,7 @@ use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
 use e2221\NetteGrid\Actions\RowAction\IRowAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
+use e2221\NetteGrid\Actions\RowAction\RowActionDelete;
 use e2221\NetteGrid\Actions\RowAction\RowActionDraggable;
 use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
 use e2221\NetteGrid\Actions\RowAction\RowActionSortable;
@@ -426,6 +427,19 @@ class NetteGrid extends Control
         $this->getDocumentTemplate()->getDataRowTemplate()
             ->addDataAttribute('draggable-row');
         return $draggableAction;
+    }
+
+    /**
+     * Add action delete
+     * @param string $name
+     * @param string|null $title
+     * @return RowActionDelete
+     */
+    public function addRowActionDelete(string $name='__deleteRow', ?string $title='Delete'): RowActionDelete
+    {
+        $deleteAction = $this->rowActions[$name] = new RowActionDelete($this, $name, $title);
+        $this->onAddRowAction($name);
+        return $deleteAction;
     }
 
     /**
