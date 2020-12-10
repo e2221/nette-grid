@@ -5,7 +5,7 @@ namespace e2221\NetteGrid\Actions\HeaderActions;
 
 
 use e2221\NetteGrid\Column\IColumn;
-use e2221\NetteGrid\NetteGrid;
+use Nette\Application\UI\InvalidLinkException;
 
 class HeaderActionExport extends HeaderAction
 {
@@ -30,10 +30,14 @@ class HeaderActionExport extends HeaderAction
     /** @var string Set csv delimiter */
     protected string $delimiter=';';
 
-    public function __construct(NetteGrid $netteGrid, string $name, ?string $title = null)
+    /**
+     * @throws InvalidLinkException
+     */
+    public function beforeRender(): void
     {
-        parent::__construct($netteGrid, $name, $title);
         $this->addIconElement('fas fa-file-export', [], true);
+        $this->setLink($this->netteGrid->link('export!', $this->name));
+        parent::beforeRender();
     }
 
     /**
