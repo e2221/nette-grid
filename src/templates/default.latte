@@ -550,7 +550,7 @@
                         if (typeof $.fn.droppable === 'undefined') {
                             return;
                         }
-                        $(allRows).find('tr[data-droppable-row]').draggable({
+                        $(allRows).find('tr[data-droppable-row]').droppable({
                             scope: {$droppableScope},
                             over: function (e, ui){
                                 {ifset $droppableEffect}$(this).addClass({$droppableEffect});{/ifset}

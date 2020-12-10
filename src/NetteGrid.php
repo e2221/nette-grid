@@ -188,7 +188,7 @@ class NetteGrid extends Control
     protected array $rowsDragActions=[];
 
     /** @var string|null Droppable scope to connect with draggable objects */
-    protected ?string $droppableScope='dragDropGrid';
+    protected ?string $droppableScope=null;
 
     /** @var string|null Droppable effect */
     protected ?string $droppableEffect='table-info';
