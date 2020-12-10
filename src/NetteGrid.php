@@ -23,6 +23,7 @@ use e2221\NetteGrid\Column\ColumnText;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
+use e2221\NetteGrid\Exceptions\NetteGridException;
 use e2221\NetteGrid\GlobalActions\GlobalAction;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
 use e2221\utils\Html\BaseElement;
@@ -274,6 +275,19 @@ class NetteGrid extends Control
     public function addColumnText(string $name, ?string $label=null): ColumnText
     {
         return $this->columns[$name] = new ColumnText($this, $name, $label);
+    }
+
+    /**
+     * Get column by name
+     * @param string $columnName
+     * @return IColumn
+     * @throws NetteGridException
+     */
+    public function getColumn(string $columnName): IColumn
+    {
+        if(isset($this->columns[$columnName]))
+            return $this->columns[$columnName];
+        throw new NetteGridException(sprintf('Column %s does not exist.', $columnName));
     }
 
     /**
