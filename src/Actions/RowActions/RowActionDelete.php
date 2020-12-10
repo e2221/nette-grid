@@ -9,7 +9,7 @@ class RowActionDelete extends RowAction
 
     public function beforeRender(): void
     {
-        $this->addIconElement('fas fa-trash-alt', [], true);
+        $this->addIconElement('far fa-trash-alt', [], true);
         $this->addDataAttribute('dynamic-remove', sprintf('#%s-%s', $this->netteGrid->getSnippetId($this->netteGrid::SNIPPET_TBODY), $this->primary));
         parent::beforeRender();
     }
