@@ -38,6 +38,7 @@ class HeaderActionExport extends HeaderAction
         $this->addIconElement('fas fa-file-export', [], true);
         $this->setLink($this->netteGrid->link('export!', $this->name));
         parent::beforeRender();
+        $this->addDataAttribute('ajax', 'false');
     }
 
     /**

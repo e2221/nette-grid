@@ -1616,17 +1616,21 @@ class NetteGrid extends Control
                 $dataToExport[0][] = $column->getLabel();
             }
             //Data
-            foreach($this->getDataFromSource(null, false, $actionExport->isRespectFilter()) as $dataKey => $data)
+            $dataFromSource = $this->getDataFromSource(null, false, $actionExport->isRespectFilter());
+            if(is_countable($dataFromSource))
             {
-                $row = [];
-                foreach($columnsToExport as $columnName => $column)
+                foreach($dataFromSource as $dataKey => $data)
                 {
-                    if($includeHiddenColumns === false)
-                        if($column->isHidden() === true)
-                            continue;
-                    $row[] = $column->getCellValueForRendering($row);
+                    $row = [];
+                    foreach($columnsToExport as $columnName => $column)
+                    {
+                        if($includeHiddenColumns === false)
+                            if($column->isHidden() === true)
+                                continue;
+                        $row[] = $column->getCellValueForRendering($data);
+                    }
+                    $dataToExport[] = $row;
                 }
-                $dataToExport[] = $row;
             }
             $exportResponse = new CSVResponse($dataToExport, $actionExport->getExportFileName(), $actionExport->getEncoding(), $actionExport->getDelimiter(), true);
             $this->getPresenter()->sendResponse($exportResponse);
