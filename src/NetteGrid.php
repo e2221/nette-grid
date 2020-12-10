@@ -654,6 +654,7 @@ class NetteGrid extends Control
                 return;
             }
         }
+        $this->reloadDocumentArea();
     }
 
     /**
