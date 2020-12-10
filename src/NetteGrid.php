@@ -182,14 +182,19 @@ class NetteGrid extends Control
     protected ?string $sortableScope=null;
 
     /** @var string|null Draggable scope to connect with droppable objects */
-    protected ?string $draggableScope=null;
+    protected ?string $draggableScope='dragDropGrid';
 
     /** @var RowActionDraggable[] */
     protected array $rowsDragActions=[];
 
     /** @var string|null Droppable scope to connect with draggable objects */
-    protected ?string $droppableScope=null;
+    protected ?string $droppableScope='dragDropGrid';
 
+    /** @var string|null Droppable effect */
+    protected ?string $droppableEffect='table-info';
+
+    /** @var null|callable function(NetteGrid $netteGrid, $movedId, $movedToId):void */
+    protected $onDropCallback=null;
 
     public function __construct()
     {
@@ -203,6 +208,20 @@ class NetteGrid extends Control
     public function getDocumentTemplate(): DocumentTemplate
     {
         return $this->documentTemplate;
+    }
+
+    /**
+     * Set grid droppable
+     * @param callable|null $onDropCallback function(NetteGrid $netteGrid, $movedId, $movedToId):void
+     * @param string|null $droppableScope   Droppable scope to connect with another draggable objects
+     * @param string|null $droppableEffect Droppable effect during dragging
+     */
+    public function setDroppable(?callable $onDropCallback=null, ?string $droppableScope='dragDropGrid', ?string $droppableEffect='table-info')
+    {
+        $this->onDropCallback = $onDropCallback;
+        $this->droppableScope = $droppableScope;
+        $this->droppableEffect = $droppableEffect;
+        $this->getDocumentTemplate()->getDataRowTemplate()->addDataAttribute('droppable-row');
     }
 
     public function setEmptyDataContent()
@@ -396,7 +415,7 @@ class NetteGrid extends Control
      * @param string|null $scope Scope to connect with another droppable objects
      * @return RowActionDraggable
      */
-    public function addRowActionDraggable(string $name='__rowsDraggable', ?string $title='Move', ?string $scope=null): RowActionDraggable
+    public function addRowActionDraggable(string $name='__rowsDraggable', ?string $title='Move', ?string $scope='dragDropGrid'): RowActionDraggable
     {
         $this->draggableScope = $scope;
         $draggableAction = new RowActionDraggable($this, $name, $title);
@@ -661,6 +680,23 @@ class NetteGrid extends Control
     }
 
     /**
+     * Signal - drop row
+     */
+    public function handleRowDrop(): void
+    {
+        if($this->getPresenter()->isAjax())
+        {
+            $request = $this->getPresenter()->getRequest();
+            $movedId = $request->getPost('movedId');
+            $movedToId = $request->getPost('movedToId');
+            $dropFn = $this->onDropCallback;
+            if(is_callable($dropFn))
+                $dropFn($this, $movedId, $movedToId);
+            $this->reloadDocumentArea();
+        }
+    }
+
+    /**
      * Load state
      * @param array $params
      * @throws BadRequestException
@@ -763,6 +799,8 @@ class NetteGrid extends Control
         $this->template->hasItemDetail = $this->hasItemDetail();
         $this->template->sortableScope = $this->sortableScope;
         $this->template->draggableScope = $this->draggableScope;
+        $this->template->droppableScope = $this->droppableScope;
+        $this->template->droppableEffect = $this->droppableEffect;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;

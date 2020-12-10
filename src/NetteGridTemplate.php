@@ -121,4 +121,6 @@ class NetteGridTemplate extends Template
     public ?string $itemDetailAction=null;
     public ?string $sortableScope;
     public ?string $draggableScope;
+    public ?string $droppableScope;
+    public ?string $droppableEffect;
 }

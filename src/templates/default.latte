@@ -544,6 +544,32 @@
                         }
                     });
 
+                {* make rows droppable *}
+                di.getService('page').getSnippet({snippet.id data})
+                    .setup(function(allRows) {
+                        if (typeof $.fn.droppable === 'undefined') {
+                            return;
+                        }
+                        $(allRows).find('tr[data-droppable-row]').draggable({
+                            scope: {$droppableScope},
+                            over: function (e, ui){
+                                {ifset $droppableEffect}$(this).addClass({$droppableEffect});{/ifset}
+                            },
+                            out: function (e, ui){
+                                {ifset $droppableEffect}$(this).removeClass({$droppableEffect});{/ifset}
+                            },
+                            drop: function(e, ui){
+                                let dragObject = $(ui.draggable);
+                                {ifset $droppableEffect}$(this).removeClass({$droppableEffect});{/ifset}
+                                let postFields = {
+                                    ['movedId']: dragObject.data('id'),
+                                    ['movedToId']: $(this).data('id'),
+                                };
+                                return di.getService('page').open({link rowDrop!}, 'POST', postFields);
+                            },
+                        });
+                    });
+
                 {* make rows draggable *}
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function(allRows) {
@@ -615,7 +641,7 @@
                                         ['afterKey']: afterKey,
                                         ['senderId']: senderId,
                                     };
-                                    di.getService('page').open({link rowsSort!}, 'POST', postFields);
+                                    return di.getService('page').open({link rowsSort!}, 'POST', postFields);
                                 },
                                 helper: function(e, ui) {
                                     ui.children().each(function() {
