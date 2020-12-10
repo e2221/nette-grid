@@ -5,6 +5,8 @@ namespace e2221\NetteGrid\Actions\RowAction;
 
 class RowActionDelete extends RowAction
 {
+    public string $class='btn-danger';
+
     public function beforeRender(): void
     {
         $this->addIconElement('fas fa-trash-alt', [], true);
