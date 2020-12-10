@@ -435,7 +435,7 @@ class NetteGrid extends Control
      * @param string|null $title
      * @return RowActionDelete
      */
-    public function addRowActionDelete(string $name='__deleteRow', ?string $title='Delete'): RowActionDelete
+    public function addRowActionDelete(string $name='__removeRow', ?string $title='Remove'): RowActionDelete
     {
         $deleteAction = $this->rowActions[$name] = new RowActionDelete($this, $name, $title);
         $this->onAddRowAction($name);
