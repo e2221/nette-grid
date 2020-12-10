@@ -24,6 +24,9 @@ class RowAction extends BaseAction implements IRowAction
     /** @var string|int|mixed */
     protected $primary;
 
+    /** @var bool Set action link only ajax */
+    public bool $onlyAjaxRequest=true;
+
     /** @var null|callable function($row, $primary){}: bool  */
     protected $showIfCallback=null;
 
@@ -164,6 +167,17 @@ class RowAction extends BaseAction implements IRowAction
         }
         $dropdown->addHtml($dropdownMenu);
         return $dropdown;
+    }
+
+    /**
+     * Set link only ajax or not
+     * @param bool $onlyAjaxRequest
+     * @return RowAction
+     */
+    public function setOnlyAjaxRequest(bool $onlyAjaxRequest=true): self
+    {
+        $this->onlyAjaxRequest = $onlyAjaxRequest;
+        return $this;
     }
 
     /**

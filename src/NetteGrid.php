@@ -644,6 +644,9 @@ class NetteGrid extends Control
     public function handleRowAction(string $action, $primary): void
     {
         $action = $this->rowActions[$action];
+        if($action->onlyAjaxRequest === true)
+            if($this->getPresenter()->isAjax() === false)
+                return;
         $onClick = $action->getOnClickCallback();
         if(is_callable($onClick))
         {
