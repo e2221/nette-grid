@@ -710,7 +710,7 @@
                             //support for textarea
                             if(editInputTag === 'textarea')
                             {
-                                input = $('<textarea class="form-control">' + editValue + '</textarea>');
+                                input = $('<textarea class="form-control form-control-sm">' + editValue + '</textarea>');
                                 let cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
                                 let cell_height = cell.outerHeight();
                                 let line_height = Math.round(parseFloat(cell.css('line-height')));

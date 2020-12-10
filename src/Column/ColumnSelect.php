@@ -12,6 +12,7 @@ class ColumnSelect extends Column
     /** @var mixed[] Select items */
     protected array $selection;
 
+    protected string $editInputTag='select';
 
     /**
      * @param mixed $row

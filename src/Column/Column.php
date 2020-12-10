@@ -40,8 +40,11 @@ abstract class Column implements IColumn
     /** @var bool is column filterable */
     protected bool $filterable=false;
 
-    /** @var bool is column editable */
+    /** @var bool is column editable in line */
     protected bool $editable=false;
+
+    /** @var bool is editable in single column */
+    protected bool $editableInColumn=false;
 
     /** @var bool is column required (for editing) */
     protected bool $required=false;
@@ -290,7 +293,7 @@ abstract class Column implements IColumn
             $edited = $fn($template, $row, $this->getCellValue($row));
             $template = $edited instanceof DataColTemplate ? $edited : $template;
         }
-        if($this->isEditable() === true)
+        if($this->editableInColumn === true)
         {
             if(($this->netteGrid->editMode === true && $this->netteGrid->editKey != $primary) || $this->netteGrid->editMode === false)
             {
@@ -371,13 +374,17 @@ abstract class Column implements IColumn
     /**
      * Set editable
      * @param bool $editable
+     * @param bool $editableInColumn
      * @return Column
      */
-    public function setEditable(bool $editable=true): self
+    public function setEditable(bool $editable=true, bool $editableInColumn=true): self
     {
         $this->editable = $editable;
+        $this->editableInColumn = $editableInColumn;
         if($editable === true)
             $this->netteGrid->setEditable(true);
+        if($editableInColumn === true)
+            $this->netteGrid->setEditableInColumn(true);
         return $this;
     }
 

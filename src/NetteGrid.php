@@ -127,8 +127,11 @@ class NetteGrid extends Control
     /** @var bool Is there at least one filterable column? */
     protected bool $isFilterable=false;
 
-    /** @var bool Is there at least one editable column? */
+    /** @var bool Is there at least one editable column? (In line) */
     protected bool $isEditable=false;
+
+    /** @var bool Is at least one editable column in column? */
+    protected bool $isEditableInColumn=false;
 
     /** @var bool Is there at least one addable column? */
     protected bool $isAddable=false;
@@ -847,13 +850,16 @@ class NetteGrid extends Control
             $this['form']['filterSubmit']->setValidationScope([$this['form']['filter']]);
         }
 
-        if($this->isEditable === true)
+        if($this->isEditable === true || $this->isEditableInColumn === true)
         {
             $this->editContainer = $this['form']->addContainer('edit');
             $this['form']['editSubmit']->setValidationScope([$this['form']['edit']]);
-            $this->editContainer->addHidden($this->primaryColumn);
-            $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
-            $this->reindexActions('edit', 0);
+            if($this->isEditable === true)
+            {
+                $this->editContainer->addHidden($this->primaryColumn);
+                $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
+                $this->reindexActions('edit', 0);
+            }
         }
 
         if($this->isAddable === true)
@@ -1324,13 +1330,23 @@ class NetteGrid extends Control
     }
 
     /**
-     * Set Grid editable
+     * Set Grid editable (in line)
      * @param bool $editable
      * @internal
      */
     public function setEditable(bool $editable=true): void
     {
         $this->isEditable = $editable;
+    }
+
+    /**
+     * Set Grid editable (in column)
+     * @param bool $editableInColumn
+     * @internal
+     */
+    public function setEditableInColumn(bool $editableInColumn=true): void
+    {
+        $this->isEditableInColumn = $editableInColumn;
     }
 
     /**
