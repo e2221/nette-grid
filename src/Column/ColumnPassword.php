@@ -17,10 +17,13 @@ class ColumnPassword extends Column
      */
     public function getInput(): BaseControl
     {
-        $input = new TextInput($this->name);
-        $input->setHtmlType('password');
-        $input->setHtmlAttribute('class', 'form-control-sm');
-        return $input;
+        if(is_null($this->input))
+        {
+            $input = new TextInput($this->name);
+            $input->setHtmlType('password');
+            $input->setHtmlAttribute('class', 'form-control-sm');
+        }
+        return $this->input;
     }
 
     /**

@@ -73,6 +73,9 @@ abstract class Column implements IColumn
     /** @var HeadFilterColTemplate|null Filter col template */
     protected ?HeadFilterColTemplate $headFilterColTemplate=null;
 
+    /** @var BaseControl|null Input */
+    protected ?BaseControl $input=null;
+
     /** @var BaseControl|null Filter input */
     protected ?BaseControl $filterInput=null;
 
@@ -386,7 +389,6 @@ abstract class Column implements IColumn
     /**
      * Set editable (in line)
      * @param bool $editable
-     * @param bool $editableInColumn
      * @return Column
      */
     public function setEditable(bool $editable=true): self
@@ -400,7 +402,7 @@ abstract class Column implements IColumn
     /**
      * Set editable in column
      * @param bool $editableInColumn
-     * @return $this
+     * @return Column
      */
     public function setEditableInColumn(bool $editableInColumn=true): self
     {
@@ -610,9 +612,12 @@ abstract class Column implements IColumn
      */
     public function getInput(): BaseControl
     {
-        $input = new TextInput($this->name);
-        $input->setHtmlAttribute('class', 'form-control-sm');
-        return $input;
+        if(is_null($this->input))
+        {
+            $this->input = new TextInput($this->name);
+            $this->input->setHtmlAttribute('class', 'form-control-sm');
+        }
+        return $this->input;
     }
 
 }

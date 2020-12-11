@@ -17,9 +17,13 @@ class ColumnNumber extends Column
      */
     public function getInput(): BaseControl
     {
-        $input = new TextInput($this->name);
-        $input->setHtmlType('number');
-        $input->setHtmlAttribute('class', 'form-control-sm');
-        return $input;
+        if(is_null($this->input))
+        {
+            $input = new TextInput($this->name);
+            $input->setHtmlType('number');
+            $input->setHtmlAttribute('class', 'form-control-sm');
+            return $input;
+        }
+        return $this->input;
     }
 }

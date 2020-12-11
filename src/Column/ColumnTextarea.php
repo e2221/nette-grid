@@ -15,8 +15,11 @@ class ColumnTextarea extends Column
      */
     public function getInput(): BaseControl
     {
-        $input = new TextArea($this->name);
-        $input->setHtmlAttribute('class', 'form-control-sm');
-        return $input;
+        if(is_null($this->input))
+        {
+            $input = new TextArea($this->name);
+            $input->setHtmlAttribute('class', 'form-control-sm');
+        }
+        return $this->input;
     }
 }
