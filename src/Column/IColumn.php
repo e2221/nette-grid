@@ -164,10 +164,10 @@ interface IColumn
 
     /**
      * Set input form value
-     * @param $celValue
+     * @param $cellValue
      * @internal
      */
-    public function setFormValue($celValue): void;
+    public function setFormValue($cellValue): void;
 
     /**
      * Get edit cell value

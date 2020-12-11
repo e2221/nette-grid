@@ -663,12 +663,15 @@ class NetteGrid extends Control
         $getColumn = $this->getColumn($column);
         $rowData = $this->getRowFromSource($id);
         $cellValue = $value;
+        $cellEditValue = $value;
         foreach($rowData as $rowDataKey => $row)
         {
             $cellValue = $getColumn->getCellValueForRendering($row);
+            $cellEditValue = $getColumn->getEditCellValue($row);
             break;
         }
         $this->getPresenter()->payload->_netteGrid_editColumn_newValue = $cellValue;
+        $this->getPresenter()->payload->_netteGrid_editColumn_editValue = $cellEditValue;
         $this->getPresenter()->sendPayload();
     }
 

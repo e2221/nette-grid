@@ -703,7 +703,7 @@
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function(col) {
                         $(col).on('dblclick', 'td[data-column-editable]', function() {
-                            var input, cell, editableLink, editValue, columnName, editInputTag;
+                            var input, cell, editableLink, editValue, columnName, editInputTag, focusableLast;
                             cell = $(this);
                             editableLink = $(this).data('editable-link');
                             editValue = $(this).data('edit-value');
@@ -719,6 +719,7 @@
                                 let line_height = Math.round(parseFloat(cell.css('line-height')));
                                 let cell_lines = (cell_height - (2 * cell_padding)) / line_height;
                                 input.attr('rows', Math.round(cell_lines));
+                                focusableLast = true;
                             }
                             if(editInputTag === 'select')
                             {
@@ -727,6 +728,7 @@
                                 $.each(options, function(index, value){
                                     input.append(new Option(value, index));
                                 });
+                                $(input).find('option[value='+editValue+']').attr('selected', 'selected');
                             }
                             if(typeof input == "undefined" || input == null)
                             {
@@ -742,7 +744,9 @@
                                         .then(
                                             function(payload){
                                                 newValue = payload.getPayload()._netteGrid_editColumn_newValue;
+                                                let newValueEdit= payload.getPayload()._netteGrid_editColumn_editValue;
                                                 cell.html(newValue);
+                                                cell.data('edit-value', newValueEdit)
                                                 return cell.addClass('inline-edited');
                                             },
                                             function(err){
@@ -754,7 +758,12 @@
                                 }
                             })
                             cell.html(input);
+                            let inputLength= input.val().length;
                             input.focus();
+                            if(focusableLast){
+                                input[0].setSelectionRange(inputLength, inputLength);
+                            }
+
                         });
                     })
                     .teardown(function() {
