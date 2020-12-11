@@ -270,17 +270,20 @@
 
                                                         {* edit - print input *}
                                                         {if $editMode === true && $column->isEditable() === true && $editRowKey == $primaryValue}
-                                                            {var $editValue = $column->getEditCellValue($row, $cell)}
+                                                            {var $editValue = $column->getEditCellValue($row)}
+                                                            {php
+                                                                $column->setFormValue($editValue);
+                                                            }
 
-                                                                {formContainer edit}
+                                                            {formContainer edit}
 
-                                                                    {ifset #data-edit-$columnName}
-                                                                        {include #"data-edit-{$columnName}"}
-                                                                    {else}
-                                                                        {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
-                                                                    {/ifset}
+                                                                {ifset #data-edit-$columnName}
+                                                                    {include #"data-edit-{$columnName}" row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
+                                                                {else}
+                                                                    {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
+                                                                {/ifset}
 
-                                                                {/formContainer}
+                                                            {/formContainer}
 
                                                         {* print cell value *}
                                                         {else}
@@ -732,14 +735,13 @@
                             }
                             input.on('blur', function(){
                                 let newValue = $(this).val();
-                                if(newValue && newValue !== editValue)
+                                if(newValue && String(newValue) !== String(editValue))
                                 {
                                     di.getService("ajax")
                                         .post(editableLink, { value: newValue, columnName: columnName })
                                         .then(
                                             function(payload){
                                                 newValue = payload.getPayload()._netteGrid_editColumn_newValue;
-                                                console.log(newValue);
                                                 cell.html(newValue);
                                                 return cell.addClass('inline-edited');
                                             },

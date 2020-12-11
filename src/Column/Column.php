@@ -103,6 +103,8 @@ abstract class Column implements IColumn
         $this->setStickyHeader();
     }
 
+
+
     /**
      * Set export value callback
      * @param callable|null $exportValueCallback
@@ -214,6 +216,16 @@ abstract class Column implements IColumn
             return $cell;
         $fn = $this->editCellValueCallback;
         return $fn($row, $cell);
+    }
+
+    /**
+     * Set form value
+     * @param $cellValue
+     * @internal
+     */
+    public function setFormValue($cellValue): void
+    {
+        $this->netteGrid['form']['edit'][$this->name]->setDefaultValue($cellValue);
     }
 
     /**

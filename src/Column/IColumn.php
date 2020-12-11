@@ -162,6 +162,19 @@ interface IColumn
     public function getDataColTemplateForRendering($row, $primary): DataColTemplate;
 
 
+    /**
+     * Set input form value
+     * @param $celValue
+     * @internal
+     */
+    public function setFormValue($celValue): void;
 
+    /**
+     * Get edit cell value
+     * @param $row
+     * @return mixed
+     * @internal
+     */
+    public function getEditCellValue($row);
 
 }
