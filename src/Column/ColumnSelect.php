@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace e2221\NetteGrid\Column;
 
+use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
@@ -66,6 +68,26 @@ class ColumnSelect extends Column
         }else{
             return isset($this->selection[$cellValue]) ? $this->selection[$cellValue] : '';
         }
+    }
+
+    /**
+     * @param mixed $row
+     * @param mixed $primary
+     * @return DataColTemplate
+     * @throws InvalidLinkException
+     * @internal
+     */
+    public function getDataColTemplateForRendering($row, $primary): DataColTemplate
+    {
+        $template = parent::getDataColTemplateForRendering($row, $primary);
+        if($this->editableInColumn === true)
+        {
+            if(($this->netteGrid->editMode === true && $this->netteGrid->editKey != $primary) || $this->netteGrid->editMode === false)
+            {
+                $template->addDataAttribute('edit-options', json_encode($this->selection));
+            }
+        }
+        return $template;
     }
 
     /**

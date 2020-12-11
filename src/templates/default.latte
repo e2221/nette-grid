@@ -717,6 +717,14 @@
                                 let cell_lines = (cell_height - (2 * cell_padding)) / line_height;
                                 input.attr('rows', Math.round(cell_lines));
                             }
+                            if(editInputTag === 'select')
+                            {
+                                let options = JSON.parse($(this).data('edit-options'));
+                                input = $('<select class="form-control form-control-sm"></select>');
+                                $.each(options, function(index, value){
+                                    input.append(new Option(index, value));
+                                });
+                            }
                             if(typeof input == "undefined" || input == null)
                             {
                                 console.log('Usupported input type. ['+editInputTag+']');
