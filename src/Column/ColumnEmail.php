@@ -9,6 +9,8 @@ use Nette\Forms\Controls\BaseControl;
 
 class ColumnEmail extends Column
 {
+    protected string $editInputTag='email';
+
     /**
      * Get input
      * @return BaseControl

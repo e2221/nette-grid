@@ -9,6 +9,8 @@ use Nette\Forms\Controls\BaseControl;
 
 class ColumnPassword extends Column
 {
+    protected string $editInputTag='password';
+
     /**
      * Get input
      * @return BaseControl
@@ -19,5 +21,15 @@ class ColumnPassword extends Column
         $input->setHtmlType('password');
         $input->setHtmlAttribute('class', 'form-control-sm');
         return $input;
+    }
+
+    /**
+     * Set form value
+     * @param $cellValue
+     * @internal
+     */
+    public function setFormValue($cellValue): void
+    {
+        $this->netteGrid['form']['edit'][$this->name]->getControlPrototype()->value = $cellValue;
     }
 }

@@ -9,6 +9,8 @@ use Nette\Forms\Controls\BaseControl;
 
 class ColumnNumber extends Column
 {
+    protected string $editInputTag='number';
+
     /**
      * Get input
      * @return BaseControl

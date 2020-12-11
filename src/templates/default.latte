@@ -705,22 +705,23 @@
                         $(col).on('dblclick', 'td[data-column-editable]', function() {
                             var input, cell, editableLink, editValue, columnName, editInputTag, focusableLast;
                             cell = $(this);
+                            cell.removeClass('inline-edited');
                             editableLink = $(this).data('editable-link');
                             editValue = $(this).data('edit-value');
                             columnName = $(this).data('column-editable');
                             editInputTag = $(this).data('edit-input');
-
                             //support for textarea
                             if(editInputTag === 'textarea')
                             {
-                                input = $('<textarea class="form-control form-control-sm">' + editValue + '</textarea>');
+                                input = $('<textarea class="form-control">' + editValue + '</textarea>');
                                 let cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
                                 let cell_height = cell.outerHeight();
                                 let line_height = Math.round(parseFloat(cell.css('line-height')));
                                 let cell_lines = (cell_height - (2 * cell_padding)) / line_height;
                                 input.attr('rows', Math.round(cell_lines));
                                 focusableLast = true;
-                            }
+                            } else
+                                //select
                             if(editInputTag === 'select')
                             {
                                 let options = ($(this).data('edit-options'));
@@ -728,12 +729,13 @@
                                 $.each(options, function(index, value){
                                     input.append(new Option(value, index));
                                 });
-                                $(input).find('option[value='+editValue+']').attr('selected', 'selected');
-                            }
-                            if(typeof input == "undefined" || input == null)
-                            {
-                                console.log('Usupported input type. ['+editInputTag+']');
-                                return;
+                                if(editValue)
+                                {
+                                    $(input).find('option[value='+editValue+']').attr('selected', 'selected');
+                                }
+                            }else{
+                                input = $('<input type="'+editInputTag+'" class="form-control" value="'+editValue+'">');
+                                focusableLast = true;
                             }
                             input.on('blur', function(){
                                 let newValue = $(this).val();
@@ -763,7 +765,6 @@
                             if(focusableLast){
                                 input[0].setSelectionRange(inputLength, inputLength);
                             }
-
                         });
                     })
                     .teardown(function() {

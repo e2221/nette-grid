@@ -9,6 +9,8 @@ use Nette\Forms\Controls\BaseControl;
 
 class ColumnDate extends Column
 {
+    protected string $editInputTag='date';
+
     /**
      * Get input
      * @return BaseControl
