@@ -191,7 +191,7 @@ abstract class Column implements IColumn
             $row = ArrayHash::from($row);
 
         //other object source
-        return $row->$keyName;
+        return $row->$keyName ?? null;
     }
 
     /**
