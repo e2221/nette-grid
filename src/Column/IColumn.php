@@ -87,12 +87,19 @@ interface IColumn
 
 
     /**
-     * Set this column editable
+     * Set this column editable (in line)
      * @param bool $editable
      * @return IColumn
      */
     public function setEditable(bool $editable=true): self;
 
+
+    /**
+     * Set editable in column
+     * @param bool $editableInColumn
+     * @return IColumn
+     */
+    public function setEditableInColumn(bool $editableInColumn=true): self;
 
     /**
      * Set this column required

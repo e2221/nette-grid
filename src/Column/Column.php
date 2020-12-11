@@ -384,7 +384,7 @@ abstract class Column implements IColumn
     }
 
     /**
-     * Set editable
+     * Set editable (in line)
      * @param bool $editable
      * @param bool $editableInColumn
      * @return Column
@@ -392,9 +392,19 @@ abstract class Column implements IColumn
     public function setEditable(bool $editable=true, bool $editableInColumn=true): self
     {
         $this->editable = $editable;
-        $this->editableInColumn = $editableInColumn;
         if($editable === true)
             $this->netteGrid->setEditable(true);
+        return $this;
+    }
+
+    /**
+     * Set editable in column
+     * @param bool $editableInColumn
+     * @return $this
+     */
+    public function setEditableInColumn(bool $editableInColumn=true): self
+    {
+        $this->editableInColumn = $editableInColumn;
         if($editableInColumn === true)
             $this->netteGrid->setEditableInColumn(true);
         return $this;
