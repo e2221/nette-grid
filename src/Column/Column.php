@@ -389,7 +389,7 @@ abstract class Column implements IColumn
      * @param bool $editableInColumn
      * @return Column
      */
-    public function setEditable(bool $editable=true, bool $editableInColumn=true): self
+    public function setEditable(bool $editable=true): self
     {
         $this->editable = $editable;
         if($editable === true)
