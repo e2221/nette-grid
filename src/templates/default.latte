@@ -719,10 +719,10 @@
                             }
                             if(editInputTag === 'select')
                             {
-                                let options = JSON.parse($(this).data('edit-options'));
+                                let options = ($(this).data('edit-options'));
                                 input = $('<select class="form-control form-control-sm"></select>');
                                 $.each(options, function(index, value){
-                                    input.append(new Option(index, value));
+                                    input.append(new Option(value, index));
                                 });
                             }
                             if(typeof input == "undefined" || input == null)
@@ -732,7 +732,7 @@
                             }
                             input.on('blur', function(){
                                 let newValue = $(this).val();
-                                if(newValue !== editValue)
+                                if(newValue && newValue !== editValue)
                                 {
                                     di.getService("ajax")
                                         .post(editableLink, { value: newValue, columnName: columnName })

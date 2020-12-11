@@ -147,10 +147,11 @@ interface IColumn
     /**
      * Get real cell value
      * @param mixed $row
+     * @param null $cell
      * @return mixed
      * @internal
      */
-    public function getCellValueForRendering($row);
+    public function getCellValueForRendering($row, $cell=null);
 
     /**
      * Get data col template for rendering - apply callbacks to edit <td> attribute

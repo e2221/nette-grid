@@ -645,6 +645,7 @@ class NetteGrid extends Control
      * @param mixed $id
      * @param string $column
      * @throws AbortException
+     * @throws NetteGridException
      */
     public function handleEditColumn($id, string $column): void
     {
@@ -659,7 +660,15 @@ class NetteGrid extends Control
             $fn = $this->onEditCallback;
             $fn(ArrayHash::from($data), $id);
         }
-        $this->getPresenter()->payload->_netteGrid_editColumn_newValue = $value;
+        $getColumn = $this->getColumn($column);
+        $rowData = $this->getRowFromSource($id);
+        $cellValue = $value;
+        foreach($rowData as $rowDataKey => $row)
+        {
+            $cellValue = $getColumn->getCellValueForRendering($row);
+            break;
+        }
+        $this->getPresenter()->payload->_netteGrid_editColumn_newValue = $cellValue;
         $this->getPresenter()->sendPayload();
     }
 
