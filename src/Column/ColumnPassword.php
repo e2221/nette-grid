@@ -19,9 +19,9 @@ class ColumnPassword extends Column
     {
         if(is_null($this->input))
         {
-            $input = new TextInput($this->name);
-            $input->setHtmlType('password');
-            $input->setHtmlAttribute('class', 'form-control-sm');
+            $this->input = new TextInput($this->name);
+            $this->input->setHtmlType('password');
+            $this->input->setHtmlAttribute('class', 'form-control-sm');
         }
         return $this->input;
     }

@@ -107,8 +107,8 @@ class ColumnSelect extends Column
     {
         if(is_null($this->input))
         {
-            $input = new SelectBox(null, $this->selection);
-            $input->setHtmlAttribute('class', 'form-control form-control-sm');
+            $this->input = new SelectBox(null, $this->selection);
+            $this->input->setHtmlAttribute('class', 'form-control form-control-sm');
         }
         return $this->input;
     }

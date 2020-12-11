@@ -19,10 +19,9 @@ class ColumnNumber extends Column
     {
         if(is_null($this->input))
         {
-            $input = new TextInput($this->name);
-            $input->setHtmlType('number');
-            $input->setHtmlAttribute('class', 'form-control-sm');
-            return $input;
+            $this->input = new TextInput($this->name);
+            $this->input->setHtmlType('number');
+            $this->input->setHtmlAttribute('class', 'form-control-sm');
         }
         return $this->input;
     }

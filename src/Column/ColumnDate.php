@@ -19,8 +19,8 @@ class ColumnDate extends Column
     {
         if(is_null($this->input))
         {
-            $input = new DateInput($this->name);
-            $input->setHtmlType('date');
+            $this->input = new DateInput($this->name);
+            $this->input->setHtmlType('date');
             $this->input->setHtmlAttribute('class', 'form-control-sm');
         }
         return $this->input;

@@ -568,7 +568,7 @@ abstract class Column implements IColumn
     public function getFilterInput(): BaseControl
     {
         if(is_null($this->filterInput))
-            $this->filterInput = $this->getInput();
+            $this->filterInput = clone $this->getInput();
         if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isFilterAutocomplete() === false)
             $this->filterInput->setHtmlAttribute('autocomplete', 'off');
         return $this->filterInput;
@@ -581,7 +581,7 @@ abstract class Column implements IColumn
     public function getEditInput(): BaseControl
     {
         if(is_null($this->editInput))
-            $this->editInput = $this->getInput();
+            $this->editInput = clone $this->getInput();
         if($this->isRequired())
             $this->editInput->setRequired();
         $this->editInput->setHtmlAttribute('placeholder', $this->label);
@@ -597,7 +597,7 @@ abstract class Column implements IColumn
     public function getAddInput(): ?BaseControl
     {
         if(is_null($this->addInput))
-            $this->addInput = $this->getInput();
+            $this->addInput = clone $this->getInput();
         if($this->isRequired())
             $this->addInput->setRequired();
         $this->addInput->setHtmlAttribute('placeholder', $this->label);

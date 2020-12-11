@@ -18,8 +18,8 @@ class ColumnEmail extends Column
     {
         if(is_null($this->input))
         {
-            $input = new TextInput($this->name);
-            $input->setHtmlType('email');
+            $this->input = new TextInput($this->name);
+            $this->input->setHtmlType('email');
             $this->input->setHtmlAttribute('class', 'form-control-sm');
         }
         return $this->input;
