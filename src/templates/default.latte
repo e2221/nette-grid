@@ -782,6 +782,7 @@
 
 <script type="application/javascript">
     (window._stack = window._stack || []).push(function(di) {
+        var rowID, row;
         di.getService('page').getSnippet({snippet.id data})
             .setup(function(tbody) {
                 $(tbody).on('click', '[data-edit]', function(){
@@ -789,17 +790,24 @@
                         $(this).addClass('disabled');
                     })
                 });
-                $(tbody).on('click', '[data-cancel][data-save]', function(){
+                $(tbody).on('click', '[data-cancel]', function(){
                     $(tbody).find('[data-edit]').each(function(){
                         $(this).removeClass('disabled');
                     })
                 });
                 $(tbody).on('click', '[data-save]', function(){
-                    let tr = $(this).closest(['tr']);
-                    $(tr).find('td').each(function(){
+                    $(tbody).find('[data-edit]').each(function(){
+                        $(this).removeClass('disabled');
+                    })
+                    let rowID = $(this).data('row-id');
+                    let row = $(tbody).find('[data-id='+rowID+']');
+                    $(row).find('td').each(function(){
                         $(this).addClass('inline-edited');
-                    });
+                    })
                 });
+            })
+            .teardown(function(){
+                rowID = row = null;
             });
     });
 </script>

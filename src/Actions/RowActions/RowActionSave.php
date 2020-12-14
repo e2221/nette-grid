@@ -19,10 +19,12 @@ class RowActionSave extends RowAction
         $this
             ->addHtmlAttribute('type', 'submit')
             ->addHtmlAttribute('value', $title);
-        $this->netteGrid->onAnchor[] = function(NetteGrid $netteGrid)
-        {
-            $this->addDataAttribute('save');
-            $this->addHtmlAttribute('name', $netteGrid['form']['editSubmit']->getName());
-        };
+    }
+
+    public function beforeRender(): void
+    {
+        $this->addDataAttribute('save');
+        $this->addHtmlAttribute('name', $this->netteGrid['form']['editSubmit']->getName());
+        $this->addDataAttribute('row-id', $this->primary);
     }
 }
