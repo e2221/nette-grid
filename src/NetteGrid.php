@@ -862,16 +862,13 @@ class NetteGrid extends Control
             $this['form']['filterSubmit']->setValidationScope([$this['form']['filter']]);
         }
 
-        if($this->isEditable === true || $this->isEditableInColumn === true)
+        if($this->isEditable === true)
         {
             $this->editContainer = $this['form']->addContainer('edit');
             $this['form']['editSubmit']->setValidationScope([$this['form']['edit']]);
-            if($this->isEditable === true)
-            {
-                $this->editContainer->addHidden($this->primaryColumn);
-                $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
-                $this->reindexActions('edit', 0);
-            }
+            $this->editContainer->addHidden($this->primaryColumn);
+            $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
+            $this->reindexActions('edit', 0);
         }
 
         if($this->isAddable === true)
@@ -913,8 +910,6 @@ class NetteGrid extends Control
 
             $this->documentTemplate->getTbodyTemplate()->makeRowsSelectable($this->rowsSelectable);
             $this->documentTemplate->getDataRowTemplate()->rowsSelectable($this->rowsSelectable);
-
-
         }
     }
 

@@ -6,7 +6,6 @@ namespace e2221\NetteGrid\Column;
 
 
 use ArrayAccess;
-use Contributte\FormsBootstrap\Inputs\TextInput;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
@@ -30,6 +29,9 @@ abstract class Column implements IColumn
 
     /** @var string|null Label of column */
     public ?string $label=null;
+
+    /** @var string Input html type */
+    protected string $htmlType='text';
 
     /** @var string Edit input used with directly edit (not inline), for text inputs it´s recommended to use textarea */
     protected string $editInputTag='textarea';
@@ -73,9 +75,6 @@ abstract class Column implements IColumn
     /** @var HeadFilterColTemplate|null Filter col template */
     protected ?HeadFilterColTemplate $headFilterColTemplate=null;
 
-    /** @var BaseControl|null Input */
-    protected ?BaseControl $input=null;
-
     /** @var BaseControl|null Filter input */
     protected ?BaseControl $filterInput=null;
 
@@ -96,6 +95,9 @@ abstract class Column implements IColumn
 
     /** @var null|callable Export value callback: function($row, $cell): ?string  */
     protected $exportValueCallback=null;
+
+    /** @var string  */
+    protected string $inputClass = \e2221\NetteGrid\FormControls\InputControl::class;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
@@ -568,7 +570,7 @@ abstract class Column implements IColumn
     public function getFilterInput(): BaseControl
     {
         if(is_null($this->filterInput))
-            $this->filterInput = clone $this->getInput();
+            $this->filterInput = $this->getInput();
         if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isFilterAutocomplete() === false)
             $this->filterInput->setHtmlAttribute('autocomplete', 'off');
         return $this->filterInput;
@@ -581,7 +583,7 @@ abstract class Column implements IColumn
     public function getEditInput(): BaseControl
     {
         if(is_null($this->editInput))
-            $this->editInput = clone $this->getInput();
+            $this->editInput = $this->getInput();
         if($this->isRequired())
             $this->editInput->setRequired();
         $this->editInput->setHtmlAttribute('placeholder', $this->label);
@@ -597,7 +599,7 @@ abstract class Column implements IColumn
     public function getAddInput(): ?BaseControl
     {
         if(is_null($this->addInput))
-            $this->addInput = clone $this->getInput();
+            $this->addInput = $this->getInput();
         if($this->isRequired())
             $this->addInput->setRequired();
         $this->addInput->setHtmlAttribute('placeholder', $this->label);
@@ -610,14 +612,12 @@ abstract class Column implements IColumn
      * Get input
      * @return BaseControl
      */
-    public function getInput(): BaseControl
+    protected function getInput(): BaseControl
     {
-        if(is_null($this->input))
-        {
-            $this->input = new TextInput($this->name);
-            $this->input->setHtmlAttribute('class', 'form-control-sm');
-        }
-        return $this->input;
+        $inputClass = $this->inputClass;
+        $input = new $inputClass();
+        $input->setHtmlType($this->htmlType);
+        return $input->getControl();
     }
 
 }

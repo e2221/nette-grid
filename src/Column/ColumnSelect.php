@@ -6,8 +6,6 @@ namespace e2221\NetteGrid\Column;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\SelectBox;
 
 
 class ColumnSelect extends Column
@@ -16,6 +14,7 @@ class ColumnSelect extends Column
     protected array $selection;
 
     protected string $editInputTag='select';
+    protected string $htmlType='select';
 
     /**
      * @param mixed $row
@@ -97,20 +96,6 @@ class ColumnSelect extends Column
             }
         }
         return $template;
-    }
-
-    /**
-     * Get input
-     * @return BaseControl
-     */
-    public function getInput(): BaseControl
-    {
-        if(is_null($this->input))
-        {
-            $this->input = new SelectBox(null, $this->selection);
-            $this->input->setHtmlAttribute('class', 'form-control form-control-sm');
-        }
-        return $this->input;
     }
 
     /**
