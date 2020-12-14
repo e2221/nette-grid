@@ -184,4 +184,10 @@ interface IColumn
      */
     public function getEditCellValue($row);
 
+    /**
+     * Set input class getter
+     * @param string $inputClass
+     * @return IColumn
+     */
+    public function setInputClass(string $inputClass): self;
 }

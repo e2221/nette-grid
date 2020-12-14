@@ -9,6 +9,7 @@ use ArrayAccess;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
+use e2221\NetteGrid\FormControls\InputControl;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
 use e2221\NetteGrid\NetteGrid;
 use Nette\Application\UI\InvalidLinkException;
@@ -97,7 +98,7 @@ abstract class Column implements IColumn
     protected $exportValueCallback=null;
 
     /** @var string  */
-    protected string $inputClass = \e2221\NetteGrid\FormControls\InputControl::class;
+    protected string $inputClass = InputControl::class;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
@@ -107,7 +108,6 @@ abstract class Column implements IColumn
         $this->titleColTemplate = $this->defaultTitleColTemplate();
         $this->setStickyHeader();
     }
-
 
 
     /**
@@ -620,4 +620,14 @@ abstract class Column implements IColumn
         return $input->getControl();
     }
 
+    /**
+     * Set input class
+     * @param string $inputClass
+     * @return Column
+     */
+    public function setInputClass(string $inputClass): self
+    {
+        $this->inputClass = $inputClass;
+        return $this;
+    }
 }

@@ -10,7 +10,7 @@ use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\IControl;
 
-class Input implements IFormControl
+class InputControl implements IFormControl
 {
     public string $htmlType='text';
 
@@ -21,16 +21,17 @@ class Input implements IFormControl
      */
     public function setHtmlType(string $htmlType): IFormControl
     {
-        $this->setHtmlType($htmlType);
+        $this->htmlType = $htmlType;
         return $this;
     }
 
     public function getControl(?string $htmlType = null): IControl
     {
-        if($htmlType === 'select')
+        $htmlType = $htmlType ?? $this->htmlType;
+        if($htmlType == 'select')
         {
             $input = $this->getSelectInput();
-        }elseif ($htmlType === 'textarea')
+        }elseif ($htmlType == 'textarea')
         {
             $input = $this->getTextareaInput();
         }else{
