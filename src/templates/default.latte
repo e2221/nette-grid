@@ -700,16 +700,17 @@
                     });
 
                 {* rows editable *}
+                var input, cell, editableLink, editValue, columnName, editInputTag, focusableLast, printValue;
                 di.getService('page').getSnippet({snippet.id data})
                     .setup(function(col) {
                         $(col).on('dblclick', 'td[data-column-editable]', function() {
-                            var input, cell, editableLink, editValue, columnName, editInputTag, focusableLast;
                             cell = $(this);
                             cell.removeClass('inline-edited');
                             editableLink = $(this).data('editable-link');
                             editValue = $(this).data('edit-value');
                             columnName = $(this).data('column-editable');
                             editInputTag = $(this).data('edit-input');
+                            printValue = $(this).data('print-value');
                             //support for textarea
                             if(editInputTag === 'textarea')
                             {
@@ -755,7 +756,11 @@
                                             }
                                         );
                                 }else{
-                                    cell.html(editValue);
+                                    if(printValue){
+                                        cell.html(printValue);
+                                    }else{
+                                        cell.html(editValue);
+                                    }
                                 }
                             })
                             cell.html(input);
@@ -767,6 +772,7 @@
                         });
                     })
                     .teardown(function() {
+                        input = cell = editableLink = editValue = columnName = editInputTag = focusableLast = printValue = null;
                     });
             });
         </script>

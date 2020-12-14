@@ -95,6 +95,7 @@ class ColumnSelect extends Column
             if(($this->netteGrid->editMode === true && $this->netteGrid->editKey != $primary) || $this->netteGrid->editMode === false)
             {
                 $template->addDataAttribute('edit-options', json_encode($this->selection));
+                $template->addDataAttribute('print-value', $this->getCellValueForRendering($row));
             }
         }
         return $template;
