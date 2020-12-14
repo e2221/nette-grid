@@ -784,16 +784,22 @@
     (window._stack = window._stack || []).push(function(di) {
         di.getService('page').getSnippet({snippet.id data})
             .setup(function(tbody) {
-                $(tbody).on('click', 'a[data-edit]', function(){
-                    $(tbody).find('a[data-edit]').each(function(){
+                $(tbody).on('click', '[data-edit]', function(){
+                    $(tbody).find('[data-edit]').each(function(){
                         $(this).addClass('disabled');
                     })
                 });
-                $(tbody).on('click', 'a[data-cancel]', function(){
-                    $(tbody).find('a[data-edit]').each(function(){
+                $(tbody).on('click', '[data-cancel][data-save]', function(){
+                    $(tbody).find('[data-edit]').each(function(){
                         $(this).removeClass('disabled');
                     })
-                })
+                });
+                $(tbody).on('click', '[data-save]', function(){
+                    let tr = $(this).closest(['tr']);
+                    $(tr).find('td').each(function(){
+                        $(this).addClass('inline-edited');
+                    });
+                });
             });
     });
 </script>

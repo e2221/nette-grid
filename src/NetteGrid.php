@@ -1282,9 +1282,11 @@ class NetteGrid extends Control
      */
     protected function getDataFromSource($rowID=null, bool $usePaginator=true, bool $useFilter=true)
     {
+        //data-source was not set
         if(is_null($this->dataSourceCallback))
             return null;
 
+        //print more then only one row
         if(is_null($rowID) === true)
         {
             if(is_null($this->editKey) === false && $this->presenter->isAjax())
@@ -1297,7 +1299,9 @@ class NetteGrid extends Control
                 $this->paginator->page = $this->page;
                 $this->paginator->itemsPerPage = $this->itemsPerPage;
             }
-        }else{
+        }
+        //print only one row
+        else{
             $filter[$this->primaryColumn] = $rowID;
         }
 
