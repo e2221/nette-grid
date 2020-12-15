@@ -442,7 +442,7 @@
                             }(this), 200);
                         });
 
-                        $(frm).on('change', '[data-autosubmit]', function(e) {
+                        $(frm).on('change', '[data-autosubmit-select]', function(e) {
                             var code;
                             code = e.which || e.keyCode || 0;
                             if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
@@ -756,7 +756,7 @@
                                             }
                                         );
                                 }else{
-                                    if(printValue){
+                                    if($(cell).data('print-value') !== 'undefined'){
                                         cell.html(printValue);
                                     }else{
                                         cell.html(editValue);

@@ -113,6 +113,22 @@ class ColumnSelect extends Column
     }
 
     /**
+     * Add filter form input
+     * @internal
+     */
+    public function addFilterFormInput(): void
+    {
+        if($this->isFilterable())
+        {
+            $container = $this->netteGrid->getFilterContainer();
+            $input = $this->getFilterInput();
+            $input->setHtmlAttribute('data-autosubmit-select');
+            $input->setHtmlAttribute('data-container', 'filterSubmit');
+            $container->addComponent($input, $this->name);
+        }
+    }
+
+    /**
      * Get input
      * @return BaseControl
      */
