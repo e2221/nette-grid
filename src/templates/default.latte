@@ -756,7 +756,7 @@
                                             }
                                         );
                                 }else{
-                                    if($(cell).data('print-value') !== 'undefined'){
+                                    if(typeof cell.data('print-value') !== 'undefined'){
                                         cell.html(printValue);
                                     }else{
                                         cell.html(editValue);
