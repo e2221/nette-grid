@@ -826,7 +826,9 @@ class NetteGrid extends Control
      */
     public function handleItemDetailModal(string $itemDetailId, $primary): void
     {
-
+        $this['itemDetailModal']->setTitle('aaa');
+        $this->reloadDocumentArea();
+        $this['itemDetailModal']->reloadHeader();
     }
 
     /**

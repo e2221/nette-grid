@@ -787,16 +787,19 @@
             <script type="application/javascript">
                 (window._stack = window._stack || []).push(function(di) {
 
-                    var modalId;
+                    var modalId, link;
                     di.getService('page').getSnippet({snippet.id data})
                         .setup(function(tbody) {
-                            $(tbody).on('click', '[item-detail-modal]', function(){
+                            $(tbody).on('click', '[data-item-detail-modal]', function(){
 
                                 modalId = $(this).data('modal-id');
+                                link = $(this).data('link');
 
-                                $('#'+modalId).modal('show');
-
-
+                                di.getService('page')
+                                    .open(link)
+                                    .then(function () {
+                                        $('#'+modalId).modal('show');
+                                    });
 
                             });
                         });

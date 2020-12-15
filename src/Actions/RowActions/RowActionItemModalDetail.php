@@ -29,7 +29,8 @@ class RowActionItemModalDetail extends RowAction
         $this
             ->setLink('javascript:void(0);')
             ->addDataAttribute('id', $this->primary)
-            ->addDataAttribute('modal-id', $this->netteGrid->getItemDetailModalId());
+            ->addDataAttribute('modal-id', $this->netteGrid->getItemDetailModalId())
+            ->addDataAttribute('link', $this->netteGrid->link('itemDetailModal!', $this->name, $this->primary));
     }
 
     /**
