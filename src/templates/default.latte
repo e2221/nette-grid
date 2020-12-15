@@ -776,8 +776,40 @@
                     });
             });
         </script>
+    {/snippet}
+
+    {snippet itemDetailsModal}
+
+        {if $hasItemModalDetail === true}
+
+            {control itemDetailModal}
+
+            <script type="application/javascript">
+                (window._stack = window._stack || []).push(function(di) {
+
+                    var modalId;
+                    di.getService('page').getSnippet({snippet.id data})
+                        .setup(function(tbody) {
+                            $(tbody).on('click', '[item-detail-modal]', function(){
+
+                                modalId = $(this).data('modal-id');
+
+                                $('#'+modalId).modal('show');
+
+
+
+                            });
+                        });
+                });
+            </script>
+
+        {/if}
 
     {/snippet}
+
+
+
+
 {/snippetArea}
 
 <script type="application/javascript">

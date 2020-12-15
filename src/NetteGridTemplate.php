@@ -9,6 +9,7 @@ use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
 use e2221\NetteGrid\Actions\RowAction\RowActionEdit;
 use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
+use e2221\NetteGrid\Actions\RowAction\RowActionItemModalDetail;
 use e2221\NetteGrid\Actions\RowAction\RowActionSave;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\Document\DocumentTemplate;
@@ -74,6 +75,9 @@ class NetteGridTemplate extends Template
     /** @var RowActionItemDetail[] */
     public array $itemDetails;
 
+    /** @var RowActionItemModalDetail[] */
+    public array $itemDetailsModal;
+
     public ?Paginator $paginator;
     public NetteGrid $control;
     public Presenter $presenter;
@@ -123,4 +127,5 @@ class NetteGridTemplate extends Template
     public ?string $draggableScope;
     public ?string $droppableScope;
     public ?string $droppableEffect;
+    public bool $hasItemModalDetail;
 }

@@ -6,6 +6,7 @@ namespace e2221\NetteGrid;
 
 use Contributte\Application\Response\CSVResponse;
 use Contributte\FormsBootstrap\BootstrapForm;
+use e2221\BootstrapComponents\Modal\Modal;
 use e2221\BootstrapComponents\Pagination\Pagination;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
@@ -16,6 +17,7 @@ use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionDelete;
 use e2221\NetteGrid\Actions\RowAction\RowActionDraggable;
 use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
+use e2221\NetteGrid\Actions\RowAction\RowActionItemModalDetail;
 use e2221\NetteGrid\Actions\RowAction\RowActionSortable;
 use e2221\NetteGrid\Column\Column;
 use e2221\NetteGrid\Column\ColumnDate;
@@ -212,6 +214,12 @@ class NetteGrid extends Control
 
     /** @var HeaderActionExport[] */
     protected array $exportActions=[];
+
+    /** @var RowActionItemModalDetail[] */
+    protected array $itemDetailsModal=[];
+
+    /** @var string|null Item detail modal id */
+    protected ?string $itemDetailModalId=null;
 
     public function __construct()
     {
@@ -493,6 +501,22 @@ class NetteGrid extends Control
         $this->itemDetails[$name] = $itemDetail;
         $this->onAddRowAction($name);
         return $itemDetail;
+    }
+
+    /**
+     * Add row action modal
+     * @param string $name
+     * @param string|null $title
+     * @return RowActionItemModalDetail
+     */
+    public function addRowActionItemModalDetail(string $name, ?string $title='Item detail'): RowActionItemModalDetail
+    {
+        $title = $title ?? ucfirst($name);
+        $itemModalDetail = new RowActionItemModalDetail($this, $name, $title);
+        $this->rowActions[$name] = $itemModalDetail;
+        $this->itemDetailsModal[$name] = $itemModalDetail;
+        $this->onAddRowAction($name);
+        return $itemModalDetail;
     }
 
     /**
@@ -784,7 +808,7 @@ class NetteGrid extends Control
     /**
      * Signal - show item detail
      * @param string $itemDetailId
-     * @param $primary
+     * @param mixed $primary
      * @throws AbortException
      */
     public function handleItemDetail(string $itemDetailId, $primary): void
@@ -793,6 +817,16 @@ class NetteGrid extends Control
         $this->template->itemDetailKey = $primary;
         $this->template->itemDetailAction = $itemDetailId;
         $this->reloadItemDetail($itemDetailId, $primary);
+    }
+
+    /**
+     * Signal - fill modal with row detail
+     * @param string $itemDetailId
+     * @param mixed $primary
+     */
+    public function handleItemDetailModal(string $itemDetailId, $primary): void
+    {
+
     }
 
     /**
@@ -911,6 +945,12 @@ class NetteGrid extends Control
             $this->documentTemplate->getTbodyTemplate()->makeRowsSelectable($this->rowsSelectable);
             $this->documentTemplate->getDataRowTemplate()->rowsSelectable($this->rowsSelectable);
         }
+
+        if($this->hasItemModalDetail() === true)
+        {
+            $this->itemDetailModalId = 'itemDetail-' . $this->getUniqueId();
+            $this['itemDetailModal']->setModalId($this->itemDetailModalId);
+        }
     }
 
 
@@ -950,6 +990,8 @@ class NetteGrid extends Control
         $this->template->draggableScope = $this->draggableScope;
         $this->template->droppableScope = $this->droppableScope;
         $this->template->droppableEffect = $this->droppableEffect;
+        $this->template->hasItemModalDetail = $this->hasItemModalDetail();
+        $this->template->itemDetailsModal = $this->itemDetailsModal;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -1141,6 +1183,13 @@ class NetteGrid extends Control
         $pagination->setWidth(Pagination::SMALL);
         $pagination->setAlign(Pagination::ALIGN_CENTER);
         return $pagination;
+    }
+
+    protected function createComponentItemDetailModal(): Modal
+    {
+        $modal = new Modal();
+
+        return $modal;
     }
 
     /**
@@ -1693,6 +1742,16 @@ class NetteGrid extends Control
     }
 
     /**
+     * Has item modal detail?
+     * @return bool
+     * @internal
+     */
+    public function hasItemModalDetail(): bool
+    {
+        return (bool)count($this->itemDetailsModal);
+    }
+
+    /**
      * Get multiple filter container
      * @return Container
      * @internal
@@ -1758,6 +1817,15 @@ class NetteGrid extends Control
         }
         $exportResponse = new CSVResponse($dataToExport, $actionExport->getExportFileName(), $actionExport->getEncoding(), $actionExport->getDelimiter(), true);
         $this->getPresenter()->sendResponse($exportResponse);
+    }
+
+    /**
+     * Get item detail modal id
+     * @return string|null
+     */
+    public function getItemDetailModalId(): ?string
+    {
+        return $this->itemDetailModalId;
     }
 
 }
