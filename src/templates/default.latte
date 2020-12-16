@@ -786,20 +786,17 @@
 
             <script type="application/javascript">
                 (window._stack = window._stack || []).push(function(di) {
-
                     var modalId, link;
                     di.getService('page').getSnippet({snippet.id data})
                         .setup(function(tbody) {
                             $(tbody).on('click', '[data-item-detail-modal]', function(){
-
                                 modalId = $(this).data('modal-id');
                                 link = $(this).data('link');
-
                                 di.getService('page').open(link);
                                 di.getService('snippetManager').one('after-update', function () {
                                     $(function () {
                                         $('#'+modalId).modal('show');
-                                    })
+                                    });
                                 });
                             });
                         });
