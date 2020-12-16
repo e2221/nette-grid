@@ -829,6 +829,16 @@ class NetteGrid extends Control
      */
     public function handleItemDetailModal(string $itemDetailId, $primary): void
     {
+        $itemDetail = $this->itemDetailsModal[$itemDetailId];
+        $row = $this->getRowFromSource($primary);
+        $headerTitleCallback = $itemDetail->getHeaderTitleCallback();
+        $modalContentCallback = $itemDetail->getContentCallback();
+
+        if(is_callable($headerTitleCallback))
+            $headerTitleCallback($row, $primary, $this['itemDetailModal']->getHeaderTitleTemplate());
+        if(is_callable($modalContentCallback))
+            $modalContentCallback($row, $primary, $this['itemDetailModal']);
+
         $this->reload(self::SNIPPET_ITEM_DETAIL_MODAL);
         $this['itemDetailModal']->reloadHeader();
     }
