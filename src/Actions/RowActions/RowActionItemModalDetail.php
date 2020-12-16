@@ -57,6 +57,7 @@ class RowActionItemModalDetail extends RowAction
 
     /**
      * @return callable|null
+     * @internal
      */
     public function getContentCallback(): ?callable
     {
@@ -65,9 +66,43 @@ class RowActionItemModalDetail extends RowAction
 
     /**
      * @return callable|null
+     * @internal
      */
     public function getHeaderTitleCallback(): ?callable
     {
         return $this->headerTitleCallback;
+    }
+
+    /**
+     * Call header title callback - internal
+     * @param mixed $row
+     * @param mixed $primary
+     * @internal
+     */
+    public function callHeaderTitleCallback($row, $primary): void
+    {
+        $titleCallback = $this->getHeaderTitleCallback();
+        if(is_callable($titleCallback))
+        {
+            $headerTemplate = $this->netteGrid['itemDetailModal']->getHeaderTitleTemplate();
+            $return = $titleCallback($row, $primary, $headerTemplate);
+            if(is_string($return))
+                $headerTemplate->setTextContent($return);
+        }
+    }
+
+    /**
+     * Call content callback - internal
+     * @param mixed $row
+     * @param mixed $primary
+     * @internal
+     */
+    public function callContentCallback($row, $primary): void
+    {
+        $contentCallback = $this->getContentCallback();
+        if(is_callable($contentCallback))
+        {
+            $contentCallback($row, $primary, $this->netteGrid['itemDetailModal']);
+        }
     }
 }
