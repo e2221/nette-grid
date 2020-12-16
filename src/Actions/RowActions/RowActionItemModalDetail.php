@@ -55,4 +55,19 @@ class RowActionItemModalDetail extends RowAction
         return $this;
     }
 
+    /**
+     * @return callable|null
+     */
+    public function getContentCallback(): ?callable
+    {
+        return $this->contentCallback;
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getHeaderTitleCallback(): ?callable
+    {
+        return $this->headerTitleCallback;
+    }
 }

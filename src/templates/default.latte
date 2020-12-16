@@ -795,12 +795,12 @@
                                 modalId = $(this).data('modal-id');
                                 link = $(this).data('link');
 
-                                di.getService('page')
-                                    .open(link)
-                                    .then(function () {
+                                di.getService('page').open(link);
+                                di.getService('snippetManager').one('after-update', function () {
+                                    $(function () {
                                         $('#'+modalId).modal('show');
-                                    });
-
+                                    })
+                                });
                             });
                         });
                 });
@@ -809,9 +809,6 @@
         {/if}
 
     {/snippet}
-
-
-
 
 {/snippetArea}
 

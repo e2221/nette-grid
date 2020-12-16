@@ -61,7 +61,9 @@ class NetteGrid extends Control
         SNIPPET_HEAD_TITLES = 'headTitles',
         SNIPPET_GLOBAL_ACTION_CONTAINER = 'global-action-container',
         SNIPPET_PATH_ITEM_DETAIL = 'itemDetail',
-        SNIPPET_HEAD_ACTIONS = 'headActions';
+        SNIPPET_HEAD_ACTIONS = 'headActions',
+        SNIPPET_ITEM_DETAIL_MODAL = 'itemDetailsModal';
+
 
     /** @var IColumn[] */
     protected array $columns=[];
@@ -823,11 +825,11 @@ class NetteGrid extends Control
      * Signal - fill modal with row detail
      * @param string $itemDetailId
      * @param mixed $primary
+     * @throws AbortException
      */
     public function handleItemDetailModal(string $itemDetailId, $primary): void
     {
-        $this['itemDetailModal']->setTitle('aaa');
-        $this->reloadDocumentArea();
+        $this->reload(self::SNIPPET_ITEM_DETAIL_MODAL);
         $this['itemDetailModal']->reloadHeader();
     }
 
