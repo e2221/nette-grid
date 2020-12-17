@@ -62,10 +62,11 @@ class ColumnSelect extends Column
         {
             $fnLink = $this->columnLinkCallback;
             $columnLink = $this->getColumnLink();
+            $columnLink->setTextContent($cellValue);
             $link = $fnLink($columnLink, $row, $cellValue);
             if(is_string($link))
                 $columnLink->setLink($link);
-            return $columnLink;
+            return $columnLink->render();
         }
         return $cellValue;
     }
@@ -93,6 +94,7 @@ class ColumnSelect extends Column
      * @param mixed $primary
      * @return DataColTemplate
      * @throws InvalidLinkException
+     * @throws NetteGridException
      * @internal
      */
     public function getDataColTemplateForRendering($row, $primary): DataColTemplate
