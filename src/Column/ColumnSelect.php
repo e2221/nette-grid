@@ -5,6 +5,7 @@ namespace e2221\NetteGrid\Column;
 
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Exceptions\NetteGridException;
+use e2221\utils\Html\HrefElement;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -54,12 +55,18 @@ class ColumnSelect extends Column
         if(is_callable($this->cellValueCallback))
         {
             $fn = $this->cellValueCallback;
-            return $fn($row, $cellValue);
+            $cellValue = $fn($row, $cellValue);
         }else{
             if(is_object($cellValue))
                 throw new NetteGridException(sprintf('Cell value for rendering is object (instance of %s given) in column %s ', get_class($cellValue), $this->name));
-            return isset($this->selection[$cellValue]) ? $this->selection[$cellValue] : '';
+            $cellValue = isset($this->selection[$cellValue]) ? $this->selection[$cellValue] : '';
         }
+        if(is_callable($this->columnLinkCallback))
+        {
+            $fnLink = $this->columnLinkCallback;
+            return $fnLink(HrefElement::getStatic(), $row, $cellValue);
+        }
+        return $cellValue;
     }
 
     /**
