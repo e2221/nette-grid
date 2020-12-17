@@ -281,15 +281,6 @@ abstract class Column implements IColumn
     }
 
     /**
-     * Get column link
-     * @return HrefElement|null
-     */
-    public function getColumnLink(): ?HrefElement
-    {
-        return $this->columnLink ?? HrefElement::getStatic();
-    }
-
-    /**
      * Get export value
      * @param mixed $row
      * @return mixed
@@ -665,5 +656,15 @@ abstract class Column implements IColumn
     {
         $this->inputClass = $inputClass;
         return $this;
+    }
+
+    /**
+     * Get column link
+     * @return HrefElement|null
+     */
+    public function getColumnLink(): HrefElement
+    {
+        $this->columnLink = $this->columnLink ?? HrefElement::getStatic();
+        return $this->columnLink;
     }
 }
