@@ -104,6 +104,9 @@ abstract class Column implements IColumn
     /** @var null|callable Column link callback: function(e2221\utils\Html\HrefElement $href, $row, $primary, $cell): void  */
     protected $columnLinkCallback=null;
 
+    /** @var HrefElement|null Column link element */
+    protected ?HrefElement $columnLink=null;
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $label=null)
     {
         $this->netteGrid = $netteGrid;
@@ -267,9 +270,22 @@ abstract class Column implements IColumn
         if(is_callable($this->columnLinkCallback))
         {
             $fnLink = $this->columnLinkCallback;
-            return $fnLink(HrefElement::getStatic(), $row, $cellValue);
+            $columnLink = $this->getColumnLink();
+            $link = $fnLink($columnLink, $row, $cellValue);
+            if(is_string($link))
+                $columnLink->setLink($link);
+            return $columnLink;
         }
         return $cellValue;
+    }
+
+    /**
+     * Get column link
+     * @return HrefElement|null
+     */
+    public function getColumnLink(): ?HrefElement
+    {
+        return $this->columnLink ?? HrefElement::getStatic();
     }
 
     /**
