@@ -9,12 +9,12 @@ use e2221\NetteGrid\Document\Templates\BaseColTemplate;
 class DataColTemplate extends BaseColTemplate
 {
     const
-        ALIGN_BASELINE = 'align-baseline',
         ALIGN_TOP = 'align-top',
         ALIGN_MIDDLE = 'align-middle',
         ALIGN_BOTTOM = 'align-bottom',
-        ALIGN_TEXT_TOP = 'align-text-top',
-        ALIGN_TEXT_BOTTOM = 'align-text-bottom';
+        ALIGN_CENTER = 'text-center',
+        ALIGN_RIGHT = 'float-right',
+        ALIGN_LEFT = 'flot-left';
 
     protected ?string $elementName='td';
     public ?string $align=null;
@@ -26,9 +26,14 @@ class DataColTemplate extends BaseColTemplate
             $this->addClass($this->align);
     }
 
-    public function setAlignBaseline(): self
+    /**
+     * Set align class
+     * @param string|null $align
+     * @return DataColTemplate
+     */
+    public function setAlign(?string $align): self
     {
-        $this->align = self::ALIGN_BASELINE;
+        $this->align = $align;
         return $this;
     }
 
@@ -50,15 +55,21 @@ class DataColTemplate extends BaseColTemplate
         return $this;
     }
 
-    public function setAlignTextTop(): self
+    public function setAlignCenter(): self
     {
-        $this->align = self::ALIGN_TEXT_TOP;
+        $this->align = self::ALIGN_CENTER;
         return $this;
     }
 
-    public function setAlignTextBottom(): self
+    public function setAlignRight(): self
     {
-        $this->align = self::ALIGN_TEXT_BOTTOM;
+        $this->align = self::ALIGN_RIGHT;
+        return $this;
+    }
+
+    public function setAlignLeft(): self
+    {
+        $this->align = self::ALIGN_LEFT;
         return $this;
     }
 }
