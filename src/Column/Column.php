@@ -116,28 +116,6 @@ abstract class Column implements IColumn
         $this->setStickyHeader();
     }
 
-    /**
-     * Set column link callback
-     * @param callable|null $columnLinkCallback function(e2221\utils\Html\HrefElement $href, $row, $primary, $cell): void
-     * @return $this
-     */
-    public function setColumnLinkCallback(?callable $columnLinkCallback): self
-    {
-        $this->columnLinkCallback = $columnLinkCallback;
-        return $this;
-    }
-
-
-    /**
-     * Set export value callback
-     * @param callable|null $exportValueCallback
-     * @return Column
-     */
-    public function setExportCellValueCallback(?callable $exportValueCallback): self
-    {
-        $this->exportValueCallback = $exportValueCallback;
-        return $this;
-    }
 
     /**
      * Add multiple filter
@@ -153,48 +131,12 @@ abstract class Column implements IColumn
         return $this;
     }
 
-    /**
-     * @param string $direction
-     * @return Column
-     */
-    public function setSortDirection(string $direction): self
-    {
-        $this->sortDirection = $direction;
-        return $this;
-    }
 
     /**
-     * Get sort direction
-     * @return string
+     * RENDERING
+     * *****************************************************************************
+     *
      */
-    public function getSortDirection(): string
-    {
-        return $this->sortDirection;
-    }
-
-    /**
-     * Set sticky header
-     * @param bool $sticky
-     * @param int $offset
-     * @return Column
-     */
-    public function setStickyHeader(bool $sticky=true, int $offset=0): self
-    {
-        $this->getTitleColTemplate()
-            ->setStickyHeader($sticky, $offset);
-        return $this;
-    }
-
-    /**
-     * Get head filter col template
-     * @return HeadFilterColTemplate
-     */
-    public function getHeadFilterColTemplate(): HeadFilterColTemplate
-    {
-        if(is_null($this->headFilterColTemplate))
-            $this->headFilterColTemplate = new HeadFilterColTemplate($this);
-        return $this->headFilterColTemplate;
-    }
 
     /**
      * Get cell value
@@ -215,17 +157,6 @@ abstract class Column implements IColumn
     }
 
     /**
-     * Set edit cell value callback
-     * @param callable|null $editCellValueCallback
-     * @return Column
-     */
-    public function setEditCellValueCallback(?callable $editCellValueCallback): self
-    {
-        $this->editCellValueCallback = $editCellValueCallback;
-        return $this;
-    }
-
-    /**
      * @param mixed $row
      * @return mixed
      * @internal
@@ -239,16 +170,6 @@ abstract class Column implements IColumn
             return $cell;
         $fn = $this->editCellValueCallback;
         return $fn($row, $cell);
-    }
-
-    /**
-     * Set form value
-     * @param $cellValue
-     * @internal
-     */
-    public function setFormValue($cellValue): void
-    {
-        $this->netteGrid['form']['edit'][$this->name]->setDefaultValue($cellValue);
     }
 
     /**
@@ -298,26 +219,6 @@ abstract class Column implements IColumn
         }
     }
 
-    /**
-     * Get data col template
-     * @return DataColTemplate
-     */
-    public function getDataColTemplate(): DataColTemplate
-    {
-        return $this->dataColTemplate = new DataColTemplate($this);
-    }
-
-
-    /**
-     * Set data col template callback
-     * @param callable|null $callback
-     * @return Column
-     */
-    public function setDataColTemplateCallback(?callable $callback): self
-    {
-        $this->dataColTemplateCallback = $callback;
-        return $this;
-    }
 
     /**
      * @param mixed $row
@@ -352,6 +253,57 @@ abstract class Column implements IColumn
     }
 
     /**
+     * VALUES CALLBACKS
+     * *****************************************************************************
+     *
+     */
+
+    /**
+     * Set column link callback
+     * @param callable|null $columnLinkCallback function(e2221\utils\Html\HrefElement $href, $row, $primary, $cell): void
+     * @return Column
+     */
+    public function setColumnLinkCallback(?callable $columnLinkCallback): self
+    {
+        $this->columnLinkCallback = $columnLinkCallback;
+        return $this;
+    }
+
+
+    /**
+     * Set export value callback
+     * @param callable|null $exportValueCallback
+     * @return Column
+     */
+    public function setExportCellValueCallback(?callable $exportValueCallback): self
+    {
+        $this->exportValueCallback = $exportValueCallback;
+        return $this;
+    }
+
+    /**
+     * Set edit cell value callback
+     * @param callable|null $editCellValueCallback
+     * @return Column
+     */
+    public function setEditCellValueCallback(?callable $editCellValueCallback): self
+    {
+        $this->editCellValueCallback = $editCellValueCallback;
+        return $this;
+    }
+
+    /**
+     * Set data col template callback
+     * @param callable|null $callback
+     * @return Column
+     */
+    public function setDataColTemplateCallback(?callable $callback): self
+    {
+        $this->dataColTemplateCallback = $callback;
+        return $this;
+    }
+
+    /**
      * Set cell value callback
      * @param callable|null $cellValueCallback
      * @return Column
@@ -360,6 +312,42 @@ abstract class Column implements IColumn
     {
         $this->cellValueCallback = $cellValueCallback;
         return $this;
+    }
+
+    /**
+     * Get column link
+     * @return HrefElement|null
+     */
+    public function getColumnLink(): HrefElement
+    {
+        $this->columnLink = $this->columnLink ?? HrefElement::getStatic();
+        return $this->columnLink;
+    }
+
+    /**
+     * COLUMN TEMPLATES
+     * *****************************************************************************
+     *
+     */
+
+    /**
+     * Get head filter col template
+     * @return HeadFilterColTemplate
+     */
+    public function getHeadFilterColTemplate(): HeadFilterColTemplate
+    {
+        $this->headFilterColTemplate = $this->headFilterColTemplate ?? new HeadFilterColTemplate($this);
+        return $this->headFilterColTemplate;
+    }
+
+    /**
+     * Get data col template
+     * @return DataColTemplate
+     */
+    public function getDataColTemplate(): DataColTemplate
+    {
+        $this->dataColTemplate = $this->dataColTemplate ?? new DataColTemplate($this);
+        return $this->dataColTemplate;
     }
 
     /**
@@ -389,6 +377,45 @@ abstract class Column implements IColumn
     public function setAsPrimaryColumn(): self
     {
         $this->netteGrid->setPrimaryColumn($this->name);
+        return $this;
+    }
+
+    /**
+     * PROPERTY SETTERS & GETTERS
+     * *****************************************************************************
+     *
+     */
+
+    /**
+     * Set sort direction
+     * @param string $direction
+     * @return Column
+     */
+    public function setSortDirection(string $direction): self
+    {
+        $this->sortDirection = $direction;
+        return $this;
+    }
+
+    /**
+     * Get sort direction
+     * @return string
+     */
+    public function getSortDirection(): string
+    {
+        return $this->sortDirection;
+    }
+
+    /**
+     * Set sticky header
+     * @param bool $sticky
+     * @param int $offset top offset in px
+     * @return Column
+     */
+    public function setStickyHeader(bool $sticky=true, int $offset=0): self
+    {
+        $this->getTitleColTemplate()
+            ->setStickyHeader($sticky, $offset);
         return $this;
     }
 
@@ -545,6 +572,21 @@ abstract class Column implements IColumn
         return $this->hidden;
     }
 
+    /**
+     * INPUTS & FORMS
+     * *****************************************************************************
+     *
+     */
+
+    /**
+     * Set form value
+     * @param $cellValue
+     * @internal
+     */
+    public function setFormValue($cellValue): void
+    {
+        $this->netteGrid['form']['edit'][$this->name]->setDefaultValue($cellValue);
+    }
 
     /**
      * Add filter form input
@@ -636,7 +678,7 @@ abstract class Column implements IColumn
     }
 
     /**
-     * Get input
+     * Get parent input for another inputs
      * @return BaseControl
      */
     protected function getInput(): BaseControl
@@ -656,15 +698,5 @@ abstract class Column implements IColumn
     {
         $this->inputClass = $inputClass;
         return $this;
-    }
-
-    /**
-     * Get column link
-     * @return HrefElement|null
-     */
-    public function getColumnLink(): HrefElement
-    {
-        $this->columnLink = $this->columnLink ?? HrefElement::getStatic();
-        return $this->columnLink;
     }
 }

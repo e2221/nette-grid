@@ -6,18 +6,28 @@ namespace e2221\NetteGrid\Column;
 
 
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
+use e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
+use e2221\utils\Html\HrefElement;
+use Nette\Forms\Controls\BaseControl;
 
 interface IColumn
 {
 
     /**
      * Set export value callback
-     * @param callable|null $exportValueCallback
-     * @return $this
+     * @param callable|null $exportValueCallback function($row, $cellValue)
+     * @return IColumn
      */
     public function setExportCellValueCallback(?callable $exportValueCallback): self;
+
+    /**
+     * Set edit cell value callback
+     * @param callable|null $editCellValueCallback function($row, $cell)
+     * @return IColumn
+     */
+    public function setEditCellValueCallback(?callable $editCellValueCallback): self;
 
     /**
      * Get export value
@@ -35,14 +45,14 @@ interface IColumn
     public function addMultipleFilter(MultipleFilter $multipleFilter): self;
 
     /**
-     * Get data col template
+     * Get data col template - styling data col <td>
      * @return DataColTemplate
      */
     public function getDataColTemplate(): DataColTemplate;
 
     /**
      * Set data col template callback (for edit/style data <td> element)
-     * @param callable|null $callback
+     * @param callable|null $callback function(DataColTemplate $template, $row, $cellValue): void - edit $template | DataColTemplate
      * @return $this
      */
     public function setDataColTemplateCallback(?callable $callback): self;
@@ -50,10 +60,17 @@ interface IColumn
 
     /**
      * Set cell value callback (for edit cell value) - could return \Nette\Utils\Html
-     * @param callable|null $cellValueCallback
+     * @param callable|null $cellValueCallback function($row, $cell)
      * @return $this
      */
     public function setCellValueCallback(?callable $cellValueCallback): self;
+
+
+    /**
+     * Get head filter col template - styling head filter <th>
+     * @return HeadFilterColTemplate
+     */
+    public function getHeadFilterColTemplate(): HeadFilterColTemplate;
 
 
     /**
@@ -65,7 +82,7 @@ interface IColumn
 
     /**
      * Set this column as primary
-     * @return $this
+     * @return IColumn
      */
     public function setAsPrimaryColumn(): self;
 
@@ -93,7 +110,6 @@ interface IColumn
      */
     public function setEditable(bool $editable=true): self;
 
-
     /**
      * Set editable in column
      * @param bool $editableInColumn
@@ -102,19 +118,39 @@ interface IColumn
     public function setEditableInColumn(bool $editableInColumn=true): self;
 
     /**
+     * Set sort direction (ASC | DESC | '')
+     * @param string $direction
+     * @return IColumn
+     */
+    public function setSortDirection(string $direction): self;
+
+    /**
+     * Set sticky header
+     * @param bool $sticky
+     * @param int $offset top offset in px
+     * @return IColumn
+     */
+    public function setStickyHeader(bool $sticky=true, int $offset=0): self;
+
+    /**
+     * Get sort direction
+     * @return string
+     */
+    public function getSortDirection(): string;
+
+    /**
      * Set this column required
      * @param bool $required
      * @return IColumn
      */
     public function setRequired(bool $required=true): self;
 
-
     /**
+     * Set column hidden
      * @param bool $hidden
      * @return IColumn
      */
     public function setHidden(bool $hidden=true): self;
-
 
     /**
      * Get column name
@@ -122,13 +158,18 @@ interface IColumn
      */
     public function getName(): string;
 
-
     /**
      * Get column label
      * @return string|null
      */
     public function getLabel(): ?string;
 
+    /**
+     * Set column add-able
+     * @param bool $addAble
+     * @return IColumn
+     */
+    public function setAddAble(bool $addAble=true): self;
 
 
     public function isSortable(): bool;
@@ -136,6 +177,7 @@ interface IColumn
     public function isEditable(): bool;
     public function isRequired(): bool;
     public function isHidden(): bool;
+    public function isAddable(): bool;
 
     /**
      * INTERNAL
@@ -165,6 +207,7 @@ interface IColumn
      * @param mixed $row
      * @param mixed $primary
      * @return DataColTemplate
+     * @internal
      */
     public function getDataColTemplateForRendering($row, $primary): DataColTemplate;
 
@@ -185,9 +228,48 @@ interface IColumn
     public function getEditCellValue($row);
 
     /**
-     * Set input class getter
+     * Set input class getter - this class have to implement e2221\NetteGrid\FormControls\IFormControl - you can style the parent for another inputs
      * @param string $inputClass
      * @return IColumn
      */
     public function setInputClass(string $inputClass): self;
+
+    /**
+     * Set column link callback
+     * @param callable|null $columnLinkCallback function(e2221\utils\Html\HrefElement $href, $row, $primary, $cell): void-edit $href | string - url
+     * @return IColumn
+     */
+    public function setColumnLinkCallback(?callable $columnLinkCallback): self;
+
+    /**
+     * Call NetteGrid after load state
+     * @internal
+     */
+    public function addFilterFormInput(): void;
+    public function addEditFormInput(): void;
+    public function addAddFormInput(): void;
+
+    /**
+     * Get filter input to styling
+     * @return BaseControl
+     */
+    public function getFilterInput(): BaseControl;
+
+    /**
+     * Get edit input to styling
+     * @return BaseControl
+     */
+    public function getEditInput(): BaseControl;
+
+    /**
+     * Get add input to styling
+     * @return BaseControl|null
+     */
+    public function getAddInput(): ?BaseControl;
+
+    /**
+     * Get column link for styling - make sense only if you set this column as link
+     * @return HrefElement
+     */
+    public function getColumnLink(): HrefElement;
 }
