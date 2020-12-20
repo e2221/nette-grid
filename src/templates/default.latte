@@ -516,19 +516,17 @@
                             let tr = this.closest('tr[data-selectable-row]');
                             if(tr)
                             {
-                                let tbody = $(this).closest('tbody');
                                 if(this.checked){
                                     tr.classList.add("ui-selecting");
-                                    tbody.data("ui-selectable")._mouseStop(null);
+                                    $(tbody).data("ui-selectable")._mouseStop(null);
                                 } else {
-                                    tr.classList.remove("ui-selected");
-                                    tr.classList.remove("table-success");
-                                    tbody.data("ui-selectable")._mouseStop(null);
+                                    tr.classList.remove("ui-selected table-success");
+                                    $(tbody).data("ui-selectable")._mouseStop(null);
                                 }
                             }
                         });
 
-                        if($(tbody).data('sortable-rows')) {
+                        if($(tbody).data('tbody-selectable')) {
                             $(tbody).selectable({
                                 filter: 'tr',
                                 cancel: 'a,.btn,input,[data-editable-link],[data-no-select]',
