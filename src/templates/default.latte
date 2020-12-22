@@ -520,7 +520,7 @@
                                     tr.classList.add("ui-selecting");
                                     $(tbody).data("ui-selectable")._mouseStop(null);
                                 } else {
-                                    tr.classList.remove("ui-selected table-success");
+                                    $(tr).removeClass("ui-selected table-success");
                                     $(tbody).data("ui-selectable")._mouseStop(null);
                                 }
                             }
