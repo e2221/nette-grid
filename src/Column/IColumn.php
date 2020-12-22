@@ -214,14 +214,14 @@ interface IColumn
 
     /**
      * Set input form value
-     * @param $cellValue
+     * @param mixed $cellValue
      * @internal
      */
     public function setFormValue($cellValue): void;
 
     /**
      * Get edit cell value
-     * @param $row
+     * @param mixed $row
      * @return mixed
      * @internal
      */

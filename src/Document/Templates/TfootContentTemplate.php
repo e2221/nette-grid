@@ -22,6 +22,6 @@ class TfootContentTemplate extends BaseTemplate
     public function beforeRender(): void
     {
         parent::beforeRender();
-        $this->addHtmlAttribute('colspan', $this->netteGrid->getTableColspan());
+        $this->addHtmlAttribute('colspan', (string)$this->netteGrid->getTableColspan());
     }
 }

@@ -22,11 +22,12 @@ class EmptyDataColTemplate extends BaseTemplate
 
     public function beforeRender(): void
     {
-        $this->addHtmlAttribute('colspan', $this->netteGrid->getTableColspan());
+        $this->addHtmlAttribute('colspan', (string)$this->netteGrid->getTableColspan());
         if($this->netteGrid->showResetFilterButton() === true)
-            $this->addElement(
+            $this->addElement('link',
                 HrefElement::getStatic('a', [], 'Reset filter')
                     ->setLink($this->netteGrid->link('resetFilter!'))
             );
+        $this->addElement('emptyData', $this->netteGrid->getDocumentTemplate()->getEmptyData());
     }
 }

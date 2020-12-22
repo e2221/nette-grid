@@ -316,7 +316,7 @@ abstract class Column implements IColumn
 
     /**
      * Get column link
-     * @return HrefElement|null
+     * @return HrefElement
      */
     public function getColumnLink(): HrefElement
     {
@@ -580,7 +580,7 @@ abstract class Column implements IColumn
 
     /**
      * Set form value
-     * @param $cellValue
+     * @param mixed $cellValue
      * @internal
      */
     public function setFormValue($cellValue): void

@@ -151,8 +151,8 @@ class RowAction extends BaseAction implements IRowAction
 
     /**
      * Render multi actions
-     * @param $row
-     * @param $primary
+     * @param mixed $row
+     * @param mixed $primary
      * @return Html|null
      * @internal
      */

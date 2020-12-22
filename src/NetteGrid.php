@@ -34,7 +34,6 @@ use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use e2221\NetteGrid\GlobalActions\GlobalAction;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
-use e2221\utils\Html\BaseElement;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -74,7 +73,7 @@ class NetteGrid extends Control
     /** @var HeaderAction[] */
     protected array $headerActions=[];
 
-    /** @var RowAction[] */
+    /** @var IRowAction[] */
     protected array $rowActions=[];
 
     /** @var array */
@@ -407,7 +406,7 @@ class NetteGrid extends Control
      * Add header action - update grid
      * @param string $name
      * @param string|null $title
-     * @return HeaderAction|BaseElement
+     * @return HeaderAction
      */
     public function addHeaderDataUpdateAction(string $name='_updateGrid', ?string $title='Update'): HeaderAction
     {
@@ -1381,7 +1380,7 @@ class NetteGrid extends Control
 
     /**
      * Get single data row
-     * @param $rowID
+     * @param mixed $rowID
      * @return mixed
      */
     protected function getRowFromSource($rowID)
@@ -1593,7 +1592,7 @@ class NetteGrid extends Control
 
     /**
      * Reload one row by primary key (data will be loaded)
-     * @param $rowID
+     * @param mixed $rowID
      * @throws AbortException
      */
     public function reloadRow($rowID): void

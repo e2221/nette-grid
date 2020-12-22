@@ -11,7 +11,7 @@ class ColumnPassword extends Column
 
     /**
      * Set form value
-     * @param $cellValue
+     * @param mixed $cellValue
      * @internal
      */
     public function setFormValue($cellValue): void

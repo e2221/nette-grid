@@ -282,8 +282,7 @@ class DocumentTemplate
      */
     public function getEmptyDataColTemplate(): EmptyDataColTemplate
     {
-        return $this->emptyDataColTemplate
-            ->addElement($this->getEmptyData());
+        return $this->emptyDataColTemplate;
     }
 
     /**
