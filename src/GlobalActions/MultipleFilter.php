@@ -7,6 +7,9 @@ namespace e2221\NetteGrid\GlobalActions;
 use e2221\NetteGrid\Column\IColumn;
 use e2221\NetteGrid\NetteGrid;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\SelectBox;
+use Nette\Forms\Controls\TextArea;
+use Nette\Forms\Controls\TextInput;
 use Nette\SmartObject;
 
 class MultipleFilter
@@ -45,8 +48,10 @@ class MultipleFilter
     {
         foreach($this->container->getControls() as $containerControl)
         {
-            $containerControl->setHtmlAttribute('data-autosubmit');
+            $containerControl->setHtmlAttribute($containerControl instanceof SelectBox ? 'data-autosubmit-select' : 'data-autosubmit');
             $containerControl->setHtmlAttribute('data-container', 'multipleFilterSubmit');
+            if($containerControl instanceof SelectBox || $containerControl instanceof TextInput || $containerControl instanceof TextArea)
+                $containerControl->setHtmlAttribute('class', 'form-control form-control-sm');
         }
         return $this->container;
     }

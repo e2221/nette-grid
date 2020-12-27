@@ -80,13 +80,7 @@
                                                         {foreach $multipleFilters as $multipleFitlerName => $multipleFilter}
                                                             {formContainer $multipleFitlerName}
                                                                 {foreach $multipleFilter->getContainer()->getControls() as $multipleFilterControl}
-                                                                    {if $multipleFilterControl instanceof Nette\Forms\Controls\TextInput}
-                                                                        {input $multipleFilterControl class => 'form-control form-control-sm'}
-                                                                    {elseif $multipleFilterControl instanceof Nette\Forms\Controls\SelectBox}
-                                                                        {input $multipleFilterControl class => 'form-control form-control-sm' data-autosubmit-select => ''}
-                                                                    {else}
-                                                                        {input $multipleFilterControl}
-                                                                    {/if}
+                                                                    {input $multipleFilterControl}
                                                                 {/foreach}
                                                             {/formContainer}
                                                         {/foreach}

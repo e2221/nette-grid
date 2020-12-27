@@ -12,6 +12,7 @@ use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionDisableEdit;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionExport;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
+use e2221\NetteGrid\Actions\HeaderActions\HeaderModalAction;
 use e2221\NetteGrid\Actions\RowAction\IRowAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionDelete;
@@ -221,6 +222,9 @@ class NetteGrid extends Control
 
     /** @var string|null Item detail modal id */
     protected ?string $itemDetailModalId=null;
+
+    /** @var HeaderModalAction[] Header modal actions  */
+    protected array $headerModalActions=[];
 
     public function __construct()
     {
@@ -452,6 +456,11 @@ class NetteGrid extends Control
         $this->headerActions[$name] = $exportAction;
         $this->exportActions[$name] = $exportAction;
         return $exportAction;
+    }
+
+    public function addHeaderModalAction(string $name='_modal', ?string $title=null)
+    {
+
     }
 
 
