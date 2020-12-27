@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace e2221\NetteGrid;
 
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
+use e2221\NetteGrid\Actions\HeaderActions\HeaderModalAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
 use e2221\NetteGrid\Actions\RowAction\RowActionCancel;
 use e2221\NetteGrid\Actions\RowAction\RowActionEdit;
@@ -78,6 +79,9 @@ class NetteGridTemplate extends Template
     /** @var RowActionItemModalDetail[] */
     public array $itemDetailsModal;
 
+    /** @var HeaderModalAction[] */
+    public array $headerModalActions;
+
     public ?Paginator $paginator;
     public NetteGrid $control;
     public Presenter $presenter;
@@ -128,4 +132,5 @@ class NetteGridTemplate extends Template
     public ?string $droppableScope;
     public ?string $droppableEffect;
     public bool $hasItemModalDetail;
+    public bool $hasHeaderModalAction;
 }

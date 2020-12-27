@@ -771,6 +771,7 @@
         </script>
     {/snippet}
 
+    {* item detal modal *}
     {snippet itemDetailsModal}
 
         {if $hasItemModalDetail === true}
@@ -795,6 +796,21 @@
                         });
                 });
             </script>
+
+        {/if}
+
+    {/snippet}
+
+    {* header action modal*}
+    {snippet headerModalActions}
+
+        {if $hasHeaderModalAction === true}
+
+            {foreach $headerModalActions as $headerModalActionName => $headerModalAction}
+
+                {control $headerModalAction}
+
+            {/foreach}
 
         {/if}
 

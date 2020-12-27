@@ -62,7 +62,8 @@ class NetteGrid extends Control
         SNIPPET_GLOBAL_ACTION_CONTAINER = 'global-action-container',
         SNIPPET_PATH_ITEM_DETAIL = 'itemDetail',
         SNIPPET_HEAD_ACTIONS = 'headActions',
-        SNIPPET_ITEM_DETAIL_MODAL = 'itemDetailsModal';
+        SNIPPET_ITEM_DETAIL_MODAL = 'itemDetailsModal',
+        SNIPPET_HEADER_MODAL_ACTION = 'headerModalActions';
 
 
     /** @var IColumn[] */
@@ -458,9 +459,18 @@ class NetteGrid extends Control
         return $exportAction;
     }
 
-    public function addHeaderModalAction(string $name='_modal', ?string $title=null)
+    /**
+     * Add header modal action
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderModalAction
+     */
+    public function addHeaderModalAction(string $name='_modal', ?string $title='Modal action')
     {
-
+        $modalAction = new HeaderModalAction($this, $name, $title);
+        $this->headerModalActions[$name] = $modalAction;
+        $this->headerActions[$name] = $modalAction;
+        return $modalAction;
     }
 
 
@@ -1012,6 +1022,8 @@ class NetteGrid extends Control
         $this->template->droppableEffect = $this->droppableEffect;
         $this->template->hasItemModalDetail = $this->hasItemModalDetail();
         $this->template->itemDetailsModal = $this->itemDetailsModal;
+        $this->template->headerModalActions = $this->headerModalActions;
+        $this->template->hasHeaderModalAction = $this->hasHeaderModalAction();
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -1205,11 +1217,13 @@ class NetteGrid extends Control
         return $pagination;
     }
 
+    /**
+     * Item detail modal
+     * @return Modal
+     */
     protected function createComponentItemDetailModal(): Modal
     {
-        $modal = new Modal();
-
-        return $modal;
+        return new Modal();
     }
 
     /**
@@ -1769,6 +1783,15 @@ class NetteGrid extends Control
     public function hasItemModalDetail(): bool
     {
         return (bool)count($this->itemDetailsModal);
+    }
+
+    /**
+     * Has header modal action?
+     * @return bool
+     */
+    public function hasHeaderModalAction(): bool
+    {
+        return (bool)count($this->headerModalActions);
     }
 
     /**
