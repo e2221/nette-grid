@@ -16,6 +16,14 @@ class HeaderModalAction extends HeaderAction
         $this->netteGrid->addComponent(new Modal(), $name);
     }
 
+    public function beforeRender(): void
+    {
+        parent::beforeRender();
+        $this
+            ->addDataAttribute('toggle', 'modal')
+            ->addDataAttribute('target', sprintf('#%s', $this->getModal()->getModalId()));
+    }
+
     /**
      * Get modal control
      * @return Modal

@@ -808,7 +808,7 @@
 
             {foreach $headerModalActions as $headerModalActionName => $headerModalAction}
 
-                {control $headerModalAction}
+                {$headerModalAction->render()|noescape}
 
             {/foreach}
 
