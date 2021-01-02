@@ -26,20 +26,20 @@
                                         {include #top-row-open-tag}
 
                                             {* grid title *}
-                                            {*}<div class="col col-sm-6">{*}
-                                            {include #title-wrapper-open-tag}
+                                            {if $hasTitle === true}
+                                                {*}<div class="col col-sm-6">{*}
+                                                {include #title-wrapper-open-tag}
 
-                                                {include #title}
+                                                    {include #title}
 
-                                            {*}</div>{*}
-                                            {include #title-wrapper-end-tag}
+                                                {*}</div>{*}
+                                                {include #title-wrapper-end-tag}
+                                            {/if}
 
                                             {* top actions *}
                                             {if $hasTopActions === true}
-
                                                 {*}<div class="col col-sm-6">{*}
                                                 {include #top-actions-open-tag}
-
                                                     {snippet topActions}
                                                         {foreach $topActions as $actionName => $topAction}
                                                             {ifset #top-action-$actionName}
@@ -49,10 +49,8 @@
                                                             {/ifset}
                                                         {/foreach}
                                                     {/snippet}
-
                                                 {*}</div>{*}
                                                 {include #top-actions-end-tag}
-
                                             {/if}
 
                                         {*}</div>{*}
