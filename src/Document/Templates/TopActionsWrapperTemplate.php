@@ -8,5 +8,5 @@ class TopActionsWrapperTemplate extends BaseTemplate
 {
     protected ?string $elementName='div';
     public string $defaultClass='col';
-    protected string $class='col-sm-6';
+    protected string $class='col-sm-6 text-right';
 }
