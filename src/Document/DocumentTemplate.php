@@ -21,6 +21,8 @@ use e2221\NetteGrid\Document\Templates\TfootContentTemplate;
 use e2221\NetteGrid\Document\Templates\TfootTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
+use e2221\NetteGrid\Document\Templates\TopActionsWrapperTemplate;
+use e2221\NetteGrid\Document\Templates\TopRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use e2221\NetteGrid\NetteGrid;
 use e2221\utils\Html\BaseElement;
@@ -56,6 +58,8 @@ class DocumentTemplate
     protected RowActionInlineSave $rowActionInlineAddSave;
     protected TfootTemplate $tfootTemplate;
     protected TfootContentTemplate $tfootContentTemplate;
+    protected TopRowTemplate $topRowTemplate;
+    protected TopActionsWrapperTemplate $topActionsWrapperTemplate;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -77,6 +81,8 @@ class DocumentTemplate
         $this->rowActionInlineAddSave = new RowActionInlineSave($netteGrid);
         $this->tfootTemplate = new TfootTemplate();
         $this->tfootContentTemplate = new TfootContentTemplate($netteGrid);
+        $this->topRowTemplate = new TopRowTemplate();
+        $this->topActionsWrapperTemplate = new TopActionsWrapperTemplate();
     }
 
     /**
@@ -113,6 +119,24 @@ class DocumentTemplate
     {
         $this->hiddenHeader = $hiddenHeader;
         return $this;
+    }
+
+    /**
+     * Top row template
+     * @return TopRowTemplate
+     */
+    public function getTopRowTemplate(): TopRowTemplate
+    {
+        return $this->topRowTemplate;
+    }
+
+    /**
+     * Get top actions wrapper <div>
+     * @return TopActionsWrapperTemplate
+     */
+    public function getTopActionsWrapperTemplate(): TopActionsWrapperTemplate
+    {
+        return $this->topActionsWrapperTemplate;
     }
 
     /**

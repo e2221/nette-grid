@@ -163,3 +163,28 @@
 {define #item-detail}
     {$itemDetail->renderItemDetail()|noescape}
 {/define}
+
+{* Top row open tag *}
+{define #top-row-open-tag}
+    {$topRowTemplate->startTag()|noescape}
+{/define}
+
+{* Top row end tag *}
+{define #top-row-end-tag}
+    {$topRowTemplate->endTag()|noescape}
+{/define}
+
+{* Top actions open tag *}
+{define #top-actions-open-tag}
+    {$topActionsWrapperTemplate->startTag()|noescape}
+{/define}
+
+{* Top action end tag *}
+{define #top-actions-end-tag}
+    {$topActionsWrapperTemplate->endTag()|noescape}
+{/define}
+
+{* Top action - available parameters (HeaderAction $headerAction) *}
+{define #top-action}
+    {$headerAction->render()|noescape}
+{/define}

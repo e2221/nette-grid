@@ -63,7 +63,8 @@ class NetteGrid extends Control
         SNIPPET_PATH_ITEM_DETAIL = 'itemDetail',
         SNIPPET_HEAD_ACTIONS = 'headActions',
         SNIPPET_ITEM_DETAIL_MODAL = 'itemDetailsModal',
-        SNIPPET_HEADER_MODAL_ACTION = 'headerModalActions';
+        SNIPPET_HEADER_MODAL_ACTION = 'headerModalActions',
+        SNIPPET_TOP_ACTIONS = 'topActions';
 
 
     /** @var IColumn[] */
@@ -71,6 +72,9 @@ class NetteGrid extends Control
 
     /** @var array @persistent */
     public array $filter=[];
+
+    /** @var HeaderAction[] */
+    protected array $topActions=[];
 
     /** @var HeaderAction[] */
     protected array $headerActions=[];
@@ -377,6 +381,100 @@ class NetteGrid extends Control
         if(isset($this->columns[$columnName]))
             return $this->columns[$columnName];
         throw new NetteGridException(sprintf('Column %s does not exist.', $columnName));
+    }
+
+    /**
+     * TOP ACTIONS
+     * ******************************************************************************
+     *
+     */
+
+    /**
+     * Add top action directly
+     * @param HeaderAction $topAction
+     * @return HeaderAction
+     * @internal
+     */
+    public function addTopActionDirectly(HeaderAction $topAction): HeaderAction
+    {
+        return $this->topActions[$topAction->name] = $topAction;
+    }
+
+    /**
+     * Add top action
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderAction
+     */
+    public function addTopAction(string $name, ?string $title=null): HeaderAction
+    {
+        return $this->addTopActionDirectly(new HeaderAction($this, $name, $title));
+    }
+
+    /**
+     * Add top action - update grid
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderAction
+     */
+    public function addTopDataUpdateAction(string $name='__updateGrid', ?string $title='Update'): HeaderAction
+    {
+        $headerAction = $this->addTopAction($name, $title);
+        $headerAction->addIconElement('fas fa-sync-alt', [], true);
+        $this->onAnchor[] = function() use ($headerAction){
+            $headerAction->setLink($this->link('redrawData!'));
+        };
+        return $headerAction;
+    }
+
+    /**
+     * Add top action - disable/enable edit
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderActionDisableEdit
+     */
+    public function addTopDisableEditAction(string $name='__disableEdit', ?string $title=null): HeaderActionDisableEdit
+    {
+        return $this->topActions[$name] = new HeaderActionDisableEdit($this, $name, $title);
+    }
+
+    /**
+     * Add top action - inline add
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderActionInlineAdd
+     */
+    public function addTopInlineAddAction(string $name='__inlineAdd', ?string $title='Add'): HeaderActionInlineAdd
+    {
+        return $this->topActions[$name] = new HeaderActionInlineAdd($this, $name, $title);
+    }
+
+    /**
+     * Add top action - export
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderActionExport
+     */
+    public function addTopExportAction(string $name='__export', ?string $title='Export'): HeaderActionExport
+    {
+        $exportAction = new HeaderActionExport($this, $name, $title);
+        $this->topActions[$name] = $exportAction;
+        $this->exportActions[$name] = $exportAction;
+        return $exportAction;
+    }
+
+    /**
+     * Add header modal action
+     * @param string $name
+     * @param string|null $title
+     * @return HeaderModalAction
+     */
+    public function addTopModalAction(string $name='__modal', ?string $title='Modal action')
+    {
+        $modalAction = new HeaderModalAction($this, $name, $title);
+        $this->headerModalActions[$name] = $modalAction;
+        $this->topActions[$name] = $modalAction;
+        return $modalAction;
     }
 
     /**
@@ -1003,6 +1101,8 @@ class NetteGrid extends Control
         $this->template->rowActions = $this->rowActions;
         $this->template->hiddenHeader = $this->documentTemplate->hiddenHeader;
         $this->template->headerActions = $this->headerActions;
+        $this->template->topActions = $this->topActions;
+        $this->template->hasTopActions = $this->hasTopActions();
         $this->template->paginator = $this->paginator;
         $this->template->sortByColumn = $this->sortByColumn;
         $this->template->sortDirection = $this->sortDirection;
@@ -1042,6 +1142,8 @@ class NetteGrid extends Control
         $this->template->rowActionEdit = $this->documentTemplate->getRowActionEdit();
         $this->template->tfootTemplate = $this->documentTemplate->getTfootTemplate();
         $this->template->tfootContentTemplate = $this->documentTemplate->getTfootContentTemplate();
+        $this->template->topRowTemplate = $this->documentTemplate->getTopRowTemplate();
+        $this->template->topActionsWrapperTemplate = $this->documentTemplate->getTopActionsWrapperTemplate();
 
         $data = $this->data ?? $this->getDataFromSource();
         $this->template->columns = $this->getColumns(true);
@@ -1792,6 +1894,15 @@ class NetteGrid extends Control
     public function hasHeaderModalAction(): bool
     {
         return (bool)count($this->headerModalActions);
+    }
+
+    /**
+     * Has top actions?
+     * @return bool
+     */
+    public function hasTopActions(): bool
+    {
+        return (bool)count($this->topActions);
     }
 
     /**

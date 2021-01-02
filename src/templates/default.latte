@@ -18,6 +18,48 @@
 
                         <thead n:snippet="head" {$theadTemplate->getAttributes()|noescape}>
 
+                            {if $hasTopActions === true}
+
+                                <tr>
+                                    <th colspan="{$tableColspan}">
+
+                                        {*}<div class="row">{*}
+                                        {include #top-row-open-tag}
+
+                                            {* grid title *}
+                                            <div class="col col-sm-6">
+
+                                            </div>
+
+                                            {* top actions *}
+                                            {if $hasTopActions === true}
+
+                                                {*}<div class="col col-sm-6">{*}
+                                                {include #top-actions-open-tag}
+
+                                                    {snippet topActions}
+                                                        {foreach $topActions as $actionName => $topAction}
+                                                            {ifset #top-action-$actionName}
+                                                                {include #"top-action-{$actionName}"}
+                                                            {else}
+                                                                {include #top-action topAction => $topAction}
+                                                            {/ifset}
+                                                        {/foreach}
+                                                    {/snippet}
+
+                                                {*}</div>{*}
+                                                {include #top-actions-end-tag}
+
+                                            {/if}
+
+                                        {*}</div>{*}
+                                        {include #top-row-end-tag}
+
+                                    </th>
+                                </tr>
+
+                            {/if}
+
                             {if $hasGlobalAction === true || $hasMultipleFilter === true}
 
                                 <tr>

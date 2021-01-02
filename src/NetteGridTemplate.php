@@ -25,6 +25,8 @@ use e2221\NetteGrid\Document\Templates\TfootContentTemplate;
 use e2221\NetteGrid\Document\Templates\TfootTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
+use e2221\NetteGrid\Document\Templates\TopActionsWrapperTemplate;
+use e2221\NetteGrid\Document\Templates\TopRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use e2221\NetteGrid\GlobalActions\GlobalAction;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
@@ -82,6 +84,9 @@ class NetteGridTemplate extends Template
     /** @var HeaderModalAction[] */
     public array $headerModalActions;
 
+    /** @var HeaderAction[] */
+    public array $topActions;
+
     public ?Paginator $paginator;
     public NetteGrid $control;
     public Presenter $presenter;
@@ -102,6 +107,8 @@ class NetteGridTemplate extends Template
     public RowActionEdit $rowActionEdit;
     public TfootTemplate $tfootTemplate;
     public TfootContentTemplate $tfootContentTemplate;
+    public TopRowTemplate $topRowTemplate;
+    public TopActionsWrapperTemplate $topActionsWrapperTemplate;
 
     public bool $editMode;
     public bool $showEmptyResult;
@@ -133,4 +140,5 @@ class NetteGridTemplate extends Template
     public ?string $droppableEffect;
     public bool $hasItemModalDetail;
     public bool $hasHeaderModalAction;
+    public bool $hasTopActions;
 }
