@@ -260,9 +260,26 @@ class NetteGrid extends Control
         $this->getDocumentTemplate()->getEmptyDataRowTemplate()->addDataAttribute('droppable-row');
     }
 
-    public function setEmptyDataContent()
+    /**
+     * Set empty data content
+     * @param string $content
+     * @return NetteGrid
+     */
+    public function setEmptyDataContent(string $content): self
     {
+        $this->documentTemplate->getEmptyData()->setTextContent($content);
+        return $this;
+    }
 
+    /**
+     * Set title
+     * @param string $title
+     * @return NetteGrid
+     */
+    public function setTitle(string $title): self
+    {
+        $this->documentTemplate->getTitleTemplate()->setTextContent($title);
+        return $this;
     }
 
     /**
@@ -1124,6 +1141,7 @@ class NetteGrid extends Control
         $this->template->itemDetailsModal = $this->itemDetailsModal;
         $this->template->headerModalActions = $this->headerModalActions;
         $this->template->hasHeaderModalAction = $this->hasHeaderModalAction();
+        $this->template->hasTitle = $this->hasTitle();
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -1144,6 +1162,8 @@ class NetteGrid extends Control
         $this->template->tfootContentTemplate = $this->documentTemplate->getTfootContentTemplate();
         $this->template->topRowTemplate = $this->documentTemplate->getTopRowTemplate();
         $this->template->topActionsWrapperTemplate = $this->documentTemplate->getTopActionsWrapperTemplate();
+        $this->template->titleWrapperTemplate = $this->documentTemplate->getTitleWrapperTemplate();
+        $this->template->titleTemplate = $this->documentTemplate->getTitleTemplate();
 
         $data = $this->data ?? $this->getDataFromSource();
         $this->template->columns = $this->getColumns(true);
@@ -1906,6 +1926,15 @@ class NetteGrid extends Control
     }
 
     /**
+     * Has title
+     * @return bool
+     */
+    public function hasTitle(): bool
+    {
+        return !empty($this->documentTemplate->getTitleTemplate()->getElement()->getText());
+    }
+
+    /**
      * Get multiple filter container
      * @return Container
      * @internal
@@ -1981,5 +2010,4 @@ class NetteGrid extends Control
     {
         return $this->itemDetailModalId;
     }
-
 }

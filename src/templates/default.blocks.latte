@@ -188,3 +188,18 @@
 {define #top-action}
     {$headerAction->render()|noescape}
 {/define}
+
+{* Title wrapper open tag *}
+{define #title-wrapper-open-tag}
+    {$titleWrapperTemplate->startTag()|noescape}
+{/define}
+
+{* Title wrapper end tag *}
+{define #title-wrapper-end-tag}
+    {$titleWrapperTemplate->endTag()|noescape}
+{/define}
+
+{* Title *}
+{define #title}
+    {$titleTemplate->render()|noescape}
+{/define}

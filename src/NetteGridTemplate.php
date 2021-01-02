@@ -25,6 +25,8 @@ use e2221\NetteGrid\Document\Templates\TfootContentTemplate;
 use e2221\NetteGrid\Document\Templates\TfootTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
+use e2221\NetteGrid\Document\Templates\TitleTemplate;
+use e2221\NetteGrid\Document\Templates\TitleWrapperTemplate;
 use e2221\NetteGrid\Document\Templates\TopActionsWrapperTemplate;
 use e2221\NetteGrid\Document\Templates\TopRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
@@ -109,6 +111,8 @@ class NetteGridTemplate extends Template
     public TfootContentTemplate $tfootContentTemplate;
     public TopRowTemplate $topRowTemplate;
     public TopActionsWrapperTemplate $topActionsWrapperTemplate;
+    public TitleWrapperTemplate $titleWrapperTemplate;
+    public TitleTemplate $titleTemplate;
 
     public bool $editMode;
     public bool $showEmptyResult;
@@ -141,4 +145,5 @@ class NetteGridTemplate extends Template
     public bool $hasItemModalDetail;
     public bool $hasHeaderModalAction;
     public bool $hasTopActions;
+    public bool $hasTitle;
 }

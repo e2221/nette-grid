@@ -18,18 +18,21 @@
 
                         <thead n:snippet="head" {$theadTemplate->getAttributes()|noescape}>
 
-                            {if $hasTopActions === true}
+                            {if $hasTopActions === true || $hasTitle === true}
 
                                 <tr>
                                     <th colspan="{$tableColspan}">
-
                                         {*}<div class="row">{*}
                                         {include #top-row-open-tag}
 
                                             {* grid title *}
-                                            <div class="col col-sm-6">
+                                            {*}<div class="col col-sm-6">{*}
+                                            {include #title-wrapper-open-tag}
 
-                                            </div>
+                                                {include #title}
+
+                                            {*}</div>{*}
+                                            {include #title-wrapper-end-tag}
 
                                             {* top actions *}
                                             {if $hasTopActions === true}
@@ -54,7 +57,6 @@
 
                                         {*}</div>{*}
                                         {include #top-row-end-tag}
-
                                     </th>
                                 </tr>
 

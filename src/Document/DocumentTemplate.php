@@ -21,6 +21,8 @@ use e2221\NetteGrid\Document\Templates\TfootContentTemplate;
 use e2221\NetteGrid\Document\Templates\TfootTemplate;
 use e2221\NetteGrid\Document\Templates\TheadTemplate;
 use e2221\NetteGrid\Document\Templates\TitlesRowTemplate;
+use e2221\NetteGrid\Document\Templates\TitleTemplate;
+use e2221\NetteGrid\Document\Templates\TitleWrapperTemplate;
 use e2221\NetteGrid\Document\Templates\TopActionsWrapperTemplate;
 use e2221\NetteGrid\Document\Templates\TopRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
@@ -60,6 +62,8 @@ class DocumentTemplate
     protected TfootContentTemplate $tfootContentTemplate;
     protected TopRowTemplate $topRowTemplate;
     protected TopActionsWrapperTemplate $topActionsWrapperTemplate;
+    protected TitleWrapperTemplate $titleWrapperTemplate;
+    protected TitleTemplate $titleTemplate;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -83,6 +87,8 @@ class DocumentTemplate
         $this->tfootContentTemplate = new TfootContentTemplate($netteGrid);
         $this->topRowTemplate = new TopRowTemplate();
         $this->topActionsWrapperTemplate = new TopActionsWrapperTemplate();
+        $this->titleWrapperTemplate = new TitleWrapperTemplate();
+        $this->titleTemplate = new TitleTemplate();
     }
 
     /**
@@ -119,6 +125,24 @@ class DocumentTemplate
     {
         $this->hiddenHeader = $hiddenHeader;
         return $this;
+    }
+
+    /**
+     * Get title template
+     * @return TitleTemplate
+     */
+    public function getTitleTemplate(): TitleTemplate
+    {
+        return $this->titleTemplate;
+    }
+
+    /**
+     * Get title wrapper
+     * @return TitleWrapperTemplate
+     */
+    public function getTitleWrapperTemplate(): TitleWrapperTemplate
+    {
+        return $this->titleWrapperTemplate;
     }
 
     /**
@@ -217,7 +241,9 @@ class DocumentTemplate
      */
     public function getEmptyData(): BaseElement
     {
-        return is_null($this->emptyData) ? BaseElement::getStatic('', [], 'Empty data. ') : $this->emptyData;
+        if(is_null($this->emptyData))
+            $this->emptyData = BaseElement::getStatic('', [], 'Empty data. ');
+        return $this->emptyData;
     }
 
     /**
