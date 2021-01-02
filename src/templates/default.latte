@@ -67,8 +67,8 @@
                                         <div class="row">
 
                                             {* Global actions *}
-                                            <div class="col col-sm-6 form-inline" n:if="$hasGlobalAction === true">
-                                                <div class="form-inline">
+                                            <div class="col col-sm-6">
+                                                <div class="form-inline" n:if="$hasGlobalAction === true">
                                                     <label class="my-1 mr-2">Selected rows:</label>
                                                     <select class="form-control form-control-sm" data-change-global-action>
                                                         <option>...select...</option>
@@ -95,24 +95,24 @@
                                                             {/formContainer}
                                                         {/ifset}
                                                     </div>
-                                                </div>
-                                                <script type="application/javascript">
-                                                    (window._stack = window._stack || []).push(function(di) {
-                                                        di.getService('page').getSnippet({snippet.id head})
-                                                            .setup(function(head){
-                                                                $(head).on('change', '[data-change-global-action]', function(){
-                                                                    let selectedOption = this.selectedIndex;
-                                                                    let containerContent = $(head).find('[data-global-action-container]');
-                                                                    containerContent.contents().remove();
-                                                                    if(selectedOption && selectedOption > 0)
-                                                                    {
-                                                                        let link = this.options.item(selectedOption).dataset.link;
-                                                                        di.getService('page').open(link, 'POST')
-                                                                    }
+                                                    <script type="application/javascript">
+                                                        (window._stack = window._stack || []).push(function(di) {
+                                                            di.getService('page').getSnippet({snippet.id head})
+                                                                .setup(function(head){
+                                                                    $(head).on('change', '[data-change-global-action]', function(){
+                                                                        let selectedOption = this.selectedIndex;
+                                                                        let containerContent = $(head).find('[data-global-action-container]');
+                                                                        containerContent.contents().remove();
+                                                                        if(selectedOption && selectedOption > 0)
+                                                                        {
+                                                                            let link = this.options.item(selectedOption).dataset.link;
+                                                                            di.getService('page').open(link, 'POST')
+                                                                        }
+                                                                    });
                                                                 });
-                                                            });
-                                                    });
-                                                </script>
+                                                        });
+                                                    </script>
+                                                </div>
                                             </div>
 
                                             {* Multiple filter *}
