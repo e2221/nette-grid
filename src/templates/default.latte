@@ -26,15 +26,15 @@
                                         {include #top-row-open-tag}
 
                                             {* grid title *}
-                                            {if $hasTitle === true}
-                                                {*}<div class="col col-sm-6">{*}
-                                                {include #title-wrapper-open-tag}
+                                            {*}<div class="col col-sm-6">{*}
+                                            {include #title-wrapper-open-tag}
 
+                                                {if $hasTitle === true}
                                                     {include #title}
+                                                {/if}
 
-                                                {*}</div>{*}
-                                                {include #title-wrapper-end-tag}
-                                            {/if}
+                                            {*}</div>{*}
+                                            {include #title-wrapper-end-tag}
 
                                             {* top actions *}
                                             {if $hasTopActions === true}
