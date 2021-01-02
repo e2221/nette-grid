@@ -1618,7 +1618,7 @@ class NetteGrid extends Control
 
     /**
      * Set on add callback
-     * @param callable|null $onAddCallback
+     * @param callable|null $onAddCallback function(ArrayHash $values): void
      * @return NetteGrid
      */
     public function setOnAddCallback(?callable $onAddCallback): self

@@ -16,4 +16,15 @@ class HeaderActionInlineAdd extends HeaderAction
         parent::beforeRender();
         $this->setLink($this->netteGrid->link('inlineAdd', ['inlineAdd' => true]));
     }
+
+    /**
+     * Set on add callback
+     * @param callable $onAddCallback function(ArrayHash $values): void
+     * @return HeaderActionInlineAdd
+     */
+    public function setOnAddCallback(callable $onAddCallback): self
+    {
+        $this->netteGrid->setOnAddCallback($onAddCallback);
+        return $this;
+    }
 }
