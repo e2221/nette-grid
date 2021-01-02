@@ -42,7 +42,7 @@
                                                             {ifset #top-action-$actionName}
                                                                 {include #"top-action-{$actionName}"}
                                                             {else}
-                                                                {include #top-action topAction => $topAction}
+                                                                {include #top-action headerAction => $topAction}
                                                             {/ifset}
                                                         {/foreach}
                                                     {/snippet}
