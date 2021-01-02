@@ -6,5 +6,5 @@ namespace e2221\NetteGrid\Document\Templates;
 
 class TitleTemplate extends BaseTemplate
 {
-    protected ?string $elementName='h4';
+    protected ?string $elementName='h6';
 }
