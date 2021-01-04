@@ -15,7 +15,7 @@ class HeaderModalAction extends HeaderAction
         parent::__construct($netteGrid, $name, $title);
         $this->netteGrid->addComponent(new Modal(), $name);
         $this->netteGrid->onAnchor[] = function(){
-            $this->netteGrid[$this->name]->setModalId(sprintf('_gridModal_%s', $this->netteGrid->getUniqueId()));
+            $this->netteGrid[$this->name]->setModalId(sprintf('_gridModal_%s_%s', $this->name, $this->netteGrid->getUniqueId()));
         };
     }
 
@@ -24,7 +24,7 @@ class HeaderModalAction extends HeaderAction
         parent::beforeRender();
         $this
             ->addDataAttribute('header-modal')
-            ->addDataAttribute('modal-id', sprintf('#_gridModal_%s', $this->netteGrid->getUniqueId()))
+            ->addDataAttribute('modal-id', sprintf('#_gridModal_%s_%s', $this->name, $this->netteGrid->getUniqueId()))
             ->setLink('javascript:void(0);');
     }
 
