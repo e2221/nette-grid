@@ -276,6 +276,7 @@
                                         </tr>
                                     {/if}
 
+                                    {ifset $data}
                                     {foreach $data as $dataKey => $row}
                                         {var e2221\NetteGrid\Document\Templates\DataRowTemplate $dataRowTemplate = $documentTemplate->getDataRowTemplateForRendering($row)}
                                         {var string|int $primaryValue = $control->getRowPrimaryValue($row)}
@@ -405,6 +406,7 @@
                                             {/if}
 
                                     {/foreach}
+                                    {/ifset}
 
                                 {/if}
 

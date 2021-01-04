@@ -1188,7 +1188,7 @@ class NetteGrid extends Control
         $this->template->editRowKey = $this->editKey;
         $this->template->data = $data;
         $this->template->filter = $this->filter;
-        $this->template->showEmptyResult = !((bool)$data);
+        $this->template->showEmptyResult = is_null($data) && $this->inlineAdd === false;
         $this->template->templates = $this->templates;
 
         $this->template->setFile(__DIR__ . '/templates/default.latte');
