@@ -829,6 +829,16 @@ class NetteGrid extends Control
             $cellEditValue = $getColumn->getEditCellValue($row);
             break;
         }
+        if(is_object($cellValue))
+        {
+            if(method_exists($cellValue, 'render')) {
+                $cellValue = $cellValue->__toString();
+            }elseif (method_exists($cellValue, '__toString')){
+                $cellValue = $cellValue->__toString();
+            }else{
+                $this->getPresenter()->payload->_netteGrid_editColumn_error = sprintf('Cell value is instance of %s. You have to provide method render (or __toString) method.', get_class($cellValue));
+            }
+        }
         $this->getPresenter()->payload->_netteGrid_editColumn_newValue = $cellValue;
         $this->getPresenter()->payload->_netteGrid_editColumn_editValue = $cellEditValue;
         $this->getPresenter()->sendPayload();

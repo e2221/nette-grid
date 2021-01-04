@@ -259,7 +259,8 @@ abstract class Column implements IColumn
                     ->addDataAttribute('column-editable', $this->name)
                     ->addDataAttribute('editable-link', $this->netteGrid->link('editColumn', $primary, $this->name))
                     ->addDataAttribute('edit-value', $this->getEditCellValue($row))
-                    ->addDataAttribute('edit-input', $this->editInputTag);
+                    ->addDataAttribute('edit-input', $this->editInputTag)
+                    ->addDataAttribute('print-value', $this->getCellValueForRendering($row));
             }
         }
         return $template;

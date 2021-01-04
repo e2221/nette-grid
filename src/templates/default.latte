@@ -746,6 +746,7 @@
                             columnName = $(this).data('column-editable');
                             editInputTag = $(this).data('edit-input');
                             printValue = $(this).data('print-value');
+                            focusableLast = false;
                             //support for textarea
                             if(editInputTag === 'textarea')
                             {
@@ -757,7 +758,7 @@
                                 input.attr('rows', Math.round(cell_lines));
                                 focusableLast = true;
                             } else
-                                //select
+                            //select
                             if(editInputTag === 'select')
                             {
                                 let options = ($(this).data('edit-options'));
@@ -782,6 +783,10 @@
                                             function(payload){
                                                 newValue = payload.getPayload()._netteGrid_editColumn_newValue;
                                                 let newValueEdit= payload.getPayload()._netteGrid_editColumn_editValue;
+                                                if(payload.getPayload()._netteGrid_editColumn_error)
+                                                {
+                                                    console.log(payload.getPayload()._netteGrid_editColumn_error);
+                                                }
                                                 cell.html(newValue);
                                                 cell.data('edit-value', newValueEdit)
                                                 return cell.addClass('inline-edited');

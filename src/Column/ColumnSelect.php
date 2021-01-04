@@ -94,7 +94,6 @@ class ColumnSelect extends Column
      * @param mixed $primary
      * @return DataColTemplate
      * @throws InvalidLinkException
-     * @throws NetteGridException
      * @internal
      */
     public function getDataColTemplateForRendering($row, $primary): DataColTemplate
@@ -103,10 +102,7 @@ class ColumnSelect extends Column
         if($this->editableInColumn === true)
         {
             if(($this->netteGrid->editMode === true && $this->netteGrid->editKey != $primary) || $this->netteGrid->editMode === false)
-            {
                 $template->addDataAttribute('edit-options', json_encode($this->selection));
-                $template->addDataAttribute('print-value', $this->getCellValueForRendering($row));
-            }
         }
         return $template;
     }
