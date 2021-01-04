@@ -20,8 +20,8 @@ class HeaderModalAction extends HeaderAction
     {
         parent::beforeRender();
         $this
-            ->addDataAttribute('toggle', 'modal')
-            ->addDataAttribute('target', sprintf('#%s', $this->getModal()->getModalId()))
+            ->addDataAttribute('header-modal')
+            ->addDataAttribute('modal-id', sprintf('#%s', $this->getModal()->getModalId()))
             ->setLink('javascript:void(0);');
     }
 

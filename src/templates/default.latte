@@ -828,20 +828,25 @@
 
             <script type="application/javascript">
                 (window._stack = window._stack || []).push(function(di) {
-                    var modalId, link;
-                    di.getService('page').getSnippet({snippet.id data})
-                        .setup(function(tbody) {
-                            $(tbody).on('click', '[data-item-detail-modal]', function(){
-                                modalId = $(this).data('modal-id');
-                                link = $(this).data('link');
-                                di.getService('page').open(link);
-                                di.getService('snippetManager').one('after-update', function () {
-                                    $(function () {
-                                        $('#'+modalId).modal('show');
+                    di.getService('snippetManager').on('after-update', function () {
+                        var modalId, link;
+                        di.getService('page').getSnippet({snippet.id data})
+                            .setup(function (tbody) {
+                                $(tbody).on('click', '[data-item-detail-modal]', function () {
+                                    modalId = $(this).data('modal-id');
+                                    link = $(this).data('link');
+                                    di.getService('page').open(link);
+                                    di.getService('snippetManager').one('after-update', function () {
+                                        $(function () {
+                                            $('#' + modalId).modal('show');
+                                        });
                                     });
                                 });
+                            })
+                            .teardown(function () {
+                                modalId = link = null;
                             });
-                        });
+                    });
                 });
             </script>
 
@@ -855,10 +860,25 @@
         {if $hasHeaderModalAction === true}
 
             {foreach $headerModalActions as $headerModalActionName => $headerModalAction}
-
                 {$headerModalAction->getModal()->render()|noescape}
-
             {/foreach}
+            <script type="application/javascript">
+                (window._stack = window._stack || []).push(function(di) {
+                    di.getService('snippetManager').on('after-update', function () {
+                        var modalId;
+                        di.getService('page').getSnippet({snippet.id head})
+                            .setup(function (head) {
+                                $(head).on('click', '[data-header-modal]', function () {
+                                    modalId = $(this).data('modal-id');
+                                    $(modalId).modal('show');
+                                });
+                            })
+                            .teardown(function () {
+                                modalId = null;
+                            });
+                    });
+                });
+            </script>
 
         {/if}
 
