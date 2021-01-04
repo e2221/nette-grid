@@ -1512,7 +1512,7 @@ class NetteGrid extends Control
 
         $getDataFn = $this->dataSourceCallback;
         $data = $getDataFn(
-            is_null($rowID) ? ($useFilter === true ? $this->filter : []) : $filter,
+            is_null($rowID) ? ($useFilter === true ? $this->filter : []) : $filter ?? [],
             is_null($rowID) ? ($useFilter === true ? $this->multipleFilter : []) : [],
             is_string($this->sortByColumn) ? [$this->sortByColumn, $this->sortDirection ?? Column::SORT_ASC] : null,
             is_null($rowID) ? ($usePaginator === true ? $this->paginator : null) : null
