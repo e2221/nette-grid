@@ -272,4 +272,11 @@ interface IColumn
      * @return HrefElement
      */
     public function getColumnLink(): HrefElement;
+
+    /**
+     * Set this column as default grid sort
+     * @param string $direction
+     * @return Column
+     */
+    public function setAsDefaultGridSortBy(string $direction='ASC'): self;
 }

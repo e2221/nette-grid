@@ -116,6 +116,19 @@ abstract class Column implements IColumn
         $this->setStickyHeader();
     }
 
+    /**
+     * Set this column as default grid sort
+     * @param string $direction
+     * @return Column
+     */
+    public function setAsDefaultGridSortBy(string $direction='ASC'): self
+    {
+        $this->netteGrid->sortDirection = $direction;
+        $this->netteGrid->sortByColumn = $this->name;
+        $this->setSortDirection($direction);
+        return $this;
+    }
+
 
     /**
      * Add multiple filter
