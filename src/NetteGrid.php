@@ -895,9 +895,15 @@ class NetteGrid extends Control
      */
     public function handleSortColumn(string $columnName, string $direction='ASC')
     {
-        $this->sortDirection = $direction;
-        $this->sortByColumn = $columnName;
-        $this->columns[$columnName]->setSortDirection($direction);
+        if($direction == '')
+        {
+            $this->sortByColumn = null;
+            $this->sortDirection = null;
+        }else{
+            $this->sortDirection = $direction;
+            $this->sortByColumn = $columnName;
+            $this->columns[$columnName]->setSortDirection($direction);
+        }
         $this->reloadHeaderTitles();
         $this->reloadItems();
     }
