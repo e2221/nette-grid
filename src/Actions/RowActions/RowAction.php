@@ -125,7 +125,7 @@ class RowAction extends BaseAction implements IRowAction
         if(is_callable($this->showIfCallback))
         {
             $fn = $this->showIfCallback;
-            $this->setHidden($fn($this->row, $this->primary));
+            $this->setHidden(!$fn($this->row, $this->primary));
         }
     }
 
