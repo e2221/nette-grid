@@ -1516,7 +1516,7 @@ class NetteGrid extends Control
             if($this->paginator instanceof Paginator && $usePaginator === true)
             {
                 $itemsTotalCountFn = $this->totalItemsCountCallback;
-                $this->paginator->setItemCount($itemsTotalCountFn($this->filter, null));
+                $this->paginator->setItemCount($itemsTotalCountFn($this->filter, $this->multipleFilter));
                 $this->paginator->page = $this->page;
                 $this->paginator->itemsPerPage = $this->itemsPerPage;
             }
