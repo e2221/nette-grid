@@ -10,6 +10,7 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 
 class GlobalAction
 {
@@ -20,7 +21,7 @@ class GlobalAction
     protected SubmitButton $actionSubmit;
     protected string $containerName;
 
-    /** @var callable|null on submit callback function(ArrayHash $selectedRows, ArrayHash $containerValues, NetteGrid $netteGrid) */
+    /** @var callable|null on submit callback: function(ArrayHash $selectedRows, ArrayHash $containerValues, NetteGrid $netteGrid): void */
     protected $onSubmit=null;
 
     use SmartObject;
@@ -38,7 +39,7 @@ class GlobalAction
 
     /**
      * Set on submit
-     * @param callable $onSubmit
+     * @param callable $onSubmit on submit callback: function(ArrayHash $selectedRows, ArrayHash $containerValues, NetteGrid $netteGrid): void
      * @return GlobalAction
      */
     public function setOnSubmit(callable $onSubmit): self
@@ -56,7 +57,7 @@ class GlobalAction
     public function onSubmitContainer(Button $button): void
     {
         $form = $button->getForm();
-        $checkedRows = $form->getHttpData($form::DATA_TEXT, 'globalActions[rowCheck][]');
+        $checkedRows = ArrayHash::from($form->getHttpData($form::DATA_TEXT, 'globalActions[rowCheck][]'));
         $containerName = $this->containerName;
         $containerValues = $form->getValues()->$containerName;
 
