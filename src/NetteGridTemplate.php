@@ -19,6 +19,7 @@ use e2221\NetteGrid\Document\Templates\Cols\EmptyDataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeaderActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\HeadFilterRowTemplate;
+use e2221\NetteGrid\Document\Templates\PreGlobalActionSelectionTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TbodyTemplate;
 use e2221\NetteGrid\Document\Templates\TfootContentTemplate;
@@ -113,6 +114,7 @@ class NetteGridTemplate extends Template
     public TopActionsWrapperTemplate $topActionsWrapperTemplate;
     public TitleWrapperTemplate $titleWrapperTemplate;
     public TitleTemplate $titleTemplate;
+    public PreGlobalActionSelectionTemplate $preGlobalActionSelectionTemplate;
 
     public bool $editMode;
     public bool $showEmptyResult;

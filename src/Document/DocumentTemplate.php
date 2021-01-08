@@ -15,6 +15,7 @@ use e2221\NetteGrid\Document\Templates\Cols\HeaderActionsColTemplate;
 use e2221\NetteGrid\Document\Templates\DataRowTemplate;
 use e2221\NetteGrid\Document\Templates\EmptyDataRowTemplate;
 use e2221\NetteGrid\Document\Templates\HeadFilterRowTemplate;
+use e2221\NetteGrid\Document\Templates\PreGlobalActionSelectionTemplate;
 use e2221\NetteGrid\Document\Templates\TableTemplate;
 use e2221\NetteGrid\Document\Templates\TbodyTemplate;
 use e2221\NetteGrid\Document\Templates\TfootContentTemplate;
@@ -64,6 +65,7 @@ class DocumentTemplate
     protected TopActionsWrapperTemplate $topActionsWrapperTemplate;
     protected TitleWrapperTemplate $titleWrapperTemplate;
     protected TitleTemplate $titleTemplate;
+    protected PreGlobalActionSelectionTemplate $preGlobalActionSelectionTemplate;
 
     public function __construct(NetteGrid $netteGrid)
     {
@@ -89,6 +91,7 @@ class DocumentTemplate
         $this->topActionsWrapperTemplate = new TopActionsWrapperTemplate();
         $this->titleWrapperTemplate = new TitleWrapperTemplate();
         $this->titleTemplate = new TitleTemplate();
+        $this->preGlobalActionSelectionTemplate = new PreGlobalActionSelectionTemplate();
     }
 
     /**
@@ -369,5 +372,14 @@ class DocumentTemplate
     public function getTableTemplate(): TableTemplate
     {
         return $this->tableTemplate;
+    }
+
+    /**
+     * Get global action pre-selection label
+     * @return PreGlobalActionSelectionTemplate
+     */
+    public function getPreGlobalActionSelectionTemplate(): PreGlobalActionSelectionTemplate
+    {
+        return $this->preGlobalActionSelectionTemplate;
     }
 }

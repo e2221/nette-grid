@@ -69,7 +69,7 @@
                                             {* Global actions *}
                                             <div class="col col-sm-6">
                                                 <div class="form-inline" n:if="$hasGlobalAction === true">
-                                                    <label class="my-1 mr-2">Selected rows:</label>
+                                                    {$preGlobalActionSelectionTemplate}
                                                     <select class="form-control form-control-sm" data-change-global-action>
                                                         <option n:if="$globalActionSelectionPrompt">{$globalActionSelectionPrompt}</option>
                                                         <option n:foreach="$globalActions as $globalActionName => $globalAction"

@@ -1182,6 +1182,7 @@ class NetteGrid extends Control
         $this->template->topActionsWrapperTemplate = $this->documentTemplate->getTopActionsWrapperTemplate();
         $this->template->titleWrapperTemplate = $this->documentTemplate->getTitleWrapperTemplate();
         $this->template->titleTemplate = $this->documentTemplate->getTitleTemplate();
+        $this->template->preGlobalActionSelectionTemplate = $this->documentTemplate->getPreGlobalActionSelectionTemplate();
 
         $data = $this->data ?? $this->getDataFromSource();
         $this->template->columns = $this->getColumns(true);
