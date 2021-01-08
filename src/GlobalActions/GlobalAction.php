@@ -79,6 +79,7 @@ class GlobalAction
     }
 
     /**
+     * Get name
      * @return string
      */
     public function getName(): string
@@ -87,6 +88,7 @@ class GlobalAction
     }
 
     /**
+     * Get label
      * @return string|null
      */
     public function getLabel(): ?string
@@ -94,5 +96,12 @@ class GlobalAction
         return $this->label;
     }
 
-
+    /**
+     * Get submit button
+     * @return SubmitButton
+     */
+    public function getActionSubmit(): SubmitButton
+    {
+        return $this->actionSubmit;
+    }
 }
