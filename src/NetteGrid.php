@@ -2039,7 +2039,7 @@ class NetteGrid extends Control
     {
         if(isset($this->globalActions[$defaultSelectedGlobalAction]))
         {
-            if(is_null($this->getPresenter()))
+            if(is_null($this->getPresenterIfExists()))
             {
                 $this->onAnchor[] = function () use($defaultSelectedGlobalAction) {
                     $this->selectGlobalAction($defaultSelectedGlobalAction);
