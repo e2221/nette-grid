@@ -2039,11 +2039,23 @@ class NetteGrid extends Control
     {
         if(isset($this->globalActions[$defaultSelectedGlobalAction]))
         {
-            $this->template->selectedGlobalAction = $defaultSelectedGlobalAction;
-            $this->template->globalActionContainerName = 'global_' . $defaultSelectedGlobalAction;
-            $this->template->globalActionContainer = $this->globalActions[$defaultSelectedGlobalAction]->getFormContainer();
+            if(is_null($this->getPresenter()))
+            {
+                $this->onAnchor[] = function () use($defaultSelectedGlobalAction) {
+                    $this->selectGlobalAction($defaultSelectedGlobalAction);
+                };
+            }else{
+                $this->selectGlobalAction($defaultSelectedGlobalAction);
+            }
         }
         return $this;
+    }
+
+    protected function selectGlobalAction(string $action): void
+    {
+        $this->template->selectedGlobalAction = $action;
+        $this->template->globalActionContainerName = 'global_' . $action;
+        $this->template->globalActionContainer = $this->globalActions[$action]->getFormContainer();
     }
 
     /**
