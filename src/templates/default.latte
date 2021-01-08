@@ -71,10 +71,11 @@
                                                 <div class="form-inline" n:if="$hasGlobalAction === true">
                                                     <label class="my-1 mr-2">Selected rows:</label>
                                                     <select class="form-control form-control-sm" data-change-global-action>
-                                                        <option>...select...</option>
+                                                        <option n:if="$globalActionSelectionPrompt">{$globalActionSelectionPrompt}</option>
                                                         <option n:foreach="$globalActions as $globalActionName => $globalAction"
                                                                 value="{$globalActionName}"
-                                                                data-link="{link selectGlobalAction! $globalActionName}">
+                                                                data-link="{link selectGlobalAction! $globalActionName}"
+                                                                {if isset($selectedGlobalAction) && $selectedGlobalAction == $globalActionName}selected{/if}>
                                                             {$globalAction->getLabel()}
                                                         </option>
                                                     </select>

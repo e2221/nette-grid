@@ -112,6 +112,9 @@ class NetteGrid extends Control
     /** @var Container|null Global actions container */
     protected ?Container $globalActionsContainer=null;
 
+    /** @var string|null Default selected global action */
+    protected ?string $globalActionSelectionPrompt='...select...';
+
     /** @var Container|null Multiple filter container */
     protected ?Container $multipleFilterContainer=null;
 
@@ -925,9 +928,7 @@ class NetteGrid extends Control
      */
     public function handleSelectGlobalAction(string $action): void
     {
-        $this->template->selectedGlobalAction = $action;
-        $this->template->globalActionContainerName = 'global_' . $action;
-        $this->template->globalActionContainer = $this->globalActions[$action]->getFormContainer();
+        $this->setDefaultSelectedGlobalAction($action);
         $this->reloadGlobalActionContainer();
     }
 
@@ -1158,6 +1159,7 @@ class NetteGrid extends Control
         $this->template->headerModalActions = $this->headerModalActions;
         $this->template->hasHeaderModalAction = $this->hasHeaderModalAction();
         $this->template->hasTitle = $this->hasTitle();
+        $this->template->globalActionSelectionPrompt = $this->globalActionSelectionPrompt;
 
         //templates
         $this->template->documentTemplate = $this->documentTemplate;
@@ -2025,5 +2027,33 @@ class NetteGrid extends Control
     public function getItemDetailModalId(): ?string
     {
         return $this->itemDetailModalId;
+    }
+
+    /**
+     * Set default selected global action
+     * @param string|null $defaultSelectedGlobalAction
+     * @return NetteGrid
+     * @internal
+     */
+    public function setDefaultSelectedGlobalAction(string $defaultSelectedGlobalAction): self
+    {
+        if(isset($this->globalActions[$defaultSelectedGlobalAction]))
+        {
+            $this->template->selectedGlobalAction = $defaultSelectedGlobalAction;
+            $this->template->globalActionContainerName = 'global_' . $defaultSelectedGlobalAction;
+            $this->template->globalActionContainer = $this->globalActions[$defaultSelectedGlobalAction]->getFormContainer();
+        }
+        return $this;
+    }
+
+    /**
+     * Set global action selection prompt [null = no prompt]
+     * @param string|null $globalActionSelectionPrompt
+     * @return NetteGrid
+     */
+    public function setGlobalActionSelectionPrompt(?string $globalActionSelectionPrompt): self
+    {
+        $this->globalActionSelectionPrompt = $globalActionSelectionPrompt;
+        return $this;
     }
 }

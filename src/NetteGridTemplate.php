@@ -146,4 +146,5 @@ class NetteGridTemplate extends Template
     public bool $hasHeaderModalAction;
     public bool $hasTopActions;
     public bool $hasTitle;
+    public ?string $globalActionSelectionPrompt;
 }

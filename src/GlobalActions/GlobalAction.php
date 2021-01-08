@@ -104,4 +104,15 @@ class GlobalAction
     {
         return $this->actionSubmit;
     }
+
+    /**
+     * Set default selected
+     * @param bool $defaultSelected
+     * @return GlobalAction
+     */
+    public function setDefaultSelected(bool $defaultSelected=true): self
+    {
+        $this->netteGrid->setDefaultSelectedGlobalAction($this->name);
+        return $this;
+    }
 }
