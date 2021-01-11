@@ -498,6 +498,19 @@ class NetteGrid extends Control
     }
 
     /**
+     * Get header action
+     * @param string $name
+     * @return HeaderAction
+     * @throws NetteGridException
+     */
+    public function getTopAction(string $name): HeaderAction
+    {
+        if(isset($this->topActions[$name]))
+            throw new NetteGridException(sprintf('Top action %s does not exit.', $name));
+        return $this->topActions[$name];
+    }
+
+    /**
      * HEADER ACTIONS
      * ******************************************************************************
      *
@@ -589,6 +602,19 @@ class NetteGrid extends Control
         $this->headerModalActions[$name] = $modalAction;
         $this->headerActions[$name] = $modalAction;
         return $modalAction;
+    }
+
+    /**
+     * Get header action
+     * @param string $name
+     * @return HeaderAction
+     * @throws NetteGridException
+     */
+    public function getHeaderAction(string $name): HeaderAction
+    {
+        if(isset($this->headerActions[$name]))
+            throw new NetteGridException(sprintf('Header action %s does not exit.', $name));
+        return $this->headerActions[$name];
     }
 
 
@@ -724,6 +750,19 @@ class NetteGrid extends Control
         unset($this->rowActionsOrder[$currentKey]);
         $this->rowActionsOrder = array_values($this->rowActionsOrder);
         array_splice($this->rowActionsOrder, $position, 0, $name);
+    }
+
+    /**
+     * Get row action
+     * @param string $name
+     * @return IRowAction
+     * @throws NetteGridException
+     */
+    public function getRowAction(string $name): IRowAction
+    {
+        if(isset($this->rowActions[$name]))
+            throw new NetteGridException(sprintf('Row action %s does not exit', $name));
+        return $this->rowActions[$name];
     }
 
     private function onAddRowAction(string $name): void
