@@ -816,6 +816,35 @@
                     .teardown(function() {
                         input = cell = editableLink = editValue = columnName = editInputTag = focusableLast = printValue = null;
                     });
+
+                {* enable/disable another row edit *}
+                var rowID, row;
+                di.getService('page').getSnippet({snippet.id data})
+                    .setup(function(tbody) {
+                        $(tbody).on('click', '[data-edit]', function(){
+                            $(tbody).find('[data-edit]').each(function(){
+                                $(this).addClass('disabled');
+                            })
+                        });
+                        $(tbody).on('click', '[data-cancel]', function(){
+                            $(tbody).find('[data-edit]').each(function(){
+                                $(this).removeClass('disabled');
+                            })
+                        });
+                        $(tbody).on('click', '[data-save]', function(){
+                            $(tbody).find('[data-edit]').each(function(){
+                                $(this).removeClass('disabled');
+                            })
+                            let rowID = $(this).data('row-id');
+                            let row = $(tbody).find('[data-id='+rowID+']');
+                            $(row).find('td').each(function(){
+                                $(this).addClass('inline-edited');
+                            })
+                        });
+                    })
+                    .teardown(function(){
+                        rowID = row = null;
+                    });
             });
         </script>
     {/snippet}
@@ -886,35 +915,3 @@
     {/snippet}
 
 {/snippetArea}
-
-<script type="application/javascript">
-    (window._stack = window._stack || []).push(function(di) {
-        var rowID, row;
-        di.getService('page').getSnippet({snippet.id data})
-            .setup(function(tbody) {
-                $(tbody).on('click', '[data-edit]', function(){
-                    $(tbody).find('[data-edit]').each(function(){
-                        $(this).addClass('disabled');
-                    })
-                });
-                $(tbody).on('click', '[data-cancel]', function(){
-                    $(tbody).find('[data-edit]').each(function(){
-                        $(this).removeClass('disabled');
-                    })
-                });
-                $(tbody).on('click', '[data-save]', function(){
-                    $(tbody).find('[data-edit]').each(function(){
-                        $(this).removeClass('disabled');
-                    })
-                    let rowID = $(this).data('row-id');
-                    let row = $(tbody).find('[data-id='+rowID+']');
-                    $(row).find('td').each(function(){
-                        $(this).addClass('inline-edited');
-                    })
-                });
-            })
-            .teardown(function(){
-                rowID = row = null;
-            });
-    });
-</script>
