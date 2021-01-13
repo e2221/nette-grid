@@ -15,22 +15,22 @@
 
 {* Table open tag (should be <table>)*}
 {define table-open-tag}
-    {$tableTemplate->renderStartTag()|noescape}
+    {$tableTemplate->startTag()|noescape}
 {/define}
 
 {* Table end tag </table> *}
 {define table-close-tag}
-    {$tableTemplate->renderEndTag()|noescape}
+    {$tableTemplate->endTag()|noescape}
 {/define}
 
 {* Title col start tag - available parameters (IColumn $column, string $columnName, array $sortColumns) *}
 {define title-col-open-tag}
-    {$column->getTitleColTemplate()->renderStartTag()|noescape}
+    {$column->getTitleColTemplate()->startTag()|noescape}
 {/define}
 
 {* Title col end tag - available parameters (IColumn $column, string $columnName, array $sortColumns) *}
 {define title-col-end-tag}
-    {$column->getTitleColTemplate()->renderEndTag()|noescape}
+    {$column->getTitleColTemplate()->endTag()|noescape}
 {/define}
 
 {* Column title - available parameters (IColumn $column, string $columnName, string $columnTitle) *}
@@ -40,48 +40,48 @@
 
 {* Empty data row <tr> *}
 {define emptyData-row-open-tag}
-    {$emptyDataRowTemplate->renderStartTag()|noescape}
+    {$emptyDataRowTemplate->startTag()|noescape}
 {/define}
 
 {* Empty data row </tr> *}
 {define emptyData-row-end-tag}
-    {$emptyDataRowTemplate->renderEndTag()|noescape}
+    {$emptyDataRowTemplate->endTag()|noescape}
 {/define}
 
 {* Empty data <td colspan="x">empty data text</td> *}
 {define emptyData}
-    {$emptyDataColTemplate->render()|noescape}
+    {$emptyDataColTemplate->render()}
 {/define}
 
 {* Data Col open tag <td> - available parameter (DataColTemplate $dataColTemplate, $row, $cell, $primary, $columnName) *}
 {define data-col-open-tag}
-    {$dataColTemplate->renderStartTag()|noescape}
+    {$dataColTemplate->startTag()|noescape}
 {/define}
 
 {* Data Col close tag </td> - available parameter (DataColTemplate $dataColTemplate) *}
 {define data-col-end-tag}
-    {$dataColTemplate->renderEndTag()|noescape}
+    {$dataColTemplate->endTag()|noescape}
 {/define}
 
 {* Head filter open tag <tr> *}
 {define head-filter-row-open-tag}
-    {$headFilterRowTemplate->renderStartTag()|noescape}
+    {$headFilterRowTemplate->startTag()|noescape}
 {/define}
 
 {* Head filter end tag </tr> *}
 {define head-filter-row-end-tag}
-    {$headFilterRowTemplate->renderEndTag()|noescape}
+    {$headFilterRowTemplate->endTag()|noescape}
 {/define}
 
 
 {* Head filter open tag <td> - available parameter (HeadFilterColTemplate $headFilterRowTempalte, string $columnName) *}
 {define head-filter-col-open-tag}
-    {$headFilterColTemplate->renderStartTag()|noescape}
+    {$headFilterColTemplate->startTag()|noescape}
 {/define}
 
 {* Head filter end tag <td> - available parameter (HeadFilterColTemplate $headFilterRowTempalte, string $columnName) *}
 {define head-filter-col-end-tag}
-    {$headFilterColTemplate->renderEndTag()|noescape}
+    {$headFilterColTemplate->endTag()|noescape}
 {/define}
 
 {* Filter input - available parameter (string $columnName) *}
@@ -91,12 +91,12 @@
 
 {* Head actions column open tag <th> *}
 {define head-actions-column-open-tag}
-    {$headerActionsColumnTemplate->renderStartTag()|noescape}
+    {$headerActionsColumnTemplate->startTag()|noescape}
 {/define}
 
 {* Head actions column end tag </th> *}
 {define head-actions-column-end-tag}
-    {$headerActionsColumnTemplate->renderEndTag()|noescape}
+    {$headerActionsColumnTemplate->endTag()|noescape}
 {/define}
 
 {* Data cell - available parameter ($row, $cell, $primary )*}
@@ -111,12 +111,12 @@
 
 {* Open tag for data actions column <td> *}
 {define data-actions-column-open-tag}
-    {$dataActionsColumnTemplate->renderStartTag()|noescape}
+    {$dataActionsColumnTemplate->startTag()|noescape}
 {/define}
 
 {* End tag for data actions column </td> *}
 {define data-actions-column-end-tag}
-    {$dataActionsColumnTemplate->renderEndTag()|noescape}
+    {$dataActionsColumnTemplate->endTag()|noescape}
 {/define}
 
 {* Data single action - available parameters (RowAction $action, $row, $primary) *}
@@ -147,11 +147,11 @@
 
 {* Tfoot cell <td colspan=x> - available parameters (int $countOfColumns) *}
 {define tfoot-content-open-tag}
-    {$tfootContentTemplate->renderStartTag()|noescape}
+    {$tfootContentTemplate->startTag()|noescape}
 {/define}
 
 {define tfoot-content-end-tag}
-    {$tfootContentTemplate->renderEndTag()|noescape}
+    {$tfootContentTemplate->endTag()|noescape}
 {/define}
 
 {* Pagination *}
@@ -161,7 +161,7 @@
 
 {* Universal item detail - available parameters (RowActionItemDetail $itemDetail, $row, $primary) *}
 {define #item-detail}
-    {$itemDetail->renderItemDetail()|noescape}
+    {$itemDetail->renderItemDetail()}
 {/define}
 
 {* Top row open tag *}
@@ -186,7 +186,7 @@
 
 {* Top action - available parameters (HeaderAction $headerAction) *}
 {define #top-action}
-    {$headerAction->render()|noescape}
+    {$headerAction->render()}
 {/define}
 
 {* Title wrapper open tag *}
@@ -201,5 +201,5 @@
 
 {* Title *}
 {define #title}
-    {$titleTemplate->render()|noescape}
+    {$titleTemplate->render()}
 {/define}

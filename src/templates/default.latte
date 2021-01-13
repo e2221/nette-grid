@@ -69,7 +69,7 @@
                                             {* Global actions *}
                                             <div class="col col-sm-6">
                                                 <div class="form-inline" n:if="$hasGlobalAction === true">
-                                                    {$preGlobalActionSelectionTemplate|noescape}
+                                                    {$preGlobalActionSelectionTemplate->render()}
                                                     <select class="form-control form-control-sm" data-change-global-action>
                                                         <option n:if="$globalActionSelectionPrompt">{$globalActionSelectionPrompt}</option>
                                                         <option n:foreach="$globalActions as $globalActionName => $globalAction"
@@ -890,7 +890,7 @@
         {if $hasHeaderModalAction === true}
 
             {foreach $headerModalActions as $headerModalActionName => $headerModalAction}
-                {$headerModalAction->getModal()->render()|noescape}
+                {$headerModalAction->getModal()->render()}
             {/foreach}
             <script type="application/javascript">
                 (window._stack = window._stack || []).push(function(di) {
