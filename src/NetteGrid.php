@@ -987,10 +987,13 @@ class NetteGrid extends Control
         if(is_callable($onClick))
         {
             $row = $this->getDataFromSource($primary);
-            foreach($row as $rowKey => $rowData)
+            if(is_countable($row))
             {
-                $onClick($this, $rowData, $primary);
-                break;
+                foreach($row as $rowKey => $rowData)
+                {
+                    $onClick($this, $rowData, $primary);
+                    break;
+                }
             }
         }
         $this->reloadDocumentArea();
