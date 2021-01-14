@@ -865,20 +865,23 @@ class NetteGrid extends Control
         $rowData = $this->getRowFromSource($id);
         $cellValue = $value;
         $cellEditValue = $value;
-        foreach($rowData as $rowDataKey => $row)
+        if(is_countable($rowData) === true)
         {
-            $cellValue = $getColumn->getCellValueForRendering($row);
-            $cellEditValue = $getColumn->getEditCellValue($row);
-            break;
-        }
-        if(is_object($cellValue))
-        {
-            if(method_exists($cellValue, 'render')) {
-                $cellValue = $cellValue->__toString();
-            }elseif (method_exists($cellValue, '__toString')){
-                $cellValue = $cellValue->__toString();
-            }else{
-                $this->getPresenter()->payload->_netteGrid_editColumn_error = sprintf('Cell value is instance of %s. You have to provide method render (or __toString) method.', get_class($cellValue));
+            foreach($rowData as $rowDataKey => $row)
+            {
+                $cellValue = $getColumn->getCellValueForRendering($row);
+                $cellEditValue = $getColumn->getEditCellValue($row);
+                break;
+            }
+            if(is_object($cellValue))
+            {
+                if(method_exists($cellValue, 'render')) {
+                    $cellValue = $cellValue->render();
+                }elseif (method_exists($cellValue, '__toString')){
+                    $cellValue = $cellValue->__toString();
+                }else{
+                    $this->getPresenter()->payload->_netteGrid_editColumn_error = sprintf('Cell value is instance of %s. You have to provide method render() (or __toString()) method.', get_class($cellValue));
+                }
             }
         }
         $this->getPresenter()->payload->_netteGrid_editColumn_newValue = $cellValue;
@@ -1023,11 +1026,14 @@ class NetteGrid extends Control
     {
         $itemDetail = $this->itemDetailsModal[$itemDetailId];
         $rowData = $this->getRowFromSource($primary);
-        foreach($rowData as $rowKey => $row)
+        if(is_countable($rowData) === true)
         {
-            $itemDetail->callHeaderTitleCallback($row, $primary);
-            $itemDetail->callContentCallback($row, $primary);
-            break;
+            foreach($rowData as $rowKey => $row)
+            {
+                $itemDetail->callHeaderTitleCallback($row, $primary);
+                $itemDetail->callContentCallback($row, $primary);
+                break;
+            }
         }
         $this->reload(self::SNIPPET_ITEM_DETAIL_MODAL);
         $this['itemDetailModal']->reloadHeader();
