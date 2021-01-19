@@ -2117,4 +2117,15 @@ class NetteGrid extends Control
         $this->globalActionSelectionPrompt = $globalActionSelectionPrompt;
         return $this;
     }
+
+    /**
+     * Set inline add mode (make sense only if at least one column is addable)
+     * @param bool $inlineAdd
+     * @return NetteGrid
+     */
+    public function setInlineAddMode(bool $inlineAdd=true): self
+    {
+        $this->inlineAdd = $inlineAdd;
+        return $this;
+    }
 }
