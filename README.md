@@ -11,3 +11,9 @@ This datagrid was inspirated by nextras/datagrid and contributte/datagrid, so th
 
 ## Instalation
 composer require e2221/nette-grid
+
+## Documentation
+<a href="https://github.com/e2221/nette-grid/wiki">Documentation<a/>
+
+## Examples
+<a href="https://github.com/e2221/nette-grid-example">Examples</a>
