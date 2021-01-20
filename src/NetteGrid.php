@@ -1252,7 +1252,7 @@ class NetteGrid extends Control
      */
     protected function createComponentForm(): Form
     {
-        $form = new BootstrapForm();
+        $form = new Form();
         if($this->autocomplete === false)
             $form->setHtmlAttribute('autocomplete', 'off');
         $form->setHtmlAttribute('data-reset', 'false');
