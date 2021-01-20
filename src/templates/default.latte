@@ -171,8 +171,9 @@
 
                                                 {include #column-title column => $column, columnName => $columnName, columnTitle => $column->getLabel()}
 
+                                                {if $column->isSortable() === true}</a>{/if}
+
                                                 {if $column->isSortable() === true && $columnName == $sortByColumn}
-                                                    </a>
                                                     {if $sortDirection == 'ASC'}
                                                         <span><em>&#9650;</em></span>
                                                     {elseif $sortDirection == 'DESC'}
