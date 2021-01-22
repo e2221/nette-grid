@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace e2221\NetteGrid;
 
 use Contributte\Application\Response\CSVResponse;
-use Contributte\FormsBootstrap\BootstrapForm;
 use e2221\BootstrapComponents\Modal\Modal;
 use e2221\BootstrapComponents\Pagination\Pagination;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderAction;
