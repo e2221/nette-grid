@@ -6,7 +6,6 @@ namespace e2221\NetteGrid\Column;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
 class ColumnSelect extends Column
