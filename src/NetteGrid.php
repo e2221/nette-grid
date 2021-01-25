@@ -1322,7 +1322,7 @@ class NetteGrid extends Control
         $values = $form->values;
         $filterValues = (array)$values['filter'];
         foreach($filterValues as $key => $value)
-            if(strlen($value) == 0)
+            if(strlen((string)$value) == 0)
                 unset($filterValues[$key]);
         $this->filter = $filterValues;
         $this->editKey = null;
@@ -1364,7 +1364,7 @@ class NetteGrid extends Control
             {
                 foreach($multipleValues->$multipleFilterName as $inputKey => $inputValue)
                 {
-                    if(strlen($inputValue) == 0)
+                    if(strlen((string)$inputValue) == 0)
                         continue;
                     if(isset($multiple[$columnName]))
                     {
