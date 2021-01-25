@@ -649,9 +649,9 @@ abstract class Column implements IColumn
 
     /**
      * Get filter input
-     * @return BaseControl
+     * @return BaseControl|SelectBox
      */
-    public function getFilterInput(): BaseControl
+    public function getFilterInput()
     {
         if(is_null($this->filterInput))
             $this->filterInput = $this->getInput();
@@ -662,9 +662,9 @@ abstract class Column implements IColumn
 
     /**
      * Get edit input
-     * @return BaseControl
+     * @return BaseControl|SelectBox
      */
-    public function getEditInput(): BaseControl
+    public function getEditInput()
     {
         if(is_null($this->editInput))
             $this->editInput = $this->getInput();
@@ -678,9 +678,9 @@ abstract class Column implements IColumn
 
     /**
      * Get add input
-     * @return BaseControl|null
+     * @return BaseControl|null|SelectBox
      */
-    public function getAddInput(): ?BaseControl
+    public function getAddInput()
     {
         if(is_null($this->addInput))
             $this->addInput = $this->getInput();

@@ -136,6 +136,33 @@ class ColumnSelect extends Column
     }
 
     /**
+     * Get filter input
+     * @return SelectBox
+     */
+    public function getFilterInput(): SelectBox
+    {
+        return parent::getFilterInput();
+    }
+
+    /**
+     * Get edit input
+     * @return SelectBox
+     */
+    public function getEditInput(): SelectBox
+    {
+        return parent::getEditInput();
+    }
+
+    /**
+     * Get add input
+     * @return SelectBox|null
+     */
+    public function getAddInput(): ?SelectBox
+    {
+        return parent::getAddInput();
+    }
+
+    /**
      * Get input
      * @return SelectBox
      */
