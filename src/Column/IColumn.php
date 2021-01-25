@@ -11,6 +11,7 @@ use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
 use e2221\utils\Html\HrefElement;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SelectBox;
 
 interface IColumn
 {
@@ -251,21 +252,21 @@ interface IColumn
 
     /**
      * Get filter input to styling
-     * @return BaseControl
+     * @return BaseControl|SelectBox|null
      */
-    public function getFilterInput(): BaseControl;
+    public function getFilterInput();
 
     /**
      * Get edit input to styling
-     * @return BaseControl
+     * @return BaseControl|SelectBox|null
      */
-    public function getEditInput(): BaseControl;
+    public function getEditInput();
 
     /**
      * Get add input to styling
-     * @return BaseControl|null
+     * @return BaseControl|SelectBox|null
      */
-    public function getAddInput(): ?BaseControl;
+    public function getAddInput();
 
     /**
      * Get column link for styling - make sense only if you set this column as link

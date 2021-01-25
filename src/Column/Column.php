@@ -15,6 +15,7 @@ use e2221\NetteGrid\NetteGrid;
 use e2221\utils\Html\HrefElement;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SelectBox;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
@@ -693,9 +694,9 @@ abstract class Column implements IColumn
 
     /**
      * Get parent input for another inputs
-     * @return BaseControl
+     * @return BaseControl|SelectBox
      */
-    protected function getInput(): BaseControl
+    protected function getInput()
     {
         $inputClass = $this->inputClass;
         $input = new $inputClass();

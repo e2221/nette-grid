@@ -7,6 +7,7 @@ use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SelectBox;
 
 class ColumnSelect extends Column
 {
@@ -136,9 +137,9 @@ class ColumnSelect extends Column
 
     /**
      * Get input
-     * @return BaseControl
+     * @return SelectBox
      */
-    protected function getInput(): BaseControl
+    protected function getInput(): SelectBox
     {
         $input = parent::getInput();
         $input->setItems($this->selection);

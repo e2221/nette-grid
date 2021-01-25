@@ -5,10 +5,10 @@ namespace e2221\NetteGrid\FormControls;
 
 
 
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
-use Nette\Forms\IControl;
 
 class InputControl implements IFormControl
 {
@@ -25,7 +25,7 @@ class InputControl implements IFormControl
         return $this;
     }
 
-    public function getControl(?string $htmlType = null): IControl
+    public function getControl(?string $htmlType = null): BaseControl
     {
         $htmlType = $htmlType ?? $this->htmlType;
         if($htmlType == 'select')
