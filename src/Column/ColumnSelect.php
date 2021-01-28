@@ -11,7 +11,7 @@ use Nette\Forms\Controls\SelectBox;
 class ColumnSelect extends Column
 {
     /** @var mixed[] Select items */
-    protected array $selection;
+    protected array $selection=[];
 
     protected string $editInputTag='select';
     protected string $htmlType='select';
