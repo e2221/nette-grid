@@ -421,7 +421,7 @@
 
                                 {* <td colspan=x> *}
                                 {include #tfoot-content-open-tag}
-                                    <div class="row" n:if="($paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0) || $showResetFilterButton === true">
+                                    <div class="row" n:if="($paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0) || $showResetFilterButton === false">
                                         <div class="col col-sm-4">
 
                                         </div>
