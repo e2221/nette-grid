@@ -252,7 +252,7 @@
 
                                     {* Inline add *}
                                     {if $isAddable === true && $inlineAdd === true}
-                                        <tr {$emptyDataRowTemplate->getAttributes()|noescape}>
+                                        <tr n:snippet="addContainer" {$emptyDataRowTemplate->getAttributes()|noescape}>
 
                                             {if $hasGlobalAction === true}
                                                 <th>
@@ -265,6 +265,7 @@
                                                     <td>
                                                         {if $column->isAddable() === true}
                                                             {input $columnName}
+                                                            <div class="text-danger" n:ifcontent>{inputError $columnName}</div>
                                                         {/if}
                                                     </td>
                                                 {/foreach}
@@ -322,6 +323,7 @@
                                                                 {else}
                                                                     {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
                                                                 {/ifset}
+                                                                <div class="text-danger" n:ifcontent>{inputError $columnName}</div>
 
                                                             {/formContainer}
 
@@ -421,9 +423,8 @@
 
                                 {* <td colspan=x> *}
                                 {include #tfoot-content-open-tag}
-                                    <div class="row" n:if="($paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0) || $showResetFilterButton === true">
+                                    <div class="row">
                                         <div class="col col-sm-4">
-
                                         </div>
                                         <div class="col col-sm-4">
                                             {if $paginator instanceof Nette\Utils\Paginator && $paginator->pageCount > 0}

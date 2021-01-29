@@ -22,6 +22,8 @@ class TfootContentTemplate extends BaseTemplate
     public function beforeRender(): void
     {
         parent::beforeRender();
+        if((is_null($this->netteGrid->getPaginator()) || $this->netteGrid->getPaginator()->pageCount == 0) && $this->netteGrid->showResetFilterButton() === false)
+            $this->setHidden();
         $this->addHtmlAttribute('colspan', (string)$this->netteGrid->getTableColspan());
     }
 }

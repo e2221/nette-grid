@@ -38,6 +38,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\ArrayHash;
@@ -63,7 +64,8 @@ class NetteGrid extends Control
         SNIPPET_HEAD_ACTIONS = 'headActions',
         SNIPPET_ITEM_DETAIL_MODAL = 'itemDetailsModal',
         SNIPPET_HEADER_MODAL_ACTION = 'headerModalActions',
-        SNIPPET_TOP_ACTIONS = 'topActions';
+        SNIPPET_TOP_ACTIONS = 'topActions',
+        SNIPPET_ADD_CONTAINER = 'addContainer';
 
 
     /** @var IColumn[] */
@@ -232,6 +234,9 @@ class NetteGrid extends Control
 
     /** @var HeaderModalAction[] Header modal actions  */
     protected array $headerModalActions=[];
+
+    /** @var string|null Error control class */
+    public ?string $errorControlClass=null;
 
     public function __construct()
     {
@@ -1099,12 +1104,14 @@ class NetteGrid extends Control
     {
         parent::loadState($params);
 
+        //filterable
         if($this->isFilterable === true)
         {
             $this->filterContainer = $this['form']->addContainer('filter');
             $this['form']['filterSubmit']->setValidationScope([$this['form']['filter']]);
         }
 
+        //editable
         if($this->isEditable === true)
         {
             $this->editContainer = $this['form']->addContainer('edit');
@@ -1114,12 +1121,14 @@ class NetteGrid extends Control
             $this->reindexActions('edit', 0);
         }
 
+        //add-able
         if($this->isAddable === true)
         {
             $this->addContainer = $this['form']->addContainer('add');
             $this['form']['addSubmit']->setValidationScope([$this['form']['add']]);
         }
 
+        //add related inputs to columns
         foreach($this->columns as $columnName => $column)
         {
             if($this->isFilterable === true)
@@ -1130,6 +1139,7 @@ class NetteGrid extends Control
                 $column->addAddFormInput();
         }
 
+        //paginator
         if($this->paginator instanceof Paginator)
         {
             $this->paginateContainer = $this['form']->addContainer('paginate');
@@ -1145,6 +1155,7 @@ class NetteGrid extends Control
                 ->setHtmlAttribute('class', 'form-control form-control-sm');
         }
 
+        //global actions
         if(count($this->globalActions) > 0)
         {
             $this->globalActionsContainer = $this['form']->addContainer('globalActions');
@@ -1155,6 +1166,7 @@ class NetteGrid extends Control
             $this->documentTemplate->getDataRowTemplate()->rowsSelectable($this->rowsSelectable);
         }
 
+        //item detail - modal
         if($this->hasItemModalDetail() === true)
         {
             $this->itemDetailModalId = 'itemDetail-' . $this->getUniqueId();
@@ -1255,16 +1267,27 @@ class NetteGrid extends Control
         if($this->autocomplete === false)
             $form->setHtmlAttribute('autocomplete', 'off');
         $form->setHtmlAttribute('data-reset', 'false');
+
+        //filter submit
         $form->addSubmit('filterSubmit')
             ->setHtmlAttribute('class', 'd-none')
             ->onClick[] = [$this, 'filterFormSuccess'];
-        $form->addSubmit('editSubmit')
-            ->onClick[] = [$this, 'editFormSuccess'];
-        $form->addSubmit('addSubmit', 'Add')
-            ->onClick[] = [$this, 'addFormSuccess'];
+
+        //edit submit
+        $editSubmit = $form->addSubmit('editSubmit');
+        $editSubmit->onClick[] = [$this, 'editFormSuccess'];
+        $editSubmit->onInvalidClick[] = [$this, 'editFormInvalid'];
+
+        //add submit
+        $addSubmit = $form->addSubmit('addSubmit', 'Add');
+        $addSubmit->onClick[] = [$this, 'addFormSuccess'];
+        $addSubmit->onInvalidClick[] = [$this, 'addFormInvalid'];
+
+        //paginate submit
         $form->addSubmit('paginateSubmit')
             ->setHtmlAttribute('class', 'd-none')
             ->onClick[] = [$this, 'paginateFormSuccess'];
+
         return $form;
     }
 
@@ -1278,13 +1301,32 @@ class NetteGrid extends Control
     {
         $form = $button->getForm();
         $values = $form->values;
-        if(is_callable($this->onAddCallback))
+        $onAddCallback = $this->onAddCallback;
+        if(is_callable($onAddCallback)){
+            $onAddCallback($values, $form['add']);
+        };
+        if($form->hasErrors() === true)
         {
-            $fn = $this->onAddCallback;
-            $fn($values->add);
+            $this->markControlsWithError($form['add']);
+            $this->inlineAdd = true;
+            $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
+            $this->redrawControl(self::SNIPPET_ADD_CONTAINER);
+        }else{
+            $this->inlineAdd = false;
+            $this->reloadItems();
         }
-        $this->inlineAdd = false;
-        $this->reloadItems();
+    }
+
+    /**
+     * Add form invalid data
+     * @param Button $button
+     */
+    public function addFormInvalid(Button $button): void
+    {
+        $this->inlineAdd = true;
+        $this->markControlsWithError($button->getForm()['add']);
+        $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
+        $this->redrawControl(self::SNIPPET_ADD_CONTAINER);
     }
 
     /**
@@ -1303,9 +1345,33 @@ class NetteGrid extends Control
         if(is_callable($this->onEditCallback))
         {
             $fn = $this->onEditCallback;
-            $fn($editValues, $primaryValue);
+            $fn($editValues, $primaryValue, $form['edit']);
         }
-        $this->editMode = false;
+        if($form->hasErrors() === true)
+        {
+            $this->editMode = true;
+            $this->markControlsWithError($form['edit']);
+        }else{
+            $this->editMode = false;
+        }
+        $this->editKey = $primaryValue;
+        $this->reloadItem();
+    }
+
+    /**
+     * Edit form invalid
+     * @param Button $button
+     * @throws AbortException
+     */
+    public function editFormInvalid(Button $button): void
+    {
+        $form = $button->getForm();
+        $values = $form->values;
+        $editValues = $values->edit;
+        $primaryColumn = $this->primaryColumn;
+        $primaryValue = $editValues->$primaryColumn;
+        $this->markControlsWithError($form['edit']);
+        $this->editMode = true;
         $this->editKey = $primaryValue;
         $this->reloadItem();
     }
@@ -1492,6 +1558,15 @@ class NetteGrid extends Control
         $this->paginator->setItemsPerPage($itemsPerPage);
         $this->paginator->page = $this['pagination']->getPaginator() ? $this['pagination']->getPaginator()->page : $this->page;
         $this['pagination']->setPaginator($this->paginator);
+    }
+
+    /**
+     * Get paginator
+     * @return Paginator|null
+     */
+    public function getPaginator(): ?Paginator
+    {
+        return $this->paginator;
     }
 
     /**
@@ -1813,7 +1888,7 @@ class NetteGrid extends Control
     }
 
     /**
-     * Reload hader actions
+     * Reload header actions
      * @throws AbortException
      */
     public function reloadHeadActions(): void
@@ -2125,6 +2200,36 @@ class NetteGrid extends Control
     public function setInlineAddMode(bool $inlineAdd=true): self
     {
         $this->inlineAdd = $inlineAdd;
+        return $this;
+    }
+
+    /**
+     * Mark error control with class
+     * @param Container|IComponent $container
+     */
+    private function markControlsWithError($container): void
+    {
+        if(is_null($this->errorControlClass))
+            return;
+        $controls = $container->getControls();
+        foreach($controls as $control)
+        {
+            if($control->hasErrors() === true)
+            {
+                $class = $control->getControlPrototype()->getAttribute('class');
+                $control->setHtmlAttribute('class', sprintf('%s %s', $class, $this->errorControlClass));
+            }
+        }
+    }
+
+    /**
+     * Set error control class
+     * @param string|null $errorControlClass
+     * @return NetteGrid
+     */
+    public function setErrorControlClass(?string $errorControlClass): self
+    {
+        $this->errorControlClass = $errorControlClass;
         return $this;
     }
 }
