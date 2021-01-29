@@ -236,7 +236,10 @@ class NetteGrid extends Control
     protected array $headerModalActions=[];
 
     /** @var string|null Error control class */
-    public ?string $errorControlClass=null;
+    public ?string $errorControlClass='is-invalid';
+
+    /** @var string|null Valid control class */
+    public ?string $validControlClass='is-valid';
 
     public function __construct()
     {
@@ -2209,15 +2212,15 @@ class NetteGrid extends Control
      */
     private function markControlsWithError($container): void
     {
-        if(is_null($this->errorControlClass))
-            return;
         $controls = $container->getControls();
         foreach($controls as $control)
         {
-            if($control->hasErrors() === true)
+            $class = $control->getControlPrototype()->getAttribute('class');
+            if($control->hasErrors() === true && is_string($this->errorControlClass))
             {
-                $class = $control->getControlPrototype()->getAttribute('class');
                 $control->setHtmlAttribute('class', sprintf('%s %s', $class, $this->errorControlClass));
+            }else if(is_string($this->validControlClass)){
+                $control->setHtmlAttribute('class', sprintf('%s %s', $class, $this->validControlClass));
             }
         }
     }
@@ -2230,6 +2233,17 @@ class NetteGrid extends Control
     public function setErrorControlClass(?string $errorControlClass): self
     {
         $this->errorControlClass = $errorControlClass;
+        return $this;
+    }
+
+    /**
+     * Set valid control class
+     * @param string|null $validControlClass
+     * @return NetteGrid
+     */
+    public function setValidControlClass(?string $validControlClass): self
+    {
+        $this->validControlClass = $validControlClass;
         return $this;
     }
 }

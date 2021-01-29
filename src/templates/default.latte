@@ -265,7 +265,7 @@
                                                     <td>
                                                         {if $column->isAddable() === true}
                                                             {input $columnName}
-                                                            <div class="text-danger" n:ifcontent>{inputError $columnName}</div>
+                                                            <div n:ifcontent class="invalid-feedback">{inputError $columnName}</div>
                                                         {/if}
                                                     </td>
                                                 {/foreach}
@@ -323,7 +323,7 @@
                                                                 {else}
                                                                     {include #data-edit row => $row, editValue => $editValue, primary => $primaryValue, columnName => $columnName}
                                                                 {/ifset}
-                                                                <div class="text-danger" n:ifcontent>{inputError $columnName}</div>
+                                                                <div n:ifcontent class="invalid-feedback">{inputError $columnName}</div>
 
                                                             {/formContainer}
 
