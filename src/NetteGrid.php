@@ -1306,7 +1306,7 @@ class NetteGrid extends Control
         $values = $form->values;
         $onAddCallback = $this->onAddCallback;
         if(is_callable($onAddCallback)){
-            $onAddCallback($values, $form['add']);
+            $onAddCallback($values->add, $form['add']);
         };
         if($form->hasErrors() === true)
         {
