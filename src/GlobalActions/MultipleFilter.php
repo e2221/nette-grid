@@ -51,7 +51,10 @@ class MultipleFilter
             $containerControl->setHtmlAttribute($containerControl instanceof SelectBox ? 'data-autosubmit-select' : 'data-autosubmit');
             $containerControl->setHtmlAttribute('data-container', 'multipleFilterSubmit');
             if($containerControl instanceof SelectBox || $containerControl instanceof TextInput || $containerControl instanceof TextArea)
-                $containerControl->setHtmlAttribute('class', 'form-control form-control-sm');
+            {
+                $class = $containerControl->getControlPrototype()->class;
+                $containerControl->setHtmlAttribute('class', is_null($class) ? 'form-control form-control-sm' : $class);
+            }
         }
         return $this->container;
     }
