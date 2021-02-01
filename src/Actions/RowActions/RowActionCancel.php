@@ -19,7 +19,7 @@ class RowActionCancel extends RowAction
         $this->setLinkCallback([$this, 'getLink']);
         $this->addDataAttribute('history', 'false');
         $this->addDataAttribute('transition', 'false');
-        $netteGrid->onAnchor[] = function(NetteGrid $netteGrid)
+        $netteGrid->onAnchor[] = function()
         {
             $this->addDataAttribute('cancel');
         };

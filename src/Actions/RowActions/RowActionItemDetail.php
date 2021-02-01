@@ -6,7 +6,6 @@ namespace e2221\NetteGrid\Actions\RowAction;
 
 use e2221\NetteGrid\NetteGrid;
 use e2221\utils\Html\BaseElement;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
 class RowActionItemDetail extends RowAction
