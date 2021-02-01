@@ -21,6 +21,8 @@ class RowActionItemModalDetail extends RowAction
         $this->addSpanElement('fa fa-eye', [], true);
         $this->addDataAttribute('item-detail-modal');
         $this->addDataAttribute('action-id', $this->name);
+        $this->addDataAttribute('history', 'false');
+        $this->addDataAttribute('transition', 'false');
     }
 
     public function beforeRender(): void

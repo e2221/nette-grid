@@ -35,7 +35,7 @@ class DocumentTemplate
 {
     use SmartObject;
 
-    /** @var null|callable function(DataRowTemplate $template, $row) */
+    /** @var null|callable function(DataRowTemplate $template, $row): DataRowTemplate */
     protected $dataRowCallback=null;
 
     /** @var bool Hidden all in tag <thead> */
@@ -283,7 +283,7 @@ class DocumentTemplate
 
     /**
      * Set data row callback
-     * @param callable|null $dataRowCallback
+     * @param callable|null $dataRowCallback function(DataRowTemplate $template, $row): DataRowTemplate
      * @return DocumentTemplate
      */
     public function setDataRowCallback(?callable $dataRowCallback): self

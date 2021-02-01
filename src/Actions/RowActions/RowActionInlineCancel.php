@@ -15,6 +15,8 @@ class RowActionInlineCancel extends RowAction
     {
         parent::__construct($netteGrid, $name, $title);
         $this->setClass('btn-warning');
+        $this->addDataAttribute('history', 'false');
+        $this->addDataAttribute('transition', 'false');
     }
 
     public function beforeRender(): void

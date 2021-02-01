@@ -17,6 +17,8 @@ class RowActionEdit extends RowAction
         parent::__construct($netteGrid, $name, $title);
         $this->setLinkCallback([$this, 'getLink']);
         $this->addSpanElement('fa fa-pencil fa fa-pencil-al', [], true);
+        $this->addDataAttribute('history', 'false');
+        $this->addDataAttribute('transition', 'false');
         $netteGrid->onAnchor[] = function(NetteGrid $netteGrid)
         {
             $this->addDataAttribute('edit');

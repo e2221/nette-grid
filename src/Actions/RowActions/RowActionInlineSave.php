@@ -18,7 +18,9 @@ class RowActionInlineSave extends RowAction
         $this->setElement(Html::el('input'));
         $this
             ->addHtmlAttribute('type', 'submit')
-            ->addHtmlAttribute('value', $title);
+            ->addHtmlAttribute('value', $title)
+            ->addDataAttribute('history', 'false')
+            ->addDataAttribute('transition', 'false');
     }
 
     public function beforeRender(): void
