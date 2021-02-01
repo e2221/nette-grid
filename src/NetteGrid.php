@@ -1780,6 +1780,9 @@ class NetteGrid extends Control
     {
         if($this->presenter->isAjax())
         {
+            $presenter = $this->getPresenter();
+            if(method_exists($presenter, 'postGet'))
+                $presenter->postGet('this');
             $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
             if(is_null($snippet))
             {

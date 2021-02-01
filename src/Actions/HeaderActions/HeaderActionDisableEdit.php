@@ -15,6 +15,8 @@ class HeaderActionDisableEdit extends HeaderAction
     {
         parent::__construct($netteGrid, $name, $title);
         $this->addIconElement('fas fa-pen', [], true);
+        $this->addDataAttribute('history', 'false');
+        $this->addDataAttribute('transition', 'false');
 
         $this->netteGrid->onAnchor[] = function(){
             if($this->netteGrid->editEnabled === true)
