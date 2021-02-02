@@ -35,6 +35,12 @@ class DocumentTemplate
 {
     use SmartObject;
 
+    const
+        RESPONSIVE_SM = 'table-responsive-sm',
+        RESPONSIVE_MD = 'table-responsive-md',
+        RESPONSIVE_LG = 'table-responsive-lg',
+        RESPONSIVE_XL = 'table-responsive-xl';
+
     /** @var null|callable function(DataRowTemplate $template, $row): DataRowTemplate */
     protected $dataRowCallback=null;
 
