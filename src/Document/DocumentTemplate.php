@@ -39,13 +39,18 @@ class DocumentTemplate
         SM = 'sm',
         MD = 'md',
         LG = 'lg',
-        XL = 'xl';
+        XL = 'xl',
+        CONFIRMATION_BASE = 'baseConfirmation',
+        CONFIRMATION_NITTRO = 'nittroConfirmation';
 
     /** @var null|callable function(DataRowTemplate $template, $row): DataRowTemplate */
     protected $dataRowCallback=null;
 
     /** @var bool Hidden all in tag <thead> */
     public bool $hiddenHeader=false;
+
+    /** @var string Confirmation type */
+    public string $defaultConfirmationStyle = self::CONFIRMATION_BASE;
 
     private NetteGrid $netteGrid;
     protected TableTemplate $tableTemplate;
@@ -98,6 +103,26 @@ class DocumentTemplate
         $this->titleWrapperTemplate = new TitleWrapperTemplate();
         $this->titleTemplate = new TitleTemplate();
         $this->preGlobalActionSelectionTemplate = new PreGlobalActionSelectionTemplate();
+    }
+
+    /**
+     * Set confirmation style [baseConfirmation, nittroConfirmation]
+     * @param string $defaultConfirmationStyle
+     * @return DocumentTemplate
+     */
+    public function setDefaultConfirmationStyle(string $defaultConfirmationStyle): self
+    {
+        $this->defaultConfirmationStyle = $defaultConfirmationStyle;
+        return $this;
+    }
+
+    /**
+     * Get confirmation style
+     * @return string
+     */
+    public function getDefaultConfirmationStyle(): string
+    {
+        return $this->defaultConfirmationStyle;
     }
 
     /**

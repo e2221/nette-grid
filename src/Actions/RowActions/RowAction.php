@@ -6,6 +6,7 @@ namespace e2221\NetteGrid\Actions\RowAction;
 
 
 use e2221\NetteGrid\Actions\BaseAction;
+use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use e2221\NetteGrid\NetteGrid;
 use Nette\Application\UI\InvalidLinkException;
@@ -39,6 +40,9 @@ class RowAction extends BaseAction implements IRowAction
     /** @var null|callable function($row, $primary){}: string|null  */
     protected $confirmationCallback=null;
 
+    /** @var string Confirmation style from DocumentTemplate */
+    public string $confirmationStyle;
+
     /** @var null|callable On click callback function(NetteGrid $grid, $row, $primary){}: void */
     protected $onClickCallback=null;
 
@@ -54,12 +58,57 @@ class RowAction extends BaseAction implements IRowAction
     protected Html $dropdownMenu;
     protected Html $dropdown;
 
+    /** @var string Confirm text for Nittro confirmation */
+    public string $confirmText='Yes';
+
+    /** @var string Cancel text for Nittro confirmation */
+    public string $confirmCancelText='No';
+
     public function __construct(NetteGrid $netteGrid, string $name, ?string $title=null)
     {
         parent::__construct($name, $title);
         $this->netteGrid = $netteGrid;
+        $this->confirmationStyle = $netteGrid->getDocumentTemplate()->getDefaultConfirmationStyle();
         $this->dropdownMenu = Html::el('div class="dropdown-menu"');
         $this->dropdown = Html::el('div class=btn-group');
+    }
+
+    /**
+     * Set confirm text for Nittro confirmation
+     * @param string $confirmText
+     */
+    public function setConfirmText(string $confirmText): void
+    {
+        $this->confirmText = $confirmText;
+    }
+
+    /**
+     * Set confirm cancel text for Nittro confirmation
+     * @param string $confirmCancelText
+     */
+    public function setConfirmCancelText(string $confirmCancelText): void
+    {
+        $this->confirmCancelText = $confirmCancelText;
+    }
+
+    /**
+     * Set confirmation style [baseConfirmation, nittroConfirmation]
+     * @param string $confirmationStyle
+     * @return RowAction
+     */
+    public function setConfirmationStyle(string $confirmationStyle): self
+    {
+        $this->confirmationStyle = $confirmationStyle;
+        return $this;
+    }
+
+    /**
+     * Get confirmation style
+     * @return string
+     */
+    public function getConfirmationStyle(): string
+    {
+        return $this->confirmationStyle;
     }
 
     /**
@@ -105,7 +154,16 @@ class RowAction extends BaseAction implements IRowAction
             $fn = $this->confirmationCallback;
             $confirmation = $fn($this->row, $this->primary);
             if(is_string($confirmation))
-                $this->setConfirmation($fn($this->row, $this->primary));
+            {
+                if($this->confirmationStyle == DocumentTemplate::CONFIRMATION_BASE)
+                {
+                    $this->setConfirmation($fn($this->row, $this->primary));
+                }else if($this->confirmationStyle == DocumentTemplate::CONFIRMATION_NITTRO){
+                    $this->addDataAttribute('prompt', $confirmation);
+                    $this->addDataAttribute('confirm', $this->confirmText);
+                    $this->addDataAttribute('cancel', $this->confirmCancelText);
+                }
+            }
         }
 
         //link - external handler
