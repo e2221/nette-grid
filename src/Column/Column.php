@@ -102,7 +102,7 @@ abstract class Column implements IColumn
     /** @var string  */
     protected string $inputClass = InputControl::class;
 
-    /** @var null|callable Column link callback: function(e2221\utils\Html\HrefElement $href, $row, $primary, $cell): void  */
+    /** @var null|callable Column link callback: function(e2221\utils\Html\HrefElement $href, $row, $primary, $cell): void|string  */
     protected $columnLinkCallback=null;
 
     /** @var HrefElement|null Column link element */
@@ -275,7 +275,7 @@ abstract class Column implements IColumn
 
     /**
      * Set column link callback
-     * @param callable|null $columnLinkCallback function(e2221\utils\Html\HrefElement $href, $row, $primary, $cell): void
+     * @param callable|null $columnLinkCallback function(e2221\utils\Html\HrefElement $href, $row, $primary, $cell): void|string
      * @return Column
      */
     public function setColumnLinkCallback(?callable $columnLinkCallback): self
