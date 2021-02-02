@@ -13,11 +13,12 @@ class RowActionDelete extends RowAction
     {
         parent::__construct($netteGrid, $name, $title);
         $this->addIconElement('far fa-trash-alt', [], true);
+        $this->addDataAttribute('history', 'false');
+        $this->addDataAttribute('transition', 'false');
     }
 
     public function beforeRender(): void
     {
-        $this->addDataAttribute('history', "false");
         $this->addDataAttribute('dynamic-remove', sprintf('#%s-%s', $this->netteGrid->getSnippetId($this->netteGrid::SNIPPET_TBODY), $this->primary));
         parent::beforeRender();
     }

@@ -17,6 +17,8 @@ class HeaderModalAction extends HeaderAction
         $this->netteGrid->onAnchor[] = function(){
             $this->netteGrid[$this->name]->setModalId(sprintf('_gridModal_%s_%s', $this->name, $this->netteGrid->getUniqueId()));
         };
+        $this->addDataAttribute('history', 'false');
+        $this->addDataAttribute('transition', 'false');
     }
 
     public function beforeRender(): void
