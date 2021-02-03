@@ -40,8 +40,8 @@ class RowAction extends BaseAction implements IRowAction
     /** @var null|callable function($row, $primary){}: string|null  */
     protected $confirmationCallback=null;
 
-    /** @var string Confirmation style from DocumentTemplate */
-    public string $confirmationStyle;
+    /** @var string|null Confirmation style from DocumentTemplate */
+    public ?string $confirmationStyle=null;
 
     /** @var null|callable On click callback function(NetteGrid $grid, $row, $primary){}: void */
     protected $onClickCallback=null;
@@ -68,7 +68,6 @@ class RowAction extends BaseAction implements IRowAction
     {
         parent::__construct($name, $title);
         $this->netteGrid = $netteGrid;
-        $this->confirmationStyle = $netteGrid->getDocumentTemplate()->getDefaultConfirmationStyle();
         $this->dropdownMenu = Html::el('div class="dropdown-menu"');
         $this->dropdown = Html::el('div class=btn-group');
     }
@@ -159,10 +158,11 @@ class RowAction extends BaseAction implements IRowAction
             $confirmation = $fn($this->row, $this->primary);
             if(is_string($confirmation))
             {
-                if($this->confirmationStyle == DocumentTemplate::CONFIRMATION_BASE)
+                $confirmationStyle = $this->getConfirmationStyle();
+                if($confirmationStyle == DocumentTemplate::CONFIRMATION_BASE)
                 {
                     $this->setConfirmation($fn($this->row, $this->primary));
-                }else if($this->confirmationStyle == DocumentTemplate::CONFIRMATION_NITTRO){
+                }else if($confirmationStyle == DocumentTemplate::CONFIRMATION_NITTRO){
                     $this->addDataAttribute('prompt', $confirmation);
                     $this->addDataAttribute('confirm', $this->confirmText);
                     $this->addDataAttribute('cancel', $this->confirmCancelText);
