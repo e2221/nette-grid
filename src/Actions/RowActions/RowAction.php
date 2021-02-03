@@ -76,19 +76,23 @@ class RowAction extends BaseAction implements IRowAction
     /**
      * Set confirm text for Nittro confirmation
      * @param string $confirmText
+     * @return RowAction
      */
-    public function setConfirmText(string $confirmText): void
+    public function setConfirmText(string $confirmText): self
     {
         $this->confirmText = $confirmText;
+        return $this;
     }
 
     /**
      * Set confirm cancel text for Nittro confirmation
      * @param string $confirmCancelText
+     * @return RowAction
      */
-    public function setConfirmCancelText(string $confirmCancelText): void
+    public function setConfirmCancelText(string $confirmCancelText): self
     {
         $this->confirmCancelText = $confirmCancelText;
+        return $this;
     }
 
     /**
