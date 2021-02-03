@@ -111,7 +111,7 @@ class RowAction extends BaseAction implements IRowAction
      */
     public function getConfirmationStyle(): string
     {
-        return $this->confirmationStyle;
+        return $this->confirmationStyle ?? $this->netteGrid->getDocumentTemplate()->getDefaultConfirmationStyle();
     }
 
     /**
