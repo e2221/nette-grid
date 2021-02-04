@@ -1909,7 +1909,7 @@ class NetteGrid extends Control
      */
     public function hasActionColumn(): bool
     {
-        return $this->isFilterable || count($this->rowActions) > 0 || count($this->headerActions) > 0 || $this->inlineAdd;
+        return count($this->rowActions) > 0 || count($this->headerActions) > 0 || $this->inlineAdd;
     }
 
     /**
