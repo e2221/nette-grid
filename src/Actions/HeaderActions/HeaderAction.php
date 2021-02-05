@@ -20,4 +20,21 @@ class HeaderAction extends BaseAction
         $this->netteGrid = $netteGrid;
         parent::__construct($name, $title);
     }
+
+    /**
+     * Set confirmation with Nittro style
+     * @param string|null $prompt
+     * @param string|null $confirm
+     * @param string|null $cancel
+     * @return $this
+     */
+    public function setNittroConfirmation(?string $prompt=null, ?string $confirm=null, ?string $cancel=null): self
+    {
+        $this->addDataAttribute('prompt', $prompt);
+        if(is_string($confirm))
+            $this->addDataAttribute('confirm', $confirm);
+        if(is_string($cancel))
+            $this->addDataAttribute('cancel', $cancel);
+        return $this;
+    }
 }
