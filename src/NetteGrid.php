@@ -1338,6 +1338,7 @@ class NetteGrid extends Control
             $this->redrawControl(self::SNIPPET_ADD_CONTAINER);
         }else{
             $this->inlineAdd = false;
+            $this->postGet('this');
             $this->reloadItems();
         }
     }
@@ -1379,6 +1380,7 @@ class NetteGrid extends Control
         }else{
             $this->editMode = false;
         }
+        $this->postGet('this');
         $this->editKey = $primaryValue;
         $this->reloadItem();
     }

@@ -54,8 +54,8 @@ class NetteGridTemplate extends Template
     /** @var IColumn[] */
     public array $columns;
 
-    /** @var mixed[]|null */
-    public ?array $data;
+    /** @var mixed|null */
+    public $data;
 
     /** @var null|int|string  */
     public $editRowKey;
