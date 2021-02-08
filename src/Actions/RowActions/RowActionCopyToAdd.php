@@ -12,11 +12,8 @@ class RowActionCopyToAdd extends RowAction
     {
         parent::__construct($netteGrid, $name, $title);
         $this->addIconElement('fas fa-copy', [], true);
-    }
 
-    public function getOnClickCallback(): ?callable
-    {
-        return function(NetteGrid $netteGrid, $row) {
+        $this->setOnClickCallback(function(NetteGrid $netteGrid, $row){
             $netteGrid->inlineAdd = true;
             foreach($netteGrid->getColumns(true) as $column)
             {
@@ -25,7 +22,6 @@ class RowActionCopyToAdd extends RowAction
                 $column->getAddInput()->setDefaultValue($column->getEditCellValue($row));
             }
             $netteGrid->reloadItems();
-        };
+        });
     }
-
 }
