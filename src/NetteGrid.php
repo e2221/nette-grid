@@ -43,6 +43,7 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Paginator;
+use Nittro\Bridges\NittroUI\ComponentUtils;
 
 /**
  * Class NetteGrid
@@ -50,6 +51,8 @@ use Nette\Utils\Paginator;
  */
 class NetteGrid extends Control
 {
+    use ComponentUtils;
+
     const
         SNIPPET_DOCUMENT_AREA = 'documentArea',
         SNIPPET_ALL_CONTENT = 'gridContent',
@@ -824,6 +827,7 @@ class NetteGrid extends Control
      */
     public function handleRedrawGrid(): void
     {
+        $this->postGet('this');
         $this->reloadDocument();
     }
 
@@ -833,6 +837,7 @@ class NetteGrid extends Control
      */
     public function handleRedrawData(): void
     {
+        $this->postGet('this');
         $this->reloadItems();
     }
 
@@ -843,8 +848,11 @@ class NetteGrid extends Control
      */
     public function handleEdit($editKey): void
     {
+        if($this->getPresenter()->isAjax() === false)
+            return;
         $this->editKey = $editKey;
         $this->editMode = true;
+        $this->postGet('this');
         $this->reloadItem();
     }
 
@@ -857,6 +865,8 @@ class NetteGrid extends Control
      */
     public function handleEditColumn($id, string $column): void
     {
+        if($this->getPresenter()->isAjax() === false)
+            return;
         $request = $this->getPresenter()->getRequest();
         $value = $request->getPost('value');
         $data = [
@@ -902,6 +912,9 @@ class NetteGrid extends Control
      */
     public function handleCancelEdit(): void
     {
+        if($this->getPresenter()->isAjax() === false)
+            return;
+        $this->postGet('this');
         $this->editMode = false;
         $this->reloadItem();
     }
@@ -913,6 +926,7 @@ class NetteGrid extends Control
      */
     public function handleInlineAdd(bool $add=true): void
     {
+        $this->postGet('this');
         $this->inlineAdd = $add;
         $this->reloadItems();
     }
@@ -925,6 +939,7 @@ class NetteGrid extends Control
     {
         $this->filter = [];
         $this->multipleFilter = [];
+        $this->postGet('this');
         $this->reloadDocument();
     }
 
@@ -935,6 +950,7 @@ class NetteGrid extends Control
      */
     public function handleRedrawRow($rowID): void
     {
+        $this->postGet('this');
         $this->reloadRow($rowID);
     }
 
@@ -977,6 +993,7 @@ class NetteGrid extends Control
      */
     public function handleSelectGlobalAction(string $action): void
     {
+        $this->postGet('this');
         $this->setDefaultSelectedGlobalAction($action);
         $this->reloadGlobalActionContainer();
     }
@@ -1006,6 +1023,7 @@ class NetteGrid extends Control
                 }
             }
         }
+        $this->postGet('this');
         $this->reloadDocumentArea();
     }
 
@@ -1020,6 +1038,7 @@ class NetteGrid extends Control
         $this->itemDetailKey = $primary;
         $this->template->itemDetailKey = $primary;
         $this->template->itemDetailAction = $itemDetailId;
+        $this->postGet('this');
         $this->reloadItemDetail($itemDetailId, $primary);
     }
 
@@ -1042,6 +1061,7 @@ class NetteGrid extends Control
                 break;
             }
         }
+        $this->postGet('this');
         $this->reload(self::SNIPPET_ITEM_DETAIL_MODAL);
         $this['itemDetailModal']->reloadHeader();
     }
@@ -1066,6 +1086,7 @@ class NetteGrid extends Control
                 if(is_callable($onSortCallback))
                     $onSortCallback($this, $movedKey, $beforeKey, $afterKey, $senderId);
             }
+            $this->postGet('this');
             $this->reloadDocumentArea();
         }
     }
@@ -1083,6 +1104,7 @@ class NetteGrid extends Control
             $dropFn = $this->onDropCallback;
             if(is_callable($dropFn))
                 $dropFn($this, $movedId, $movedToId);
+            $this->postGet('this');
             $this->reloadDocumentArea();
         }
     }
