@@ -14,6 +14,7 @@ use e2221\NetteGrid\Actions\HeaderActions\HeaderActionInlineAdd;
 use e2221\NetteGrid\Actions\HeaderActions\HeaderModalAction;
 use e2221\NetteGrid\Actions\RowAction\IRowAction;
 use e2221\NetteGrid\Actions\RowAction\RowAction;
+use e2221\NetteGrid\Actions\RowAction\RowActionCopyToAdd;
 use e2221\NetteGrid\Actions\RowAction\RowActionDelete;
 use e2221\NetteGrid\Actions\RowAction\RowActionDraggable;
 use e2221\NetteGrid\Actions\RowAction\RowActionItemDetail;
@@ -747,6 +748,19 @@ class NetteGrid extends Control
         $deleteAction = $this->rowActions[$name] = new RowActionDelete($this, $name, $title);
         $this->onAddRowAction($name);
         return $deleteAction;
+    }
+
+    /**
+     * Add row action Copy to add (copy data to add form)
+     * @param string $name
+     * @param string|null $title
+     * @return RowActionCopyToAdd
+     */
+    public function addRowActionCopyToAdd(string $name='__copyToAdd', ?string $title='Copy to add form'): RowActionCopyToAdd
+    {
+        $action = $this->rowActions[$name] = new RowActionCopyToAdd($this, $name, $title);
+        $this->onAddRowAction($name);
+        return $action;
     }
 
     /**
