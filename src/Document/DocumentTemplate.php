@@ -341,14 +341,16 @@ class DocumentTemplate
      */
     public function getDataRowTemplateForRendering($row): DataRowTemplate
     {
-        $template = clone($this->dataRowTemplate instanceof DataRowTemplate ? $this->dataRowTemplate : new DataRowTemplate($this));
-        if(is_callable($this->dataRowCallback))
-        {
+        $templateDefault = $defaultTemplate = $this->getDataRowTemplate();
+        if(is_callable($this->dataRowCallback)) {
+            $template = new DataRowTemplate($this);
+            $attributes = $template->render()->attrs;
+            $template->addHtmlAttributes($attributes);
             $fn = $this->dataRowCallback;
             $edited = $fn($template, $row);
-            $template = $edited instanceof DataRowTemplate ? $edited : $template;
+            return $edited instanceof DataRowTemplate ? $edited : $template;
         }
-        return $template;
+        return $templateDefault;
     }
 
     /**
