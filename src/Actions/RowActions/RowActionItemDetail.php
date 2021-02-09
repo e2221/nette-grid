@@ -15,7 +15,7 @@ class RowActionItemDetail extends RowAction
     public string $class = 'btn-secondary';
     protected bool $couldHaveMultiAction=false;
 
-    /** @var null|callable Detail callback function($row, $primary): string|Nette\Utils\Html|e2221\utils\BaseElement|IComponent(only attached) */
+    /** @var null|callable Detail callback function($row, $primary): string|Nette\Utils\Html|e2221\utils\BaseElement|IComponent*/
     protected $detailCallback=null;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $title='Show detail')
@@ -38,13 +38,18 @@ class RowActionItemDetail extends RowAction
     }
 
     /**
-     * Set detail callback
+     * Set detail callback: function($row, $primary): string|Nette\Utils\Html|e2221\utils\BaseElement|IComponent
      * @param callable|null $detailCallback
      * @return RowActionItemDetail
      */
     public function setDetailCallback(?callable $detailCallback): self
     {
         $this->detailCallback = $detailCallback;
+
+        //attach component if is not attached
+        if($this->detailCallback instanceof Component && is_null($this->detailCallback->getPresenterIfExists()))
+            $this->netteGrid->addComponent($this->detailCallback, 'itemDetail_' . $this->name);
+
         return $this;
     }
 
