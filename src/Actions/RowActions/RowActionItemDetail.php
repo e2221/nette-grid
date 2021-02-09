@@ -6,6 +6,8 @@ namespace e2221\NetteGrid\Actions\RowAction;
 
 use e2221\NetteGrid\NetteGrid;
 use e2221\utils\Html\BaseElement;
+use Nette\Application\UI\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Utils\Html;
 
 class RowActionItemDetail extends RowAction
@@ -13,7 +15,7 @@ class RowActionItemDetail extends RowAction
     public string $class = 'btn-secondary';
     protected bool $couldHaveMultiAction=false;
 
-    /** @var null|callable Detail callback function($row, $primary): string|Nette\Utils\Html|e2221\utils\BaseElement */
+    /** @var null|callable Detail callback function($row, $primary): string|Nette\Utils\Html|e2221\utils\BaseElement|IComponent(only attached) */
     protected $detailCallback=null;
 
     public function __construct(NetteGrid $netteGrid, string $name, ?string $title='Show detail')
@@ -48,7 +50,7 @@ class RowActionItemDetail extends RowAction
 
     /**
      * Get detail
-     * @return null|string|BaseElement|Html
+     * @return null|string|BaseElement|Html|IComponent
      * @internal
      */
     public function renderItemDetail()
@@ -56,7 +58,17 @@ class RowActionItemDetail extends RowAction
         if(is_callable($this->detailCallback))
         {
             $detailFn = $this->detailCallback;
-            return $detailFn($this->row, $this->primary);
+            $detail = $detailFn($this->row, $this->primary);
+            if($detail instanceof Component)
+            {
+                if(method_exists($detail, 'render'))
+                {
+                    return $detail->render();
+                }
+                return null;
+            }else{
+                return $detail;
+            }
         }
         return null;
     }
