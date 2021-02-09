@@ -1750,7 +1750,6 @@ class NetteGrid extends Control
     /**
      * Is grid editable
      * @return bool
-     * @internal
      */
     public function isEditable(): bool
     {
