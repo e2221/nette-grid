@@ -4,9 +4,9 @@ After playing with [Nextras/datagrid](https://nextras.org/datagrid/docs/3.0/) an
 This datagrid was inspirated by nextras/datagrid and contributte/datagrid, so thanks for great job!
 
 ## Requirements
-* php 7.4 (8.0 was not tested yet)
+* php >=7.4
 * Nette 3 (3.1)
-* js: Nittro js (full), jQueryUi, Bootstrap.js, Fotawesome.js
+* js: Nittro js (full), jQueryUi, Bootstrap.js, Fontawesome.js
 * css: css style which is located in folder assets, bootstrap css, nittro css
 
 ## Instalation
