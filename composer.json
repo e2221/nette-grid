@@ -3,6 +3,7 @@
     "description": "Datagrid for Nette Framework",
     "type": "library",
     "require": {
+        "php": ">=7.4",
         "nette/application": "^3.0",
         "nette/component-model": "^3.0",
         "nette/forms": ">3.0  <=3.0.7",
