@@ -161,12 +161,11 @@ abstract class Column implements IColumn
     public function getCellValue($row)
     {
         $keyName = $this->name;
-
-        //array source
-        if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
+        if(is_array($row))
+        {
             $row = ArrayHash::from($row);
+        }
 
-        //other object source
         return $row->$keyName ?? null;
     }
 
