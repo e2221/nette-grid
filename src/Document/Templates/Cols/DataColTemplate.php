@@ -17,21 +17,23 @@ class DataColTemplate extends BaseColTemplate
         ALIGN_LEFT = 'flot-left';
 
     protected ?string $elementName='td';
-    public ?string $align=null;
+
+    /** @var string[]|null  */
+    public ?array $align=null;
 
     public function beforeRender(): void
     {
         parent::beforeRender();
-        if(is_string($this->align))
-            $this->addClass($this->align);
+        if(is_array($this->align))
+            $this->addClass(implode(' ', $this->align));
     }
 
     /**
      * Set align class
-     * @param string|null $align
+     * @param string[]|null $align
      * @return DataColTemplate
      */
-    public function setAlign(?string $align): self
+    public function setAlign(?array $align): self
     {
         $this->align = $align;
         return $this;
@@ -39,37 +41,37 @@ class DataColTemplate extends BaseColTemplate
 
     public function setAlignTop(): self
     {
-        $this->align = self::ALIGN_TOP;
+        $this->align[] = self::ALIGN_TOP;
         return $this;
     }
 
     public function setAlignMiddle(): self
     {
-        $this->align = self::ALIGN_MIDDLE;
+        $this->align[] = self::ALIGN_MIDDLE;
         return $this;
     }
 
     public function setAlignBottom(): self
     {
-        $this->align = self::ALIGN_BOTTOM;
+        $this->align[] = self::ALIGN_BOTTOM;
         return $this;
     }
 
     public function setAlignCenter(): self
     {
-        $this->align = self::ALIGN_CENTER;
+        $this->align[] = self::ALIGN_CENTER;
         return $this;
     }
 
     public function setAlignRight(): self
     {
-        $this->align = self::ALIGN_RIGHT;
+        $this->align[] = self::ALIGN_RIGHT;
         return $this;
     }
 
     public function setAlignLeft(): self
     {
-        $this->align = self::ALIGN_LEFT;
+        $this->align[] = self::ALIGN_LEFT;
         return $this;
     }
 }
