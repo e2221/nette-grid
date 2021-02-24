@@ -244,12 +244,14 @@ abstract class Column implements IColumn
      */
     public function getDataColTemplateForRendering($row, $primary): DataColTemplate
     {
-        $template = clone(is_null($this->dataColTemplate) ? new DataColTemplate($this) : $this->dataColTemplate);
+        $template = $this->getDataColTemplate();
+
         if(is_callable($this->dataColTemplateCallback))
         {
+            $templateNew = new DataColTemplate($this);
             $fn = $this->dataColTemplateCallback;
-            $edited = $fn($template, $row, $this->getCellValue($row));
-            $template = $edited instanceof DataColTemplate ? $edited : $template;
+            $edited = $fn($templateNew, $row, $this->getCellValue($row));
+            $template = $edited instanceof DataColTemplate ? $edited : $templateNew;
         }
         if($this->editableInColumn === true)
         {
