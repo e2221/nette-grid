@@ -161,12 +161,11 @@ abstract class Column implements IColumn
     public function getCellValue($row)
     {
         $keyName = $this->name;
-
-        //array source
-        if((is_array($row) || $row instanceof ArrayAccess) && isset($row[$keyName]))
+        if(is_array($row))
+        {
             $row = ArrayHash::from($row);
+        }
 
-        //other object source
         return $row->$keyName ?? null;
     }
 
@@ -245,12 +244,14 @@ abstract class Column implements IColumn
      */
     public function getDataColTemplateForRendering($row, $primary): DataColTemplate
     {
-        $template = clone(is_null($this->dataColTemplate) ? new DataColTemplate($this) : $this->dataColTemplate);
+        $template = $this->getDataColTemplate();
+
         if(is_callable($this->dataColTemplateCallback))
         {
+            $templateNew = new DataColTemplate($this);
             $fn = $this->dataColTemplateCallback;
-            $edited = $fn($template, $row, $this->getCellValue($row));
-            $template = $edited instanceof DataColTemplate ? $edited : $template;
+            $edited = $fn($templateNew, $row, $this->getCellValue($row));
+            $template = $edited instanceof DataColTemplate ? $edited : $templateNew;
         }
         if($this->editableInColumn === true)
         {
