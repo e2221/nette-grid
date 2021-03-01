@@ -42,6 +42,7 @@ use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Paginator;
 use Nittro\Bridges\NittroUI\ComponentUtils;
@@ -75,7 +76,7 @@ class NetteGrid extends Control
     /** @var IColumn[] */
     protected array $columns=[];
 
-    /** @var array @persistent */
+    /** @var mixed[] @persistent */
     public array $filter=[];
 
     /** @var HeaderAction[] */
@@ -87,7 +88,7 @@ class NetteGrid extends Control
     /** @var IRowAction[] */
     protected array $rowActions=[];
 
-    /** @var array */
+    /** @var mixed[] */
     protected array $rowActionsOrder=[];
 
     /** @var string[] Templates with changed blocks */
@@ -165,7 +166,7 @@ class NetteGrid extends Control
     /** @var int Default items per page */
     protected int $itemsPerPage=50;
 
-    /** @var array|null Items per page selection - for case null => selection will not be show */
+    /** @var mixed[]|null Items per page selection - for case null => selection will not be show */
     protected ?array $itemsPerPageSelection=null;
 
     /** @var Paginator|null  */
@@ -197,7 +198,7 @@ class NetteGrid extends Control
     /** @var MultipleFilter[] Multiple filters  */
     public array $multipleFilters=[];
 
-    /** @var array Multiple filter @persistent */
+    /** @var mixed[] Multiple filter @persistent */
     public array $multipleFilter=[];
 
     /** @var mixed Item detail key @persistent */
@@ -262,16 +263,19 @@ class NetteGrid extends Control
     /**
      * Set grid droppable
      * @param callable|null $onDropCallback function(NetteGrid $netteGrid, $movedId, $movedToId):void
-     * @param string|null $droppableScope   Droppable scope to connect with another draggable objects
+     * @param string|null $droppableScope Droppable scope to connect with another draggable objects
      * @param string|null $droppableEffect Droppable effect during dragging
+     * @return NetteGrid
      */
-    public function setDroppable(?callable $onDropCallback=null, ?string $droppableScope='dragDropGrid', ?string $droppableEffect='table-info')
+    public function setDroppable(?callable $onDropCallback=null, ?string $droppableScope='dragDropGrid', ?string $droppableEffect='table-info'): self
     {
         $this->onDropCallback = $onDropCallback;
         $this->droppableScope = $droppableScope;
         $this->droppableEffect = $droppableEffect;
         $this->getDocumentTemplate()->getDataRowTemplate()->addDataAttribute('droppable-row');
         $this->getDocumentTemplate()->getEmptyDataRowTemplate()->addDataAttribute('droppable-row');
+
+        return $this;
     }
 
     /**
@@ -768,7 +772,7 @@ class NetteGrid extends Control
      * @param string $name
      * @param int $position
      */
-    public function reindexActions(string $name, int $position)
+    public function reindexActions(string $name, int $position): void
     {
         $currentKey = array_search($name, $this->rowActionsOrder, true);
         unset($this->rowActionsOrder[$currentKey]);
@@ -985,7 +989,7 @@ class NetteGrid extends Control
      * @param string $direction
      * @throws AbortException
      */
-    public function handleSortColumn(string $columnName, string $direction='ASC')
+    public function handleSortColumn(string $columnName, string $direction='ASC'): void
     {
         if($direction == '')
         {
@@ -1021,7 +1025,7 @@ class NetteGrid extends Control
     public function handleRowAction(string $action, $primary): void
     {
         $action = $this->rowActions[$action];
-        if($action->onlyAjaxRequest === true)
+        if($action->isOnlyAjaxRequest() === true)
             if($this->getPresenter()->isAjax() === false)
                 return;
         $onClick = $action->getOnClickCallback();
@@ -1136,7 +1140,7 @@ class NetteGrid extends Control
 
     /**
      * Load state
-     * @param array $params
+     * @param mixed[] $params
      * @throws BadRequestException
      */
     public function loadState(array $params): void
@@ -1147,14 +1151,20 @@ class NetteGrid extends Control
         if($this->isFilterable === true)
         {
             $this->filterContainer = $this['form']->addContainer('filter');
-            $this['form']['filterSubmit']->setValidationScope([$this['form']['filter']]);
+            $filterSubmit = $this['form']['filterSubmit'];
+            if($filterSubmit instanceof SubmitButton){
+                $filterSubmit->setValidationScope([$this['form']['filter']]);
+            }
         }
 
         //editable
         if($this->isEditable === true)
         {
             $this->editContainer = $this['form']->addContainer('edit');
-            $this['form']['editSubmit']->setValidationScope([$this['form']['edit']]);
+            $editSubmit = $this['form']['editSubmit'];
+            if($editSubmit instanceof SubmitButton){
+                $editSubmit->setValidationScope([$this['form']['edit']]);
+            }
             $this->editContainer->addHidden($this->primaryColumn);
             $this->addRowActionDirectly($this->documentTemplate->getRowActionEdit());
             $this->reindexActions('edit', 0);
@@ -1164,7 +1174,11 @@ class NetteGrid extends Control
         if($this->isAddable === true)
         {
             $this->addContainer = $this['form']->addContainer('add');
-            $this['form']['addSubmit']->setValidationScope([$this['form']['add']]);
+            $addSubmit = $this['form']['addSubmit'];
+            if($addSubmit instanceof SubmitButton)
+            {
+                $addSubmit->setValidationScope([$this['form']['add']]);
+            }
         }
 
         //add related inputs to columns
@@ -1182,7 +1196,10 @@ class NetteGrid extends Control
         if($this->paginator instanceof Paginator)
         {
             $this->paginateContainer = $this['form']->addContainer('paginate');
-            $this['form']['paginateSubmit']->setValidationScope([$this['form']['paginate']]);
+            $paginateSubmit = $this['form']['paginateSubmit'];
+            if($paginateSubmit instanceof SubmitButton){
+                $paginateSubmit->setValidationScope([$this['form']['paginate']]);
+            }
             $itemsPerPageSelection = [];
             foreach($this->itemsPerPageSelection as $itemsPerPage)
                 $itemsPerPageSelection[$itemsPerPage] = $itemsPerPage;
@@ -1219,8 +1236,12 @@ class NetteGrid extends Control
      */
     public function render(): void
     {
-        if($this->isFilterable === true)
-            $this['form']['filter']->setDefaults($this->filter);
+        if($this->isFilterable === true) {
+            $filterContainer = $this['form']['filter'];
+            if($filterContainer instanceof Container){
+                $filterContainer->setDefaults($this->filter);
+            }
+        }
 
         $this->template->uniqueID = $this->getUniqueId();
         $this->template->isFilterable = $this->isFilterable;
@@ -1586,10 +1607,11 @@ class NetteGrid extends Control
      * Set pagination
      * @param callable $totalItemsCountCallback function(array $filter, array $multipleFilter)
      * @param int $itemsPerPage default items per page
-     * @param array|null $itemsPerPageSelection items per page selection - if null - selection will not be shown
+     * @param mixed[]|null $itemsPerPageSelection items per page selection - if null - selection will not be shown
      * @param string|null $showAllOption Show all option - if null - option will not be shown
+     * @return Pagination
      */
-    public function setPagination(callable $totalItemsCountCallback, int $itemsPerPage=50, ?array $itemsPerPageSelection=null, ?string $showAllOption='All')
+    public function setPagination(callable $totalItemsCountCallback, int $itemsPerPage=50, ?array $itemsPerPageSelection=null, ?string $showAllOption='All'): Pagination
     {
         $this->totalItemsCountCallback = $totalItemsCountCallback;
         $this->itemsPerPage = $itemsPerPage;
@@ -1598,7 +1620,8 @@ class NetteGrid extends Control
         $this->paginator = new Paginator();
         $this->paginator->setItemsPerPage($itemsPerPage);
         $this->paginator->page = $this['pagination']->getPaginator() ? $this['pagination']->getPaginator()->page : $this->page;
-        $this['pagination']->setPaginator($this->paginator);
+
+        return $this['pagination']->setPaginator($this->paginator);
     }
 
     /**
@@ -2151,7 +2174,7 @@ class NetteGrid extends Control
      * @param HeaderActionExport $actionExport
      * @throws AbortException
      */
-    protected function csvExport(HeaderActionExport $actionExport)
+    protected function csvExport(HeaderActionExport $actionExport): void
     {
         $dataToExport = [];
         $includeHiddenColumns = $actionExport->isExportHiddenColumns();
@@ -2197,7 +2220,7 @@ class NetteGrid extends Control
 
     /**
      * Set default selected global action
-     * @param string|null $defaultSelectedGlobalAction
+     * @param string $defaultSelectedGlobalAction
      * @return NetteGrid
      * @internal
      */
@@ -2252,15 +2275,18 @@ class NetteGrid extends Control
      */
     private function markControlsWithError($container): void
     {
-        $controls = $container->getControls();
-        foreach($controls as $control)
+        if($container instanceof Container)
         {
-            $class = $control->getControlPrototype()->getAttribute('class');
-            if($control->hasErrors() === true && is_string($this->errorControlClass))
+            $controls = $container->getControls();
+            foreach($controls as $control)
             {
-                $control->setHtmlAttribute('class', sprintf('%s %s', $class, $this->errorControlClass));
-            }else if(is_string($this->validControlClass)){
-                $control->setHtmlAttribute('class', sprintf('%s %s', $class, $this->validControlClass));
+                $class = $control->getControlPrototype()->getAttribute('class');
+                if($control->hasErrors() === true && is_string($this->errorControlClass))
+                {
+                    $control->setHtmlAttribute('class', sprintf('%s %s', $class, $this->errorControlClass));
+                }else if(is_string($this->validControlClass)){
+                    $control->setHtmlAttribute('class', sprintf('%s %s', $class, $this->validControlClass));
+                }
             }
         }
     }

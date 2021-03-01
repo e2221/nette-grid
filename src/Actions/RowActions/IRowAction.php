@@ -124,4 +124,9 @@ interface IRowAction
      * @return string|null
      */
     public function getTitle(): ?string;
+
+    /**
+     * @return bool
+     */
+    public function isOnlyAjaxRequest(): bool;
 }

@@ -20,7 +20,7 @@
         "phpstan/phpstan-nette": "^0.12"
     },
     "scripts": {
-        "phpstan": "phpstan analyse --level 5 --configuration phpstan.neon src"
+        "phpstan": "phpstan analyse --level 6 --configuration phpstan.neon src"
     },
     "autoload": {
         "classmap": ["src/"]

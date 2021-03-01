@@ -121,7 +121,10 @@ class NetteGridTemplate extends Template
     public bool $isFilterable;
     public bool $hasActionsColumn;
     public bool $isEditable;
+
+    /** @var mixed[] */
     public array $rowActionsOrder;
+
     public string $primaryColumn;
     public ?string $editColumn;
     public bool $hiddenHeader;
