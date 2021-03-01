@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Column;
 
 
-use ArrayAccess;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
@@ -245,10 +244,12 @@ abstract class Column implements IColumn
     public function getDataColTemplateForRendering($row, $primary): DataColTemplate
     {
         $template = $this->getDataColTemplate();
-
         if(is_callable($this->dataColTemplateCallback))
         {
+            $attrs = $template->render()->attrs;
             $templateNew = new DataColTemplate($this);
+            if(isset($attrs['class']))
+                $templateNew->addClass($attrs['class']);
             $fn = $this->dataColTemplateCallback;
             $edited = $fn($templateNew, $row, $this->getCellValue($row));
             $template = $edited instanceof DataColTemplate ? $edited : $templateNew;
