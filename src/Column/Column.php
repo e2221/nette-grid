@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Column;
 
 
-use ArrayAccess;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\HeadFilterColTemplate;
 use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
