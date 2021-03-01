@@ -6,6 +6,7 @@ namespace e2221\NetteGrid\Column;
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
 class ColumnSelect extends Column
@@ -15,6 +16,8 @@ class ColumnSelect extends Column
 
     protected string $editInputTag='select';
     protected string $htmlType='select';
+    protected ?string $prompt=null;
+    protected ?string $filterPrompt=null;
 
     /**
      * @param mixed $row
@@ -102,19 +105,32 @@ class ColumnSelect extends Column
         if($this->editableInColumn === true)
         {
             if(($this->netteGrid->editMode === true && $this->netteGrid->editKey != $primary) || $this->netteGrid->editMode === false)
-                $template->addDataAttribute('edit-options', json_encode($this->selection));
+                $template->addDataAttribute('edit-options', (string)json_encode($this->selection));
         }
         return $template;
     }
 
     /**
      * Set selection
-     * @param array $selection
+     * @param mixed[] $selection
+     * @param string|null $prompt
      * @return ColumnSelect
      */
-    public function setSelection(array $selection): self
+    public function setSelection(array $selection, ?string $prompt=null): self
     {
         $this->selection = $selection;
+        $this->prompt = $prompt;
+        return $this;
+    }
+
+    /**
+     * Set filter prompt
+     * @param string|null $prompt
+     * @return ColumnSelect
+     */
+    public function setFilterPrompt(?string $prompt): self
+    {
+        $this->filterPrompt = $prompt;
         return $this;
     }
 
@@ -130,45 +146,54 @@ class ColumnSelect extends Column
             $input = $this->getFilterInput();
             $input->setHtmlAttribute('data-autosubmit-select');
             $input->setHtmlAttribute('data-container', 'filterSubmit');
+            if($this->filterPrompt && $input instanceof SelectBox)
+                $input->setPrompt($this->filterPrompt);
             $container->addComponent($input, $this->name);
         }
     }
 
     /**
      * Get filter input
-     * @return SelectBox
+     * @return SelectBox|BaseControl
      */
-    public function getFilterInput(): SelectBox
+    public function getFilterInput()
     {
         return parent::getFilterInput();
     }
 
     /**
      * Get edit input
-     * @return SelectBox
+     * @return SelectBox|BaseControl
      */
-    public function getEditInput(): SelectBox
+    public function getEditInput()
     {
-        return parent::getEditInput();
+        $select = parent::getEditInput();
+        if($this->prompt && $select instanceof SelectBox)
+            $select->setPrompt($this->prompt);
+        return $select;
     }
 
     /**
      * Get add input
-     * @return SelectBox|null
+     * @return SelectBox|null|BaseControl
      */
-    public function getAddInput(): ?SelectBox
+    public function getAddInput()
     {
         return parent::getAddInput();
     }
 
     /**
      * Get input
-     * @return SelectBox
+     * @return SelectBox|BaseControl
      */
-    protected function getInput(): SelectBox
+    protected function getInput()
     {
         $input = parent::getInput();
-        $input->setItems($this->selection);
+
+        if($input instanceof SelectBox) {
+            $input->setItems($this->selection);
+        }
+
         return $input;
     }
 }

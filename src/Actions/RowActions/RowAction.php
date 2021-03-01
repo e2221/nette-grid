@@ -128,11 +128,12 @@ class RowAction extends BaseAction implements IRowAction
         $this->isMultiAction = true;
         $this->defaultClass = 'btn btn-xs dropdown-toggle';
         $this
+            ->setLink('#')
             ->addHtmlAttribute('role', 'button')
             ->addHtmlAttribute('data-toggle', 'dropdown')
             ->addHtmlAttribute('aria-haspopup', 'true')
-            ->addHtmlAttribute('aria-expanded', 'false')
-            ->setLink('#');
+            ->addHtmlAttribute('aria-expanded', 'false');
+
         return $this->actions[$name] = new MultiActionItem($this->netteGrid, $this, $name, $title);
     }
 
@@ -364,5 +365,13 @@ class RowAction extends BaseAction implements IRowAction
     public function getTitle(): ?string
     {
         return $this->title;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnlyAjaxRequest(): bool
+    {
+        return $this->onlyAjaxRequest;
     }
 }

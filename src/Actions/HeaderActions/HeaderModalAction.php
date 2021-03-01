@@ -25,9 +25,9 @@ class HeaderModalAction extends HeaderAction
     {
         parent::beforeRender();
         $this
+            ->setLink('javascript:void(0);')
             ->addDataAttribute('header-modal')
-            ->addDataAttribute('modal-id', sprintf('#_gridModal_%s_%s', $this->name, $this->netteGrid->getUniqueId()))
-            ->setLink('javascript:void(0);');
+            ->addDataAttribute('modal-id', sprintf('#_gridModal_%s_%s', $this->name, $this->netteGrid->getUniqueId()));
     }
 
     /**

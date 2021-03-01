@@ -19,8 +19,7 @@ class RowActionEdit extends RowAction
         $this->addSpanElement('fa fa-pencil fa fa-pencil-al', [], true);
         $this->addDataAttribute('history', 'false');
         $this->addDataAttribute('transition', 'false');
-        $netteGrid->onAnchor[] = function(NetteGrid $netteGrid)
-        {
+        $netteGrid->onAnchor[] = function() {
             $this->addDataAttribute('edit');
         };
 
