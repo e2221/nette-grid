@@ -37,7 +37,7 @@ class RowActionItemModalDetail extends RowAction
 
     /**
      * Set content callback
-     * @param callable|null $contentCallback
+     * @param callable|null $contentCallback function($row, $primary, e2221\BootstrapComponents\Modal\Modal $modal): void
      * @return RowActionItemModalDetail
      */
     public function setContentCallback(?callable $contentCallback): self
@@ -48,7 +48,7 @@ class RowActionItemModalDetail extends RowAction
 
     /**
      * Set header title callback
-     * @param callable|null $headerTitleCallback
+     * @param callable|null $headerTitleCallback function($row, $primary, e2221\BootstrapComponents\Modal\Components\HeaderTitleTemplate $headerTemplate): string|null
      * @return RowActionItemModalDetail
      */
     public function setHeaderTitleCallback(?callable $headerTitleCallback): self

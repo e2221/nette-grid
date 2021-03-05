@@ -62,10 +62,10 @@ abstract class Column implements IColumn
     /** @var TitleColTemplate Title col to style */
     protected TitleColTemplate $titleColTemplate;
 
-    /** @var null|callable Change cell value with callback function($row, $cell){} */
+    /** @var null|callable Change cell value with callback function($row, $cell){}: string */
     protected $cellValueCallback=null;
 
-    /** @var null|callable Change edit cell value function($row, $cell){}  */
+    /** @var null|callable Change edit cell value function($row, $cell){}: string  */
     protected $editCellValueCallback=null;
 
     /** @var DataColTemplate|null Data col template */
@@ -289,7 +289,7 @@ abstract class Column implements IColumn
 
     /**
      * Set export value callback
-     * @param callable|null $exportValueCallback
+     * @param callable|null $exportValueCallback function($row, $cell): ?string
      * @return Column
      */
     public function setExportCellValueCallback(?callable $exportValueCallback): self
@@ -300,7 +300,7 @@ abstract class Column implements IColumn
 
     /**
      * Set edit cell value callback
-     * @param callable|null $editCellValueCallback
+     * @param callable|null $editCellValueCallback function($row, $cell){}: string
      * @return Column
      */
     public function setEditCellValueCallback(?callable $editCellValueCallback): self
@@ -311,7 +311,7 @@ abstract class Column implements IColumn
 
     /**
      * Set data col template callback
-     * @param callable|null $callback
+     * @param callable|null $callback function(DataColTemplate $template, $row, $cell){}
      * @return Column
      */
     public function setDataColTemplateCallback(?callable $callback): self
@@ -322,7 +322,7 @@ abstract class Column implements IColumn
 
     /**
      * Set cell value callback
-     * @param callable|null $cellValueCallback
+     * @param callable|null $cellValueCallback function($row, $cell){}: string
      * @return Column
      */
     public function setCellValueCallback(?callable $cellValueCallback): self
