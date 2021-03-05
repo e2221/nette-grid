@@ -245,7 +245,7 @@ class RowAction extends BaseAction implements IRowAction
 
     /**
      * Set show if callback
-     * @param callable|null $showIfCallback
+     * @param callable|null $showIfCallback function($row, $primary){}: bool
      * @return RowAction
      */
     public function setShowIfCallback(?callable $showIfCallback): self
@@ -256,7 +256,7 @@ class RowAction extends BaseAction implements IRowAction
 
     /**
      * Set confirmation callback
-     * @param callable|null $confirmationCallback
+     * @param callable|null $confirmationCallback function($row, $primary){}: string|null
      * @return RowAction
      */
     public function setConfirmationCallback(?callable $confirmationCallback): self
@@ -267,7 +267,7 @@ class RowAction extends BaseAction implements IRowAction
 
     /**
      * Set link callback
-     * @param callable|null $linkCallback
+     * @param callable|null $linkCallback function(NetteGrid $netteGrid, $row, $primary){}: string
      * @return RowAction
      */
     public function setLinkCallback(?callable $linkCallback): self
@@ -278,7 +278,7 @@ class RowAction extends BaseAction implements IRowAction
 
     /**
      * Set style element callback
-     * @param callable|null $styleElementCallback
+     * @param callable|null $styleElementCallback function(RowAction $this, $row, $primary){}: void
      * @return RowAction
      */
     public function setStyleElementCallback(?callable $styleElementCallback): self
