@@ -14,18 +14,97 @@ class DataColTemplate extends BaseColTemplate
         ALIGN_BOTTOM = 'align-bottom',
         ALIGN_CENTER = 'text-center',
         ALIGN_RIGHT = 'float-right',
-        ALIGN_LEFT = 'flot-left';
+        ALIGN_LEFT = 'flot-left',
+        TEXT_TRUNCATE = 'text-truncate',
+        TEXT_LOWERCASE = 'text-lowercase',
+        TEXT_UPPERCASE = 'text-uppercase',
+        FONT_BOLD = 'font-weight-bold',
+        FONT_LIGHT = 'font-weight-light',
+        FONT_ITALIC = 'font-italic';
 
     protected ?string $elementName='td';
 
     /** @var string[]|null  */
-    public ?array $align=null;
+    private ?array $align=null;
+
+    /** @var string[]|null  */
+    private ?array $font=null;
+
+    /** @var string[]|null  */
+    private ?array $textStyle=null;
 
     public function beforeRender(): void
     {
         parent::beforeRender();
-        if(is_array($this->align))
+        if(is_array($this->align)){
             $this->addClass(implode(' ', $this->align));
+        }
+        if(is_array($this->font)){
+            $this->addClass(implode(' ', $this->font));
+        }
+        if(is_array($this->textStyle)){
+            $this->addClass(implode(' ', $this->textStyle));
+        }
+    }
+
+    /**
+     * Set text font - italic
+     * @return DataColTemplate
+     */
+    public function setTextFont_italic(): self
+    {
+        $this->font[] = self::FONT_ITALIC;
+        return $this;
+    }
+
+    /**
+     * Set text font - light
+     * @return DataColTemplate
+     */
+    public function setTextFont_light(): self
+    {
+        $this->font[] = self::FONT_LIGHT;
+        return $this;
+    }
+
+    /**
+     * Set text font - bold
+     * @return DataColTemplate
+     */
+    public function setTextFont_bold(): self
+    {
+        $this->font[] = self::FONT_BOLD;
+        return $this;
+    }
+
+    /**
+     * Set text style - uppercase
+     * @return DataColTemplate
+     */
+    public function setTextStyle_uppercase(): self
+    {
+        $this->textStyle[] = self::TEXT_UPPERCASE;
+        return $this;
+    }
+
+    /**
+     * Text style - lowercase
+     * @return DataColTemplate
+     */
+    public function setTextStyle_lowercase(): self
+    {
+        $this->textStyle[] = self::TEXT_LOWERCASE;
+        return $this;
+    }
+
+    /**
+     * Text style - truncate
+     * @return DataColTemplate
+     */
+    public function setTextStyle_truncate(): self
+    {
+        $this->textStyle[] = self::TEXT_TRUNCATE;
+        return $this;
     }
 
     /**
