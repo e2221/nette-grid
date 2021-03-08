@@ -2,6 +2,12 @@
     "name": "e2221/nette-grid",
     "description": "Datagrid for Nette Framework",
     "type": "library",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/e2221/bootstrap-components"
+        }
+    ],
     "require": {
         "php": ">=7.4",
         "nette/application": "^3.0",
@@ -12,11 +18,11 @@
         "nittro/nette-bridges": "^2.1",
         "contributte/application": "^0.4.1",
         "e2221/utils": "^0.1",
-        "e2221/bootstrap-components": "^0.1",
         "ext-json": "*"
     },
     "license": "MIT",
     "require-dev": {
+        "e2221/bootstrap-components": "dev-master@dev",
         "phpstan/phpstan-nette": "^0.12"
     },
     "scripts": {
