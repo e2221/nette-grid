@@ -212,9 +212,8 @@ class ColumnSelect extends Column
     public function addSelectpicker_edit(): ColumnSelect
     {
         $input = $this->getEditInput();
-        $class = $input->getControlPrototype()->class;
         $input
-            ->setHtmlAttribute('class', sprintf('%s %s', $class, self::SELECTPICKER))
+            ->setHtmlAttribute('class', self::SELECTPICKER)
             ->setHtmlAttribute(array_key_first(self::SELECTPICKER_LIVE_SEARCH), current(self::SELECTPICKER_LIVE_SEARCH));
 
         return $this;
@@ -227,9 +226,8 @@ class ColumnSelect extends Column
     public function addSelectpicker_filter(): ColumnSelect
     {
         $input = $this->getFilterInput();
-        $class = $input->getControlPrototype()->class;
         $input
-            ->setHtmlAttribute('class', sprintf('%s %s', $class, self::SELECTPICKER))
+            ->setHtmlAttribute('class', self::SELECTPICKER)
             ->setHtmlAttribute(array_key_first(self::SELECTPICKER_LIVE_SEARCH), current(self::SELECTPICKER_LIVE_SEARCH));
         return $this;
     }
@@ -241,9 +239,8 @@ class ColumnSelect extends Column
     public function addSelectpicker_add(): ColumnSelect
     {
         $input = $this->getAddInput();
-        $class = $input->getControlPrototype()->class;
         $input
-            ->setHtmlAttribute('class', sprintf('%s %s', $class, self::SELECTPICKER))
+            ->setHtmlAttribute('class', self::SELECTPICKER)
             ->setHtmlAttribute(array_key_first(self::SELECTPICKER_LIVE_SEARCH), current(self::SELECTPICKER_LIVE_SEARCH));
         return $this;
     }
