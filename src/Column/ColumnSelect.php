@@ -167,9 +167,14 @@ class ColumnSelect extends Column
      */
     public function getEditInput()
     {
+        if($this->editInput){
+            return $this->editInput;
+        }
         $select = parent::getEditInput();
-        if($this->prompt && $select instanceof SelectBox)
+        if($this->prompt && $select instanceof SelectBox){
             $select->setPrompt($this->prompt);
+        }
+
         return $select;
     }
 
@@ -189,11 +194,9 @@ class ColumnSelect extends Column
     protected function getInput()
     {
         $input = parent::getInput();
-
         if($input instanceof SelectBox) {
             $input->setItems($this->selection);
         }
-
         return $input;
     }
 }

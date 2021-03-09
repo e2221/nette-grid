@@ -655,11 +655,14 @@ abstract class Column implements IColumn
      */
     public function getFilterInput()
     {
-        if(is_null($this->filterInput))
+        if(is_null($this->filterInput)){
             $this->filterInput = $this->getInput();
-        if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isFilterAutocomplete() === false)
-            $this->filterInput->setHtmlAttribute('autocomplete', 'off');
-        return $this->filterInput;
+            if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isFilterAutocomplete() === false)
+                $this->filterInput->setHtmlAttribute('autocomplete', 'off');
+            return $this->filterInput;
+        }else{
+            return $this->filterInput;
+        }
     }
 
     /**
@@ -668,14 +671,17 @@ abstract class Column implements IColumn
      */
     public function getEditInput()
     {
-        if(is_null($this->editInput))
+        if(is_null($this->editInput)){
             $this->editInput = $this->getInput();
-        if($this->isRequired())
-            $this->editInput->setRequired();
-        $this->editInput->setHtmlAttribute('placeholder', $this->label);
-        if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isEditAutocomplete() === false)
-            $this->editInput->setHtmlAttribute('autocomplete', 'off');
-        return $this->editInput;
+            if($this->isRequired())
+                $this->editInput->setRequired();
+            $this->editInput->setHtmlAttribute('placeholder', $this->label);
+            if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isEditAutocomplete() === false)
+                $this->editInput->setHtmlAttribute('autocomplete', 'off');
+            return $this->editInput;
+        }else{
+            return $this->editInput;
+        }
     }
 
     /**
@@ -684,14 +690,17 @@ abstract class Column implements IColumn
      */
     public function getAddInput()
     {
-        if(is_null($this->addInput))
+        if(is_null($this->addInput)){
             $this->addInput = $this->getInput();
-        if($this->isRequired())
-            $this->addInput->setRequired();
-        $this->addInput->setHtmlAttribute('placeholder', $this->label);
-        if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isAddAutocomplete() === false)
-            $this->addInput->setHtmlAttribute('autocomplete', 'off');
-        return $this->addInput;
+            if($this->isRequired())
+                $this->addInput->setRequired();
+            $this->addInput->setHtmlAttribute('placeholder', $this->label);
+            if($this->netteGrid->isAutocomplete() === false || $this->netteGrid->isAddAutocomplete() === false)
+                $this->addInput->setHtmlAttribute('autocomplete', 'off');
+            return $this->addInput;
+        }else{
+            return $this->addInput;
+        }
     }
 
     /**
