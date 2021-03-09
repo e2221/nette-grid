@@ -31,7 +31,7 @@ class InputControl implements IFormControl
         if($htmlType == 'select')
         {
             $input = $this->getSelectInput();
-            $input->setHtmlAttribute('class', 'custom-select custom-select-sm selectpicker');
+            $input->setHtmlAttribute('class', 'custom-select custom-select-sm');
         }elseif ($htmlType == 'textarea')
         {
             $input = $this->getTextareaInput();

@@ -11,6 +11,8 @@ use Nette\Forms\Controls\SelectBox;
 
 class ColumnSelect extends Column
 {
+    private const SELECTPICKER='selectpicker';
+
     /** @var mixed[] Select items */
     protected array $selection=[];
 
@@ -198,5 +200,53 @@ class ColumnSelect extends Column
             $input->setItems($this->selection);
         }
         return $input;
+    }
+
+    /**
+     * Add selectpicker selector to edit input
+     * @return ColumnSelect
+     */
+    public function addSelectpicker_edit(): ColumnSelect
+    {
+        $input = $this->getEditInput();
+        $class = $input->getControlPrototype()->class;
+        $input->setHtmlAttribute('class', sprintf('%s %s', $class, self::SELECTPICKER));
+        return $this;
+    }
+
+    /**
+     * Add selectpicker selector to filter input
+     * @return ColumnSelect
+     */
+    public function addSelectpicker_filter(): ColumnSelect
+    {
+        $input = $this->getFilterInput();
+        $class = $input->getControlPrototype()->class;
+        $input->setHtmlAttribute('class', sprintf('%s %s', $class, self::SELECTPICKER));
+        return $this;
+    }
+
+    /**
+     * Add selectpicker selector to add input
+     * @return ColumnSelect
+     */
+    public function addSelectpicker_add(): ColumnSelect
+    {
+        $input = $this->getAddInput();
+        $class = $input->getControlPrototype()->class;
+        $input->setHtmlAttribute('class', sprintf('%s %s', $class, self::SELECTPICKER));
+        return $this;
+    }
+
+    /**
+     * Add selectpicker selector to all inputs
+     * @return ColumnSelect
+     */
+    public function addSelectpicker(): ColumnSelect
+    {
+        $this->addSelectpicker_add();
+        $this->addSelectpicker_edit();
+        $this->addSelectpicker_filter();
+        return $this;
     }
 }
