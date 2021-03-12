@@ -883,7 +883,7 @@ class NetteGrid extends Control
      * @param mixed $id
      * @param string $column
      * @throws AbortException
-     * @throws NetteGridException
+     * @throws NetteGridException|ReflectionException
      */
     public function handleEditColumn($id, string $column): void
     {
@@ -898,7 +898,9 @@ class NetteGrid extends Control
         if(is_callable($this->onEditCallback))
         {
             $fn = $this->onEditCallback;
-            $fn(ArrayHash::from($data), $id);
+            $type = $this->getCallbackParameterType($fn);
+            $data = $this->prepareCallbackClosure(ArrayHash::from($data), $type);
+            $fn($data, $id);
         }
         $getColumn = $this->getColumn($column);
         $rowData = $this->getRowFromSource($id);
