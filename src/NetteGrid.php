@@ -2353,7 +2353,11 @@ class NetteGrid extends Control
                 if (property_exists($result, $key)) {
                     $prop = new ReflectionProperty($result, $key);
                     $type = Reflection::getPropertyType($prop);
-                    settype($value, $type);
+                    if(empty($value) && $prop->getType()->allowsNull()){
+                        $value = null;
+                    }else{
+                        settype($value, $type);
+                    }
                     $result->$key = $value;
                 }
             }
