@@ -44,8 +44,11 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\Callback;
 use Nette\Utils\Paginator;
+use Nette\Utils\Reflection;
 use Nittro\Bridges\NittroUI\ComponentUtils;
+use ReflectionException;
 
 /**
  * Class NetteGrid
@@ -1355,6 +1358,7 @@ class NetteGrid extends Control
      * Add from success
      * @param Button $button
      * @throws AbortException
+     * @throws ReflectionException
      * @internal
      */
     public function addFormSuccess(Button $button): void
@@ -1363,8 +1367,10 @@ class NetteGrid extends Control
         $values = $form->values;
         $onAddCallback = $this->onAddCallback;
         if(is_callable($onAddCallback)){
-            $onAddCallback($values->add, $form['add']);
-        };
+            $type = $this->getCallbackParameterType($onAddCallback, 0);
+            $data = $this->prepareCallbackClosure($values->add, $type);
+            $onAddCallback($data, $form['add']);
+        }
         if($form->hasErrors() === true)
         {
             $this->markControlsWithError($form['add']);
@@ -2311,5 +2317,42 @@ class NetteGrid extends Control
     {
         $this->validControlClass = $validControlClass;
         return $this;
+    }
+
+    /**
+     * @param callable $callback
+     * @param int $offset
+     * @return string|null
+     * @throws ReflectionException
+     */
+    private function getCallbackParameterType(callable $callback, int $offset=0): ?string
+    {
+        $reflection = Callback::toReflection($callback);
+        return Reflection::getParameterType(
+            $reflection->getParameters()[$offset]
+        );
+    }
+
+    /**
+     * Prepare callback closure in given object
+     * @param ArrayHash $data
+     * @param string $type
+     * @return ArrayHash|mixed|mixed[]
+     */
+    private function prepareCallbackClosure(ArrayHash $data, string $type)
+    {
+        if ($type == 'array') {
+            return (array)$data;
+        } elseif ($type == 'Nette\Utils\ArrayHash') {
+            return $data;
+        } else {
+            $result = new $type();
+            foreach ($data as $key => $value) {
+                if (property_exists($result, $key)) {
+                    $result->$key = $value;
+                }
+            }
+            return $result;
+        }
     }
 }
