@@ -2337,16 +2337,16 @@ class NetteGrid extends Control
     /**
      * Prepare callback closure in given object
      * @param ArrayHash $data
-     * @param string $type
+     * @param string|null $type
      * @return ArrayHash|mixed|mixed[]
      * @throws ReflectionException
      */
-    private function prepareCallbackClosure(ArrayHash $data, string $type)
+    private function prepareCallbackClosure(ArrayHash $data, ?string $type)
     {
-        if ($type == 'array') {
-            return (array)$data;
-        } elseif ($type == 'Nette\Utils\ArrayHash') {
+        if ($type == 'Nette\Utils\ArrayHash' || is_null($type)) {
             return $data;
+        } elseif ($type == 'array') {
+            return (array)$data;
         } else {
             $result = new $type();
             foreach ($data as $key => $value) {
@@ -2361,6 +2361,7 @@ class NetteGrid extends Control
                     $result->$key = $value;
                 }
             }
+
             return $result;
         }
     }
