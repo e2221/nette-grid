@@ -1401,6 +1401,7 @@ class NetteGrid extends Control
      * Edit form success
      * @param Button $button
      * @throws AbortException
+     * @throws ReflectionException
      * @internal
      */
     public function editFormSuccess(Button $button): void
@@ -1413,7 +1414,9 @@ class NetteGrid extends Control
         if(is_callable($this->onEditCallback))
         {
             $fn = $this->onEditCallback;
-            $fn($editValues, $primaryValue, $form['edit']);
+            $type = $this->getCallbackParameterType($fn);
+            $data = $this->prepareCallbackClosure($editValues, $type);
+            $fn($data, $primaryValue, $form['edit']);
         }
         if($form->hasErrors() === true)
         {
