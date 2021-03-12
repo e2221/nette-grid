@@ -847,7 +847,21 @@
                     .teardown(function(){
                         rowID = row = null;
                     });
+
+                {* init selectpicker *}
+                di.getService('snippetManager').on('after-update', function () {
+                    di.getService('page').getSnippet({snippet.id gridContent})
+                        .setup(function (grid) {
+                            if (typeof $.fn.selectpicker !== 'undefined') {
+                                $(grid).find('.selectpicker').each(function(){
+                                    $(this).selectpicker();
+                                })
+                            }
+                        });
+                });
+
             });
+
         </script>
     {/snippet}
 

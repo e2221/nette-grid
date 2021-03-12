@@ -11,6 +11,11 @@ use Nette\Forms\Controls\SelectBox;
 
 class ColumnSelect extends Column
 {
+    private const
+        SELECTPICKER='selectpicker',
+        SELECTPICKER_LIVE_SEARCH = ['data-live-search' => 'true'];
+
+
     /** @var mixed[] Select items */
     protected array $selection=[];
 
@@ -167,9 +172,14 @@ class ColumnSelect extends Column
      */
     public function getEditInput()
     {
+        if($this->editInput){
+            return $this->editInput;
+        }
         $select = parent::getEditInput();
-        if($this->prompt && $select instanceof SelectBox)
+        if($this->prompt && $select instanceof SelectBox){
             $select->setPrompt($this->prompt);
+        }
+
         return $select;
     }
 
@@ -189,11 +199,61 @@ class ColumnSelect extends Column
     protected function getInput()
     {
         $input = parent::getInput();
-
         if($input instanceof SelectBox) {
             $input->setItems($this->selection);
         }
-
         return $input;
+    }
+
+    /**
+     * Add selectpicker selector to edit input
+     * @return ColumnSelect
+     */
+    public function addSelectpicker_edit(): ColumnSelect
+    {
+        $input = $this->getEditInput();
+        $input
+            ->setHtmlAttribute('class', self::SELECTPICKER)
+            ->setHtmlAttribute(array_key_first(self::SELECTPICKER_LIVE_SEARCH), current(self::SELECTPICKER_LIVE_SEARCH));
+
+        return $this;
+    }
+
+    /**
+     * Add selectpicker selector to filter input
+     * @return ColumnSelect
+     */
+    public function addSelectpicker_filter(): ColumnSelect
+    {
+        $input = $this->getFilterInput();
+        $input
+            ->setHtmlAttribute('class', self::SELECTPICKER)
+            ->setHtmlAttribute(array_key_first(self::SELECTPICKER_LIVE_SEARCH), current(self::SELECTPICKER_LIVE_SEARCH));
+        return $this;
+    }
+
+    /**
+     * Add selectpicker selector to add input
+     * @return ColumnSelect
+     */
+    public function addSelectpicker_add(): ColumnSelect
+    {
+        $input = $this->getAddInput();
+        $input
+            ->setHtmlAttribute('class', self::SELECTPICKER)
+            ->setHtmlAttribute(array_key_first(self::SELECTPICKER_LIVE_SEARCH), current(self::SELECTPICKER_LIVE_SEARCH));
+        return $this;
+    }
+
+    /**
+     * Add selectpicker selector to all inputs
+     * @return ColumnSelect
+     */
+    public function addSelectpicker(): ColumnSelect
+    {
+        $this->addSelectpicker_add();
+        $this->addSelectpicker_edit();
+        $this->addSelectpicker_filter();
+        return $this;
     }
 }
