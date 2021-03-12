@@ -49,6 +49,7 @@ use Nette\Utils\Paginator;
 use Nette\Utils\Reflection;
 use Nittro\Bridges\NittroUI\ComponentUtils;
 use ReflectionException;
+use ReflectionProperty;
 
 /**
  * Class NetteGrid
@@ -2338,6 +2339,7 @@ class NetteGrid extends Control
      * @param ArrayHash $data
      * @param string $type
      * @return ArrayHash|mixed|mixed[]
+     * @throws ReflectionException
      */
     private function prepareCallbackClosure(ArrayHash $data, string $type)
     {
@@ -2349,6 +2351,9 @@ class NetteGrid extends Control
             $result = new $type();
             foreach ($data as $key => $value) {
                 if (property_exists($result, $key)) {
+                    $prop = new ReflectionProperty($result, $key);
+                    $type = Reflection::getPropertyType($prop);
+                    settype($value, $type);
                     $result->$key = $value;
                 }
             }
