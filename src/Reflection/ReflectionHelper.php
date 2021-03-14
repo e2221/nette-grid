@@ -67,7 +67,7 @@ class ReflectionHelper
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      * @param string|null $type
      * @return array|mixed|ArrayHash
      * @throws ReflectionException
