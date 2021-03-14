@@ -35,6 +35,7 @@ use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use e2221\NetteGrid\GlobalActions\GlobalAction;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -44,12 +45,9 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Callback;
 use Nette\Utils\Paginator;
-use Nette\Utils\Reflection;
 use Nittro\Bridges\NittroUI\ComponentUtils;
 use ReflectionException;
-use ReflectionProperty;
 
 /**
  * Class NetteGrid
@@ -898,8 +896,8 @@ class NetteGrid extends Control
         if(is_callable($this->onEditCallback))
         {
             $fn = $this->onEditCallback;
-            $type = $this->getCallbackParameterType($fn);
-            $data = $this->prepareCallbackClosure(ArrayHash::from($data), $type);
+            $type = ReflectionHelper::getCallbackParameterType($fn);
+            $data = ReflectionHelper::getFormCallbackClosure(ArrayHash::from($data), $type);
             $fn($data, $id);
         }
         $getColumn = $this->getColumn($column);
@@ -1027,6 +1025,7 @@ class NetteGrid extends Control
      * Redraw any snippet of grid should be called by callback
      * @param string $action
      * @param mixed $primary
+     * @throws ReflectionException
      */
     public function handleRowAction(string $action, $primary): void
     {
@@ -1042,7 +1041,9 @@ class NetteGrid extends Control
             {
                 foreach($row as $rowKey => $rowData)
                 {
-                    $onClick($this, $rowData, $primary);
+                    $type = ReflectionHelper::getCallbackParameterType($onClick, 1);
+                    $data = ReflectionHelper::getRowCallbackClosure($rowData, $type);
+                    $onClick($this, $data, $primary);
                     break;
                 }
             }
@@ -1370,8 +1371,8 @@ class NetteGrid extends Control
         $values = $form->values;
         $onAddCallback = $this->onAddCallback;
         if(is_callable($onAddCallback)){
-            $type = $this->getCallbackParameterType($onAddCallback, 0);
-            $data = $this->prepareCallbackClosure($values->add, $type);
+            $type = ReflectionHelper::getCallbackParameterType($onAddCallback, 0);
+            $data = ReflectionHelper::getFormCallbackClosure($values->add, $type);
             $onAddCallback($data, $form['add']);
         }
         if($form->hasErrors() === true)
@@ -1416,8 +1417,8 @@ class NetteGrid extends Control
         if(is_callable($this->onEditCallback))
         {
             $fn = $this->onEditCallback;
-            $type = $this->getCallbackParameterType($fn);
-            $data = $this->prepareCallbackClosure($editValues, $type);
+            $type = ReflectionHelper::getCallbackParameterType($fn);
+            $data = ReflectionHelper::getFormCallbackClosure($editValues, $type);
             $fn($data, $primaryValue, $form['edit']);
         }
         if($form->hasErrors() === true)
@@ -2325,49 +2326,4 @@ class NetteGrid extends Control
         return $this;
     }
 
-    /**
-     * @param callable $callback
-     * @param int $offset
-     * @return string|null
-     * @throws ReflectionException
-     */
-    private function getCallbackParameterType(callable $callback, int $offset=0): ?string
-    {
-        $reflection = Callback::toReflection($callback);
-        return Reflection::getParameterType(
-            $reflection->getParameters()[$offset]
-        );
-    }
-
-    /**
-     * Prepare callback closure in given object
-     * @param ArrayHash $data
-     * @param string|null $type
-     * @return ArrayHash|mixed|mixed[]
-     * @throws ReflectionException
-     */
-    private function prepareCallbackClosure(ArrayHash $data, ?string $type)
-    {
-        if ($type == 'Nette\Utils\ArrayHash' || is_null($type)) {
-            return $data;
-        } elseif ($type == 'array') {
-            return (array)$data;
-        } else {
-            $result = new $type();
-            foreach ($data as $key => $value) {
-                if (property_exists($result, $key)) {
-                    $prop = new ReflectionProperty($result, $key);
-                    $type = Reflection::getPropertyType($prop);
-                    if(empty($value) && $prop->getType()->allowsNull()){
-                        $value = null;
-                    }else{
-                        settype($value, $type);
-                    }
-                    $result->$key = $value;
-                }
-            }
-
-            return $result;
-        }
-    }
 }

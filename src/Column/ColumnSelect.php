@@ -5,9 +5,11 @@ namespace e2221\NetteGrid\Column;
 
 use e2221\NetteGrid\Document\Templates\Cols\DataColTemplate;
 use e2221\NetteGrid\Exceptions\NetteGridException;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
+use ReflectionException;
 
 class ColumnSelect extends Column
 {
@@ -50,6 +52,7 @@ class ColumnSelect extends Column
      * @param mixed $cell
      * @return mixed
      * @throws NetteGridException
+     * @throws ReflectionException
      * @internal
      *
      * Get Cell value - internal for rendering
@@ -60,7 +63,9 @@ class ColumnSelect extends Column
         if(is_callable($this->cellValueCallback))
         {
             $fn = $this->cellValueCallback;
-            $cellValue = $fn($row, $cellValue);
+            $type = ReflectionHelper::getCallbackParameterType($fn, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $cellValue = $fn($data, $cellValue);
         }else{
             if(is_object($cellValue))
                 throw new NetteGridException(sprintf('Cell value for rendering is object (instance of %s given) in column %s ', get_class($cellValue), $this->name));
@@ -71,7 +76,9 @@ class ColumnSelect extends Column
             $fnLink = $this->columnLinkCallback;
             $columnLink = $this->getColumnLink();
             $columnLink->setTextContent($cellValue);
-            $link = $fnLink($columnLink, $row, $cellValue);
+            $type = ReflectionHelper::getCallbackParameterType($fnLink, 1);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $link = $fnLink($columnLink, $data, $cellValue);
             if(is_string($link))
                 $columnLink->setLink($link);
             return $columnLink->render();
@@ -83,6 +90,7 @@ class ColumnSelect extends Column
      * Get export value
      * @param mixed $row
      * @return mixed
+     * @throws ReflectionException
      * @internal
      */
     public function getExportCellValue($row)
@@ -91,7 +99,9 @@ class ColumnSelect extends Column
         if(is_callable($this->exportValueCallback))
         {
             $fn = $this->exportValueCallback;
-            return $fn($row, $cellValue);
+            $type = ReflectionHelper::getCallbackParameterType($fn, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            return $fn($data, $cellValue);
         }else{
             return isset($this->selection[$cellValue]) ? $this->selection[$cellValue] : '';
         }

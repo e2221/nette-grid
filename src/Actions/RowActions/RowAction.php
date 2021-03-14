@@ -9,6 +9,7 @@ use e2221\NetteGrid\Actions\BaseAction;
 use e2221\NetteGrid\Document\DocumentTemplate;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use e2221\NetteGrid\NetteGrid;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
@@ -139,6 +140,7 @@ class RowAction extends BaseAction implements IRowAction
 
     /**
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      * @internal
      */
     public function beforeRender(): void
@@ -149,20 +151,24 @@ class RowAction extends BaseAction implements IRowAction
         if(is_callable($this->styleElementCallback))
         {
             $fn = $this->styleElementCallback;
-            $fn($this, $this->row, $this->primary);
+            $type = ReflectionHelper::getCallbackParameterType($fn, 1);
+            $data = ReflectionHelper::getRowCallbackClosure($this->row, $type);
+            $fn($this, $data, $this->primary);
         }
 
         //confirmation
         if(is_callable($this->confirmationCallback))
         {
             $fn = $this->confirmationCallback;
-            $confirmation = $fn($this->row, $this->primary);
+            $type = ReflectionHelper::getCallbackParameterType($fn);
+            $data = ReflectionHelper::getRowCallbackClosure($this->row, $type);
+            $confirmation = $fn($data, $this->primary);
             if(is_string($confirmation))
             {
                 $confirmationStyle = $this->getConfirmationStyle();
                 if($confirmationStyle == DocumentTemplate::CONFIRMATION_BASE)
                 {
-                    $this->setConfirmation($fn($this->row, $this->primary));
+                    $this->setConfirmation($fn($data, $this->primary));
                 }else if($confirmationStyle == DocumentTemplate::CONFIRMATION_NITTRO){
                     $this->addDataAttribute('prompt', $confirmation);
                     $this->addDataAttribute('confirm', $this->confirmText);
@@ -175,7 +181,9 @@ class RowAction extends BaseAction implements IRowAction
         if(is_callable($this->linkCallback))
         {
             $fn = $this->linkCallback;
-            $this->setLink($fn($this->netteGrid, $this->row, $this->primary));
+            $type = ReflectionHelper::getCallbackParameterType($fn, 1);
+            $data = ReflectionHelper::getRowCallbackClosure($this->row, $type);
+            $this->setLink($fn($this->netteGrid, $data, $this->primary));
         }
 
         //link - callback
@@ -188,7 +196,9 @@ class RowAction extends BaseAction implements IRowAction
         if(is_callable($this->showIfCallback))
         {
             $fn = $this->showIfCallback;
-            $this->setHidden(!$fn($this->row, $this->primary));
+            $type = ReflectionHelper::getCallbackParameterType($fn, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($this->row, $type);
+            $this->setHidden(!$fn($data, $this->primary));
         }
     }
 

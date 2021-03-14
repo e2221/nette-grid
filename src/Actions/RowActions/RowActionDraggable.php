@@ -5,6 +5,7 @@ namespace e2221\NetteGrid\Actions\RowAction;
 
 
 use e2221\NetteGrid\NetteGrid;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
 
 class RowActionDraggable extends RowAction
 {
@@ -25,7 +26,9 @@ class RowActionDraggable extends RowAction
         $helperFn = $this->helperCallback;
         if(is_callable($helperFn))
         {
-            $this->addDataAttribute('helper-text', $helperFn($this->row, $this->primary));
+            $type = ReflectionHelper::getCallbackParameterType($helperFn, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($this->row, $type);
+            $this->addDataAttribute('helper-text', $helperFn($data, $this->primary));
         }
     }
 

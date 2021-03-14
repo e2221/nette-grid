@@ -11,12 +11,14 @@ use e2221\NetteGrid\Document\Templates\Cols\TitleColTemplate;
 use e2221\NetteGrid\FormControls\InputControl;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
 use e2221\NetteGrid\NetteGrid;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
 use e2221\utils\Html\HrefElement;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
+use ReflectionException;
 
 abstract class Column implements IColumn
 {
@@ -188,6 +190,7 @@ abstract class Column implements IColumn
      * @param mixed $row
      * @param mixed $cell
      * @return mixed
+     * @throws ReflectionException
      * @internal
      *
      * Get Cell value - internal for rendering
@@ -198,14 +201,18 @@ abstract class Column implements IColumn
         if(is_callable($this->cellValueCallback))
         {
             $fn = $this->cellValueCallback;
-            $cellValue = $fn($row, $cellValue);
+            $type = ReflectionHelper::getCallbackParameterType($fn, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $cellValue = $fn($data, $cellValue);
         }
         if(is_callable($this->columnLinkCallback))
         {
             $fnLink = $this->columnLinkCallback;
             $columnLink = $this->getColumnLink();
             $columnLink->setTextContent($cellValue);
-            $link = $fnLink($columnLink, $row, $cellValue);
+            $type = ReflectionHelper::getCallbackParameterType($fnLink, 1);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $link = $fnLink($columnLink, $data, $cellValue);
             if(is_string($link))
                 $columnLink->setLink($link);
             return $columnLink->render();
@@ -217,6 +224,7 @@ abstract class Column implements IColumn
      * Get export value
      * @param mixed $row
      * @return mixed
+     * @throws ReflectionException
      * @internal
      */
     public function getExportCellValue($row)
@@ -225,7 +233,9 @@ abstract class Column implements IColumn
         if(is_callable($this->exportValueCallback))
         {
             $fn = $this->exportValueCallback;
-            return $fn($row, $cellValue);
+            $type = ReflectionHelper::getCallbackParameterType($fn, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            return $fn($data, $cellValue);
         }else{
             return $cellValue;
         }
@@ -237,6 +247,7 @@ abstract class Column implements IColumn
      * @param mixed $primary
      * @return DataColTemplate
      * @throws InvalidLinkException
+     * @throws ReflectionException
      * @internal
      *
      * Get data col template - only for rendering internal
@@ -251,7 +262,9 @@ abstract class Column implements IColumn
             if(isset($attrs['class']))
                 $templateNew->addClass($attrs['class']);
             $fn = $this->dataColTemplateCallback;
-            $edited = $fn($templateNew, $row, $this->getCellValue($row));
+            $type = ReflectionHelper::getCallbackParameterType($fn, 1);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $edited = $fn($templateNew, $data, $this->getCellValue($row));
             $template = $edited instanceof DataColTemplate ? $edited : $templateNew;
         }
         if($this->editableInColumn === true)
