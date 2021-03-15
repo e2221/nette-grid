@@ -1025,10 +1025,10 @@ class NetteGrid extends Control
      * Redraw any snippet of grid should be called by callback
      * @param string $action
      * @param mixed $primary
-     * @throws ReflectionException
+     * @throws ReflectionException|NetteGridException
      */
     public function handleRowAction(string $action, $primary): void
-    {
+    {;
         $action = $this->rowActions[$action];
         if($action->isOnlyAjaxRequest() === true)
             if($this->getPresenter()->isAjax() === false)
@@ -1239,7 +1239,9 @@ class NetteGrid extends Control
 
 
     /**
-     * Default renderer
+     * Renderer
+     * @throws NetteGridException
+     * @throws ReflectionException
      */
     public function render(): void
     {
@@ -1701,6 +1703,7 @@ class NetteGrid extends Control
      * @param bool $usePaginator
      * @param bool $useFilter
      * @return mixed
+     * @throws NetteGridException|ReflectionException
      * @internal
      */
     protected function getDataFromSource($rowID=null, bool $usePaginator=true, bool $useFilter=true)
@@ -1729,6 +1732,14 @@ class NetteGrid extends Control
         }
 
         $getDataFn = $this->dataSourceCallback;
+
+        if($this->isEditable()){
+            $parametersCount = ReflectionHelper::getCallbackParametersCount($getDataFn);
+            if($parametersCount == 0){
+                throw new NetteGridException('Grid is editable but no filter parameter was set to datasource callback.');
+            }
+        }
+
         $data = $getDataFn(
             is_null($rowID) ? ($useFilter === true ? $this->filter : []) : $filter ?? [],
             is_null($rowID) ? ($useFilter === true ? $this->multipleFilter : []) : [],
@@ -1747,6 +1758,8 @@ class NetteGrid extends Control
      * Get single data row
      * @param mixed $rowID
      * @return mixed
+     * @throws NetteGridException
+     * @throws ReflectionException
      */
     protected function getRowFromSource($rowID)
     {
@@ -1961,6 +1974,8 @@ class NetteGrid extends Control
      * Reload one row by primary key (data will be loaded)
      * @param mixed $rowID
      * @throws AbortException
+     * @throws NetteGridException
+     * @throws ReflectionException
      */
     public function reloadRow($rowID): void
     {
@@ -2188,6 +2203,8 @@ class NetteGrid extends Control
      * Csv export
      * @param HeaderActionExport $actionExport
      * @throws AbortException
+     * @throws NetteGridException
+     * @throws ReflectionException
      */
     protected function csvExport(HeaderActionExport $actionExport): void
     {

@@ -44,6 +44,20 @@ class ReflectionHelper
     }
 
     /**
+     * Get count of callback parameters
+     * @param callable $callback
+     * @return int
+     * @throws ReflectionException
+     */
+    public static function getCallbackParametersCount(callable $callback): int
+    {
+        $reflection = Callback::toReflection($callback);
+        $parameters = $reflection->getParameters();
+
+        return count($parameters);
+    }
+
+    /**
      * Prepare callback closure in given object - form
      * @param ArrayHash $data
      * @param string|null $type
