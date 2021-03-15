@@ -36,9 +36,11 @@ class ReflectionHelper
     public static function getCallbackParameterType(callable $callback, int $offset = 0): ?string
     {
         $reflection = Callback::toReflection($callback);
-        return Reflection::getParameterType(
-            $reflection->getParameters()[$offset]
-        );
+        $parameters = $reflection->getParameters();
+        if(!isset($parameters[$offset])){
+            return null;
+        }
+        return Reflection::getParameterType($parameters[$offset]);
     }
 
     /**
