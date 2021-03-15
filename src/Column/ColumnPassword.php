@@ -16,6 +16,9 @@ class ColumnPassword extends Column
      */
     public function setFormValue($cellValue): void
     {
-        $this->netteGrid['form']['edit'][$this->name]->getControlPrototype()->value = $cellValue;
+        $this->netteGrid->getComponent('form')
+            ->getComponent('edit')
+                ->getComponent($this->name)
+                    ->getControlPrototype()->value = $cellValue;
     }
 }

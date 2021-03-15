@@ -904,7 +904,7 @@ class NetteGrid extends Control
         $rowData = $this->getRowFromSource($id);
         $cellValue = $value;
         $cellEditValue = $value;
-        if(is_countable($rowData) === true)
+        if(is_iterable($rowData) === true)
         {
             foreach($rowData as $rowDataKey => $row)
             {
@@ -1037,7 +1037,7 @@ class NetteGrid extends Control
         if(is_callable($onClick))
         {
             $row = $this->getDataFromSource($primary);
-            if(is_countable($row))
+            if(is_iterable($row))
             {
                 foreach($row as $rowKey => $rowData)
                 {
@@ -1071,13 +1071,13 @@ class NetteGrid extends Control
      * Signal - fill modal with row detail
      * @param string $itemDetailId
      * @param mixed $primary
-     * @throws AbortException
+     * @throws AbortException|ReflectionException
      */
     public function handleItemDetailModal(string $itemDetailId, $primary): void
     {
         $itemDetail = $this->itemDetailsModal[$itemDetailId];
         $rowData = $this->getRowFromSource($primary);
-        if(is_countable($rowData) === true)
+        if(is_iterable($rowData) === true)
         {
             foreach($rowData as $rowKey => $row)
             {
@@ -2203,7 +2203,7 @@ class NetteGrid extends Control
         }
         //Data
         $dataFromSource = $this->getDataFromSource(null, false, $actionExport->isRespectFilter());
-        if(is_countable($dataFromSource))
+        if(is_iterable($dataFromSource))
         {
             foreach($dataFromSource as $dataKey => $data)
             {

@@ -19,7 +19,10 @@ class RowActionCopyToAdd extends RowAction
             {
                 if($column->isAddable() === false)
                     continue;
-                $column->getAddInput()->setDefaultValue($column->getEditCellValue($row));
+                $addInput = $column->getAddInput();
+                if($addInput){
+                    $addInput->setDefaultValue($column->getEditCellValue($row));
+                }
             }
             $netteGrid->reloadItems();
         });

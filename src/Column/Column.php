@@ -615,7 +615,10 @@ abstract class Column implements IColumn
      */
     public function setFormValue($cellValue): void
     {
-        $this->netteGrid['form']['edit'][$this->name]->setDefaultValue($cellValue);
+        $this->netteGrid->getComponent('form')
+            ->getComponent('edit')
+                ->getComponent($this->name)
+                    ->setDefaultValue($cellValue);
     }
 
     /**

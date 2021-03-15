@@ -90,7 +90,7 @@ class RowActionItemModalDetail extends RowAction
         if(is_callable($titleCallback))
         {
             $headerTemplate = $this->netteGrid['itemDetailModal']->getHeaderTitleTemplate();
-            $type = ReflectionHelper::getCallbackParameterType($headerTemplate, 0);
+            $type = ReflectionHelper::getCallbackParameterType($row, 0);
             $data = ReflectionHelper::getRowCallbackClosure($row, $type);
             $return = $titleCallback($data, $primary, $headerTemplate);
             if(is_string($return))

@@ -232,11 +232,18 @@ class RowAction extends BaseAction implements IRowAction
     public function renderMultiActions($row, $primary): ?Html
     {
         $dropdown = clone $this->dropdown;
-        $dropdown->addHtml(parent::render());
+        $render = parent::render();
+        if($render instanceof Html){
+            $dropdown->addHtml($render);
+        }
         $dropdownMenu = clone $this->dropdownMenu;
         foreach($this->actions as $actionName => $action)
         {
-            $dropdownMenu->addHtml($action->render($row, $primary));
+            $render = $action->render($row, $primary);
+            if($render instanceof Html)
+            {
+                $dropdownMenu->addHtml($render);
+            }
         }
         $dropdown->addHtml($dropdownMenu);
         return $dropdown;
