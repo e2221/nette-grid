@@ -1736,8 +1736,10 @@ class NetteGrid extends Control
             is_null($rowID) ? ($usePaginator === true ? $this->paginator : null) : null
         );
 
-        if(is_countable($data) === false || count($data) == 0)
+        if(is_iterable($data) === false || is_countable($data) === false || count($data) == 0){
             return null;
+        }
+
         return $data;
     }
 
