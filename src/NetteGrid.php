@@ -35,6 +35,7 @@ use e2221\NetteGrid\Exceptions\ColumnNotFoundException;
 use e2221\NetteGrid\Exceptions\NetteGridException;
 use e2221\NetteGrid\GlobalActions\GlobalAction;
 use e2221\NetteGrid\GlobalActions\MultipleFilter;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -46,6 +47,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Paginator;
 use Nittro\Bridges\NittroUI\ComponentUtils;
+use ReflectionException;
 
 /**
  * Class NetteGrid
@@ -879,7 +881,7 @@ class NetteGrid extends Control
      * @param mixed $id
      * @param string $column
      * @throws AbortException
-     * @throws NetteGridException
+     * @throws NetteGridException|ReflectionException
      */
     public function handleEditColumn($id, string $column): void
     {
@@ -894,13 +896,15 @@ class NetteGrid extends Control
         if(is_callable($this->onEditCallback))
         {
             $fn = $this->onEditCallback;
-            $fn(ArrayHash::from($data), $id);
+            $type = ReflectionHelper::getCallbackParameterType($fn);
+            $data = ReflectionHelper::getFormCallbackClosure(ArrayHash::from($data), $type);
+            $fn($data, $id);
         }
         $getColumn = $this->getColumn($column);
         $rowData = $this->getRowFromSource($id);
         $cellValue = $value;
         $cellEditValue = $value;
-        if(is_countable($rowData) === true)
+        if(is_iterable($rowData) === true)
         {
             foreach($rowData as $rowDataKey => $row)
             {
@@ -1021,9 +1025,10 @@ class NetteGrid extends Control
      * Redraw any snippet of grid should be called by callback
      * @param string $action
      * @param mixed $primary
+     * @throws ReflectionException|NetteGridException
      */
     public function handleRowAction(string $action, $primary): void
-    {
+    {;
         $action = $this->rowActions[$action];
         if($action->isOnlyAjaxRequest() === true)
             if($this->getPresenter()->isAjax() === false)
@@ -1032,11 +1037,13 @@ class NetteGrid extends Control
         if(is_callable($onClick))
         {
             $row = $this->getDataFromSource($primary);
-            if(is_countable($row))
+            if(is_iterable($row))
             {
                 foreach($row as $rowKey => $rowData)
                 {
-                    $onClick($this, $rowData, $primary);
+                    $type = ReflectionHelper::getCallbackParameterType($onClick, 1);
+                    $data = ReflectionHelper::getRowCallbackClosure($rowData, $type);
+                    $onClick($this, $data, $primary);
                     break;
                 }
             }
@@ -1064,13 +1071,13 @@ class NetteGrid extends Control
      * Signal - fill modal with row detail
      * @param string $itemDetailId
      * @param mixed $primary
-     * @throws AbortException
+     * @throws AbortException|ReflectionException
      */
     public function handleItemDetailModal(string $itemDetailId, $primary): void
     {
         $itemDetail = $this->itemDetailsModal[$itemDetailId];
         $rowData = $this->getRowFromSource($primary);
-        if(is_countable($rowData) === true)
+        if(is_iterable($rowData) === true)
         {
             foreach($rowData as $rowKey => $row)
             {
@@ -1232,7 +1239,9 @@ class NetteGrid extends Control
 
 
     /**
-     * Default renderer
+     * Renderer
+     * @throws NetteGridException
+     * @throws ReflectionException
      */
     public function render(): void
     {
@@ -1355,6 +1364,7 @@ class NetteGrid extends Control
      * Add from success
      * @param Button $button
      * @throws AbortException
+     * @throws ReflectionException
      * @internal
      */
     public function addFormSuccess(Button $button): void
@@ -1363,8 +1373,10 @@ class NetteGrid extends Control
         $values = $form->values;
         $onAddCallback = $this->onAddCallback;
         if(is_callable($onAddCallback)){
-            $onAddCallback($values->add, $form['add']);
-        };
+            $type = ReflectionHelper::getCallbackParameterType($onAddCallback, 0);
+            $data = ReflectionHelper::getFormCallbackClosure($values->add, $type);
+            $onAddCallback($data, $form['add']);
+        }
         if($form->hasErrors() === true)
         {
             $this->markControlsWithError($form['add']);
@@ -1394,6 +1406,7 @@ class NetteGrid extends Control
      * Edit form success
      * @param Button $button
      * @throws AbortException
+     * @throws ReflectionException
      * @internal
      */
     public function editFormSuccess(Button $button): void
@@ -1406,7 +1419,9 @@ class NetteGrid extends Control
         if(is_callable($this->onEditCallback))
         {
             $fn = $this->onEditCallback;
-            $fn($editValues, $primaryValue, $form['edit']);
+            $type = ReflectionHelper::getCallbackParameterType($fn);
+            $data = ReflectionHelper::getFormCallbackClosure($editValues, $type);
+            $fn($data, $primaryValue, $form['edit']);
         }
         if($form->hasErrors() === true)
         {
@@ -1688,6 +1703,7 @@ class NetteGrid extends Control
      * @param bool $usePaginator
      * @param bool $useFilter
      * @return mixed
+     * @throws NetteGridException|ReflectionException
      * @internal
      */
     protected function getDataFromSource($rowID=null, bool $usePaginator=true, bool $useFilter=true)
@@ -1716,6 +1732,14 @@ class NetteGrid extends Control
         }
 
         $getDataFn = $this->dataSourceCallback;
+
+        if($this->isEditable()){
+            $parametersCount = ReflectionHelper::getCallbackParametersCount($getDataFn);
+            if($parametersCount == 0){
+                throw new NetteGridException('Grid is editable but no filter parameter was set to datasource callback.');
+            }
+        }
+
         $data = $getDataFn(
             is_null($rowID) ? ($useFilter === true ? $this->filter : []) : $filter ?? [],
             is_null($rowID) ? ($useFilter === true ? $this->multipleFilter : []) : [],
@@ -1723,8 +1747,10 @@ class NetteGrid extends Control
             is_null($rowID) ? ($usePaginator === true ? $this->paginator : null) : null
         );
 
-        if(is_countable($data) === false || count($data) == 0)
+        if(is_iterable($data) === false || is_countable($data) === false || count($data) == 0){
             return null;
+        }
+
         return $data;
     }
 
@@ -1732,6 +1758,8 @@ class NetteGrid extends Control
      * Get single data row
      * @param mixed $rowID
      * @return mixed
+     * @throws NetteGridException
+     * @throws ReflectionException
      */
     protected function getRowFromSource($rowID)
     {
@@ -1946,6 +1974,8 @@ class NetteGrid extends Control
      * Reload one row by primary key (data will be loaded)
      * @param mixed $rowID
      * @throws AbortException
+     * @throws NetteGridException
+     * @throws ReflectionException
      */
     public function reloadRow($rowID): void
     {
@@ -2173,6 +2203,8 @@ class NetteGrid extends Control
      * Csv export
      * @param HeaderActionExport $actionExport
      * @throws AbortException
+     * @throws NetteGridException
+     * @throws ReflectionException
      */
     protected function csvExport(HeaderActionExport $actionExport): void
     {
@@ -2190,7 +2222,7 @@ class NetteGrid extends Control
         }
         //Data
         $dataFromSource = $this->getDataFromSource(null, false, $actionExport->isRespectFilter());
-        if(is_countable($dataFromSource))
+        if(is_iterable($dataFromSource))
         {
             foreach($dataFromSource as $dataKey => $data)
             {
@@ -2312,4 +2344,5 @@ class NetteGrid extends Control
         $this->validControlClass = $validControlClass;
         return $this;
     }
+
 }

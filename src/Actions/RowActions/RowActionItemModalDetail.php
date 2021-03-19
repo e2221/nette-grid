@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Actions\RowAction;
 
 use e2221\NetteGrid\NetteGrid;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
+use ReflectionException;
 
 class RowActionItemModalDetail extends RowAction
 {
@@ -79,6 +81,7 @@ class RowActionItemModalDetail extends RowAction
      * Call header title callback - internal
      * @param mixed $row
      * @param mixed $primary
+     * @throws ReflectionException
      * @internal
      */
     public function callHeaderTitleCallback($row, $primary): void
@@ -87,7 +90,9 @@ class RowActionItemModalDetail extends RowAction
         if(is_callable($titleCallback))
         {
             $headerTemplate = $this->netteGrid['itemDetailModal']->getHeaderTitleTemplate();
-            $return = $titleCallback($row, $primary, $headerTemplate);
+            $type = ReflectionHelper::getCallbackParameterType($row, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $return = $titleCallback($data, $primary, $headerTemplate);
             if(is_string($return))
                 $headerTemplate->setTextContent($return);
         }
@@ -97,6 +102,7 @@ class RowActionItemModalDetail extends RowAction
      * Call content callback - internal
      * @param mixed $row
      * @param mixed $primary
+     * @throws ReflectionException
      * @internal
      */
     public function callContentCallback($row, $primary): void
@@ -104,7 +110,9 @@ class RowActionItemModalDetail extends RowAction
         $contentCallback = $this->getContentCallback();
         if(is_callable($contentCallback))
         {
-            $contentCallback($row, $primary, $this->netteGrid['itemDetailModal']);
+            $type = ReflectionHelper::getCallbackParameterType($contentCallback, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $contentCallback($data, $primary, $this->netteGrid['itemDetailModal']);
         }
     }
 }

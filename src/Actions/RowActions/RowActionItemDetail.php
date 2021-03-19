@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace e2221\NetteGrid\Actions\RowAction;
 
 use e2221\NetteGrid\NetteGrid;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
 use e2221\utils\Html\BaseElement;
 use Nette\Application\UI\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Utils\Html;
+use ReflectionException;
 
 class RowActionItemDetail extends RowAction
 {
@@ -56,6 +58,7 @@ class RowActionItemDetail extends RowAction
     /**
      * Get detail
      * @return null|string|BaseElement|Html|IComponent
+     * @throws ReflectionException
      * @internal
      */
     public function renderItemDetail()
@@ -63,7 +66,9 @@ class RowActionItemDetail extends RowAction
         if(is_callable($this->detailCallback))
         {
             $detailFn = $this->detailCallback;
-            $detail = $detailFn($this->row, $this->primary);
+            $type = ReflectionHelper::getCallbackParameterType($this->detailCallback, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($this->row, $type);
+            $detail = $detailFn($data, $this->primary);
             if($detail instanceof Component)
             {
                 if(method_exists($detail, 'render'))

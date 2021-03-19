@@ -28,6 +28,7 @@ use e2221\NetteGrid\Document\Templates\TopActionsWrapperTemplate;
 use e2221\NetteGrid\Document\Templates\TopRowTemplate;
 use e2221\NetteGrid\Document\Templates\WholeDocumentTemplate;
 use e2221\NetteGrid\NetteGrid;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
 use e2221\utils\Html\BaseElement;
 use Nette\SmartObject;
 
@@ -333,11 +334,12 @@ class DocumentTemplate
     }
 
     /**
+     * @param mixed $row
+     * @return DataRowTemplate
+     * @throws \ReflectionException
      * @internal
      *
      * Get data row template for rendering - internal
-     * @param mixed $row
-     * @return DataRowTemplate
      */
     public function getDataRowTemplateForRendering($row): DataRowTemplate
     {
@@ -347,7 +349,9 @@ class DocumentTemplate
             $attributes = $template->render()->attrs;
             $template->addHtmlAttributes($attributes);
             $fn = $this->dataRowCallback;
-            $edited = $fn($template, $row);
+            $type = ReflectionHelper::getCallbackParameterType($fn, 1);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $edited = $fn($template, $data);
             return $edited instanceof DataRowTemplate ? $edited : $template;
         }
         return $templateDefault;
