@@ -135,7 +135,7 @@ class NetteGrid extends Control
     /** @var null|callable Function that will be called after submit edit function(ArrayHash $values, $primary) */
     protected $onEditCallback=null;
 
-    /** @var null|callable After submit inline add function(ArrayHash $values) */
+    /** @var null|callable After submit inline add function(ArrayHash $values, Container $addContainer, NetteGrid $grid) */
     protected $onAddCallback=null;
 
     /** @var bool @persistent Active edit mode [true = edit is enable] */
@@ -1371,11 +1371,12 @@ class NetteGrid extends Control
     {
         $form = $button->getForm();
         $values = $form->values;
+        $this->inlineAdd = false;
         $onAddCallback = $this->onAddCallback;
         if(is_callable($onAddCallback)){
             $type = ReflectionHelper::getCallbackParameterType($onAddCallback, 0);
             $data = ReflectionHelper::getFormCallbackClosure($values->add, $type);
-            $onAddCallback($data, $form['add']);
+            $onAddCallback($data, $form['add'], $this);
         }
         if($form->hasErrors() === true)
         {
@@ -1384,7 +1385,6 @@ class NetteGrid extends Control
             $this->redrawControl(self::SNIPPET_DOCUMENT_AREA);
             $this->redrawControl(self::SNIPPET_ADD_CONTAINER);
         }else{
-            $this->inlineAdd = false;
             $this->postGet('this');
             $this->reloadItems();
         }
