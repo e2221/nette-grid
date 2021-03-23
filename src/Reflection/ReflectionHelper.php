@@ -156,7 +156,7 @@ class ReflectionHelper
                     $value = null;
                 } elseif (is_scalar($value)) {
                     settype($value, $propType);
-                } elseif (is_object($value) && get_class($value) != $propType && property_exists($value, 'id')){
+                } elseif (is_object($value) && (get_class($value) != $propType) && isset($value->id)){
                     $value = $value->id;
                 }
                 $obj->$key = $value;
