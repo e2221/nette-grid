@@ -6,6 +6,8 @@ namespace e2221\NetteGrid\Document\Templates;
 
 
 use e2221\NetteGrid\Document\DocumentTemplate;
+use e2221\NetteGrid\Reflection\ReflectionHelper;
+use ReflectionException;
 
 class DataRowTemplate extends BaseTemplate
 {
@@ -32,6 +34,7 @@ class DataRowTemplate extends BaseTemplate
      * @param mixed $row
      * @param mixed $primary
      * @return void
+     * @throws ReflectionException
      */
     public function prepareElement($row=null, $primary=null): void
     {
@@ -39,8 +42,11 @@ class DataRowTemplate extends BaseTemplate
             $this->addDataAttribute('id', $primary);
 
         $draggableHelperFn = $this->draggableHelperCallback;
-        if(is_callable($draggableHelperFn))
-            $this->addDataAttribute('helper-text', $draggableHelperFn($row, $primary));
+        if(is_callable($draggableHelperFn)){
+            $type = ReflectionHelper::getCallbackParameterType($draggableHelperFn, 0);
+            $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+            $this->addDataAttribute('helper-text', $draggableHelperFn($data, $primary));
+        }
 
         parent::prepareElement();
     }
@@ -58,6 +64,7 @@ class DataRowTemplate extends BaseTemplate
     public function setDraggableHelperCallback(?callable $draggableHelperCallback): self
     {
         $this->draggableHelperCallback = $draggableHelperCallback;
+
         return $this;
     }
 
@@ -69,8 +76,10 @@ class DataRowTemplate extends BaseTemplate
      */
     public function rowsSelectable(bool $selectable=true): self
     {
-        if($selectable === true)
+        if($selectable === true){
             $this->addDataAttribute('selectable-row');
+        }
+
         return $this;
     }
 }
