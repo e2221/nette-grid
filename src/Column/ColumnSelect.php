@@ -30,6 +30,7 @@ class ColumnSelect extends Column
      * @param mixed $row
      * @return mixed
      * @throws NetteGridException
+     * @throws ReflectionException
      * @internal
      *
      * Get Cell value for rendering - internal
@@ -44,7 +45,9 @@ class ColumnSelect extends Column
             return isset($this->selection[$cell]) ? $this->selection[$cell] : '';
         }
         $fn = $this->editCellValueCallback;
-        return $fn($row, $cell);
+        $type = ReflectionHelper::getCallbackParameterType($fn, 0);
+        $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+        return $fn($data, $cell);
     }
 
     /**

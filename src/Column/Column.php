@@ -173,6 +173,7 @@ abstract class Column implements IColumn
     /**
      * @param mixed $row
      * @return mixed
+     * @throws ReflectionException
      * @internal
      *
      * Get Cell value for rendering - internal
@@ -183,7 +184,9 @@ abstract class Column implements IColumn
         if(is_null($this->editCellValueCallback))
             return $cell;
         $fn = $this->editCellValueCallback;
-        return $fn($row, $cell);
+        $type = ReflectionHelper::getCallbackParameterType($fn, 0);
+        $data = ReflectionHelper::getRowCallbackClosure($row, $type);
+        return $fn($data, $cell);
     }
 
     /**
