@@ -511,196 +511,199 @@
 
 
                 {* check all selectors after clicking check all *}
-                di.getService('page').getSnippet({snippet.id gridContent})
-                    .setup(function(gridContent){
-                        $(gridContent).on('change', 'input[data-select-all]', function(){
-                            let selectors = $(gridContent).find('input[data-row-selector]');
-                            if(this.checked){
-                                selectors.each(function(){
-                                    $(this).prop("checked", true);
-                                    let tr = this.closest('tr[data-selectable-row]');
-                                    if(tr) {
-                                        let tbody = $(this).closest('tbody');
-                                        tr.classList.add("ui-selecting");
-                                        try{
-                                            tbody.data("ui-selectable")._mouseStop(null);
-                                        }catch (e) {
-                                            console.log(e);
+                di.getService('snippetManager').on('after-update', function () {
+                    di.getService('page').getSnippet({snippet.id gridContent})
+                        .setup(function(gridContent){
+                            $(gridContent).on('change', 'input[data-select-all]', function(){
+                                let selectors = $(gridContent).find('input[data-row-selector]');
+                                if(this.checked){
+                                    selectors.each(function(){
+                                        $(this).prop("checked", true);
+                                        let tr = this.closest('tr[data-selectable-row]');
+                                        if(tr) {
+                                            let tbody = $(this).closest('tbody');
+                                            tr.classList.add("ui-selecting");
+                                            try{
+                                                tbody.data("ui-selectable")._mouseStop(null);
+                                            }catch (e) {
+                                                console.log(e);
+                                            }
                                         }
+                                    });
+                                }else{
+                                    selectors.each(function(){
+                                        $(this).prop("checked", false);
+                                        let tr = this.closest('tr[data-selectable-row]');
+                                        if(tr) {
+                                            let tbody = $(this).closest('tbody');
+                                            tr.classList.remove("ui-selected");
+                                            tr.classList.remove("table-success");
+                                            try{
+                                                tbody.data("ui-selectable")._mouseStop(null);
+                                            }catch (e) {
+                                                console.log(e);
+                                            }
+                                        }
+                                    });
+                                }
+                            })
+                        });
+
+                    {* make rows selectable *}
+                    di.getService('page').getSnippet({snippet.id data})
+                        .setup(function(tbody) {
+                            if (typeof $.fn.selectable === 'undefined') {
+                                return;
+                            }
+                            $(tbody).on('change','[data-row-selector]', function(){
+                                let tr = this.closest('tr[data-selectable-row]');
+                                if(tr)
+                                {
+                                    if(this.checked){
+                                        tr.classList.add("ui-selecting");
+                                        $(tbody).data("ui-selectable")._mouseStop(null);
+                                    } else {
+                                        $(tr).removeClass("ui-selected table-success");
+                                        $(tbody).data("ui-selectable")._mouseStop(null);
+                                    }
+                                }
+                            });
+
+                            if($(tbody).data('tbody-selectable')) {
+                                $(tbody).selectable({
+                                    filter: 'tr',
+                                    cancel: 'a,.btn,input,[data-editable-link],[data-no-select]',
+                                    classes: {
+                                        "ui-selecting": "table-info",
+                                        "ui-selected": "table-success"
+                                    },
+                                    stop: function () {
+                                        $(".ui-selected", this).find("input:checkbox:first").each(function () {
+                                            $(this).prop("checked", true);
+                                        });
+                                    },
+                                    unselected: function (event, ui) {
+                                        $(ui.unselected, this).find("input:checkbox:first").each(function () {
+                                            $(this).prop("checked", false);
+                                        });
                                     }
                                 });
-                            }else{
-                                selectors.each(function(){
-                                    $(this).prop("checked", false);
-                                    let tr = this.closest('tr[data-selectable-row]');
-                                    if(tr) {
-                                        let tbody = $(this).closest('tbody');
-                                        tr.classList.remove("ui-selected");
-                                        tr.classList.remove("table-success");
-                                        try{
-                                            tbody.data("ui-selectable")._mouseStop(null);
-                                        }catch (e) {
-                                            console.log(e);
+                            }
+                        });
+
+                    {* make rows droppable *}
+                    di.getService('page').getSnippet({snippet.id data})
+                        .setup(function(allRows) {
+                            if (typeof $.fn.droppable === 'undefined') {
+                                return;
+                            }
+                            $(allRows).find('tr[data-droppable-row]').droppable({
+                                scope: {$droppableScope},
+                                over: function (e, ui){
+                                    {ifset $droppableEffect}$(this).addClass({$droppableEffect});{/ifset}
+                                },
+                                out: function (e, ui){
+                                    {ifset $droppableEffect}$(this).removeClass({$droppableEffect});{/ifset}
+                                },
+                                drop: function(e, ui){
+                                    let dragObject = $(ui.draggable);
+                                    {ifset $droppableEffect}$(this).removeClass({$droppableEffect});{/ifset}
+                                    let postFields = {
+                                        ['movedId']: dragObject.data('id'),
+                                        ['movedToId']: $(this).data('id'),
+                                    };
+                                    return di.getService('page').open({link rowDrop!}, 'POST', postFields);
+                                },
+                            });
+                        });
+
+                    {* make rows draggable *}
+                    di.getService('page').getSnippet({snippet.id data})
+                        .setup(function(allRows) {
+                            if (typeof $.fn.draggable  === 'undefined') {
+                                return;
+                            }
+                            $(allRows).find('tr[data-draggable-row]').draggable({
+                                handle: 'a[data-drag-handler]',
+                                scope: {$draggableScope},
+                                revert: 'invalid',
+                                zIndex: 20000,
+                                helper: function(e, ui){
+                                    let helper, helperText;
+                                    helper=$(this);
+                                    helperText = helper.data('helper-text');
+                                    if(helperText)
+                                    {
+                                        return $("<div class='ui-widget-header'>"+helperText+"</div>");
+                                    }else{
+                                        return $(this).clone();
+                                    }
+                                },
+                                opacity: 0.8,
+                                cursor: "move",
+                                cursorAt: { top: 0, left: 0 },
+                            });
+                        });
+
+
+                    {* make rows sortable *}
+                    var row, actionKey, movedKey, beforeKey, afterKey, postFields, handler, senderId;
+                    di.getService('page').getSnippet({snippet.id data})
+                        .setup(function(allRows) {
+                            if (typeof $.fn.sortable === 'undefined') {
+                                return;
+                            }
+                            $(allRows).on('mousedown', 'a[data-sort-handler]', function(){
+                                handler = $(this);
+                            });
+
+                            if($(allRows).data('sortable-rows'))
+                            {
+                                $(allRows).sortable({
+                                    handle: 'a[data-sort-handler]',
+                                    items: 'tr',
+                                    placeholder: "table-info",
+                                    {ifset $sortableScope}
+                                        connectWith: '[data-sortable-scope={$sortableScope}]',
+                                    {/ifset}
+                                    update: function(event, ui){
+                                        row = ui.item.closest('tr[data-id]');
+                                        actionKey = $(handler).data('action-id');
+                                        movedKey = $(row).data('id');
+                                        if (row.prevAll("[data-sortable-row]").first().length) {
+                                            beforeKey = row.prevAll("[data-sortable-row]").first().data('id');
                                         }
+                                        if (row.nextAll("[data-sortable-row]").first().length) {
+                                            afterKey = row.nextAll("[data-sortable-row]").first().data('id');
+                                            if(afterKey === beforeKey)
+                                                beforeKey = null;
+                                        }
+                                        if(ui.sender) {
+                                            senderId = ui.sender.data('sortable-sender-id');
+                                        }
+                                        postFields = {
+                                            ['actionKey']: actionKey,
+                                            ['movedKey']: movedKey,
+                                            ['beforeKey']: beforeKey,
+                                            ['afterKey']: afterKey,
+                                            ['senderId']: senderId,
+                                        };
+                                        return di.getService('page').open({link rowsSort!}, 'POST', postFields);
+                                    },
+                                    helper: function(e, ui) {
+                                        ui.children().each(function() {
+                                            return $(this).width($(this).width());
+                                        });
+                                        return ui;
                                     }
                                 });
                             }
                         })
-                    });
-
-                {* make rows selectable *}
-                di.getService('page').getSnippet({snippet.id data})
-                    .setup(function(tbody) {
-                        if (typeof $.fn.selectable === 'undefined') {
-                            return;
-                        }
-                        $(tbody).on('change','[data-row-selector]', function(){
-                            let tr = this.closest('tr[data-selectable-row]');
-                            if(tr)
-                            {
-                                if(this.checked){
-                                    tr.classList.add("ui-selecting");
-                                    $(tbody).data("ui-selectable")._mouseStop(null);
-                                } else {
-                                    $(tr).removeClass("ui-selected table-success");
-                                    $(tbody).data("ui-selectable")._mouseStop(null);
-                                }
-                            }
+                        .teardown(function () {
+                            row = actionKey = movedKey = beforeKey = afterKey = postFields = handler = senderId = null;
                         });
 
-                        if($(tbody).data('tbody-selectable')) {
-                            $(tbody).selectable({
-                                filter: 'tr',
-                                cancel: 'a,.btn,input,[data-editable-link],[data-no-select]',
-                                classes: {
-                                    "ui-selecting": "table-info",
-                                    "ui-selected": "table-success"
-                                },
-                                stop: function () {
-                                    $(".ui-selected", this).find("input:checkbox:first").each(function () {
-                                        $(this).prop("checked", true);
-                                    });
-                                },
-                                unselected: function (event, ui) {
-                                    $(ui.unselected, this).find("input:checkbox:first").each(function () {
-                                        $(this).prop("checked", false);
-                                    });
-                                }
-                            });
-                        }
-                    });
-
-                {* make rows droppable *}
-                di.getService('page').getSnippet({snippet.id data})
-                    .setup(function(allRows) {
-                        if (typeof $.fn.droppable === 'undefined') {
-                            return;
-                        }
-                        $(allRows).find('tr[data-droppable-row]').droppable({
-                            scope: {$droppableScope},
-                            over: function (e, ui){
-                                {ifset $droppableEffect}$(this).addClass({$droppableEffect});{/ifset}
-                            },
-                            out: function (e, ui){
-                                {ifset $droppableEffect}$(this).removeClass({$droppableEffect});{/ifset}
-                            },
-                            drop: function(e, ui){
-                                let dragObject = $(ui.draggable);
-                                {ifset $droppableEffect}$(this).removeClass({$droppableEffect});{/ifset}
-                                let postFields = {
-                                    ['movedId']: dragObject.data('id'),
-                                    ['movedToId']: $(this).data('id'),
-                                };
-                                return di.getService('page').open({link rowDrop!}, 'POST', postFields);
-                            },
-                        });
-                    });
-
-                {* make rows draggable *}
-                di.getService('page').getSnippet({snippet.id data})
-                    .setup(function(allRows) {
-                        if (typeof $.fn.draggable  === 'undefined') {
-                            return;
-                        }
-                        $(allRows).find('tr[data-draggable-row]').draggable({
-                            handle: 'a[data-drag-handler]',
-                            scope: {$draggableScope},
-                            revert: 'invalid',
-                            zIndex: 20000,
-                            helper: function(e, ui){
-                                let helper, helperText;
-                                helper=$(this);
-                                helperText = helper.data('helper-text');
-                                if(helperText)
-                                {
-                                    return $("<div class='ui-widget-header'>"+helperText+"</div>");
-                                }else{
-                                    return $(this).clone();
-                                }
-                            },
-                            opacity: 0.8,
-                            cursor: "move",
-                            cursorAt: { top: 0, left: 0 },
-                        });
-                    });
-
-
-                {* make rows sortable *}
-                var row, actionKey, movedKey, beforeKey, afterKey, postFields, handler, senderId;
-                di.getService('page').getSnippet({snippet.id data})
-                    .setup(function(allRows) {
-                        if (typeof $.fn.sortable === 'undefined') {
-                            return;
-                        }
-                        $(allRows).on('mousedown', 'a[data-sort-handler]', function(){
-                            handler = $(this);
-                        });
-
-                        if($(allRows).data('sortable-rows'))
-                        {
-                            $(allRows).sortable({
-                                handle: 'a[data-sort-handler]',
-                                items: 'tr',
-                                placeholder: "table-info",
-                                {ifset $sortableScope}
-                                    connectWith: '[data-sortable-scope={$sortableScope}]',
-                                {/ifset}
-                                update: function(event, ui){
-                                    row = ui.item.closest('tr[data-id]');
-                                    actionKey = $(handler).data('action-id');
-                                    movedKey = $(row).data('id');
-                                    if (row.prevAll("[data-sortable-row]").first().length) {
-                                        beforeKey = row.prevAll("[data-sortable-row]").first().data('id');
-                                    }
-                                    if (row.nextAll("[data-sortable-row]").first().length) {
-                                        afterKey = row.nextAll("[data-sortable-row]").first().data('id');
-                                        if(afterKey === beforeKey)
-                                            beforeKey = null;
-                                    }
-                                    if(ui.sender) {
-                                        senderId = ui.sender.data('sortable-sender-id');
-                                    }
-                                    postFields = {
-                                        ['actionKey']: actionKey,
-                                        ['movedKey']: movedKey,
-                                        ['beforeKey']: beforeKey,
-                                        ['afterKey']: afterKey,
-                                        ['senderId']: senderId,
-                                    };
-                                    return di.getService('page').open({link rowsSort!}, 'POST', postFields);
-                                },
-                                helper: function(e, ui) {
-                                    ui.children().each(function() {
-                                        return $(this).width($(this).width());
-                                    });
-                                    return ui;
-                                }
-                            });
-                        }
-                    })
-                    .teardown(function () {
-                        row = actionKey = movedKey = beforeKey = afterKey = postFields = handler = senderId = null;
-                    });
+                });{* /snippet after-update*}
 
                 {* item detail toggle *}
                 var btn, id, link, detailRow, itemDetailTd, actionId;
