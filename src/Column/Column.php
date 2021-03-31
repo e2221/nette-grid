@@ -119,6 +119,17 @@ abstract class Column implements IColumn
     }
 
     /**
+     * Set html type directly
+     * @param string $type
+     * @return Column
+     */
+    public function setHtmlType(string $type): self
+    {
+        $this->htmlType = $type;
+        return $this;
+    }
+
+    /**
      * Set this column as default grid sort
      * @param string $direction
      * @return Column
