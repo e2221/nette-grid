@@ -154,6 +154,8 @@ class ReflectionHelper
                 $propType = Reflection::getPropertyType($prop);
                 if (empty($value) && $prop->getType()->allowsNull()) {
                     $value = null;
+                } elseif (is_string($value) && ($propType == 'DateTimeImmutable' || $propType == 'DateTime')) {
+                    $value = new $propType($value);
                 } elseif (is_scalar($value)) {
                     settype($value, $propType);
                 } elseif (is_object($value) && (get_class($value) != $propType) && isset($value->id)){
