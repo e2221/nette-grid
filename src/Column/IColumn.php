@@ -17,6 +17,13 @@ interface IColumn
 {
 
     /**
+     * Set directly html type of input
+     * @param string $type
+     * @return IColumn
+     */
+    public function setHtmlType(string $type): self;
+
+    /**
      * Set export value callback
      * @param callable|null $exportValueCallback function($row, $cellValue)
      * @return IColumn
