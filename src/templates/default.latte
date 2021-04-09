@@ -106,8 +106,9 @@
                                                                         containerContent.contents().remove();
                                                                         if(selectedOption && selectedOption > 0)
                                                                         {
+                                                                            let context = { transition:false }
                                                                             let link = this.options.item(selectedOption).dataset.link;
-                                                                            di.getService('page').open(link, 'POST')
+                                                                            di.getService('page').open(link, 'POST', {}, context);
                                                                         }
                                                                     });
                                                                 });
