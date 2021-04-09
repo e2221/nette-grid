@@ -57,6 +57,7 @@ class GlobalAction
     public function onSubmitContainer(Button $button): void
     {
         $form = $button->getForm();
+        $form->reset();
         $checkedRows = ArrayHash::from($form->getHttpData($form::DATA_TEXT, 'globalActions[rowCheck][]'));
         $containerName = $this->containerName;
         $containerValues = $form->getValues()->$containerName;
