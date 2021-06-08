@@ -8,6 +8,7 @@ use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Callback;
 use Nette\Utils\Reflection;
+use Nette\Utils\Strings;
 use ReflectionException;
 use ReflectionProperty;
 
@@ -150,18 +151,25 @@ class ReflectionHelper
         $objectFields = self::dataToArray($object);
         foreach ($objectFields as $key => $value) {
             if (property_exists($obj, $key)) {
-                $prop = new ReflectionProperty($obj, $key);
-                $propType = Reflection::getPropertyType($prop);
-                if (empty($value) && $prop->getType()->allowsNull()) {
-                    $value = null;
-                } elseif (is_string($value) && ($propType == 'DateTimeImmutable' || $propType == 'DateTime')) {
-                    $value = new $propType($value);
-                } elseif (is_scalar($value)) {
-                    settype($value, $propType);
-                } elseif (is_object($value) && (get_class($value) != $propType) && isset($value->id)){
-                    $value = $value->id;
+                $upperKey = Strings::firstUpper($key);
+                if(method_exists($obj, "set$upperKey")){
+                    $obj->{"set$upperKey"}($value);
+                }else if(method_exists($obj, "is$upperKey")){
+                    $obj->{"is$upperKey"}($value);
+                }else{
+                    $prop = new ReflectionProperty($obj, $key);
+                    $propType = Reflection::getPropertyType($prop);
+                    if (empty($value) && $prop->getType()->allowsNull()) {
+                        $value = null;
+                    } elseif (is_string($value) && ($propType == 'DateTimeImmutable' || $propType == 'DateTime')) {
+                        $value = new $propType($value);
+                    } elseif (is_scalar($value)) {
+                        settype($value, $propType);
+                    } elseif (is_object($value) && (get_class($value) != $propType) && isset($value->id)){
+                        $value = $value->id;
+                    }
+                    $obj->$key = $value;
                 }
-                $obj->$key = $value;
             }
         }
         return $obj;
