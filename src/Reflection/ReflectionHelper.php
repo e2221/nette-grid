@@ -152,26 +152,28 @@ class ReflectionHelper
         foreach ($objectFields as $key => $value) {
             if (property_exists($obj, $key)) {
                 $upperKey = Strings::firstUpper($key);
+
+                // value re-type
+                $prop = new ReflectionProperty($obj, $key);
+                $propType = Reflection::getPropertyType($prop);
+                if (empty($value) && $prop->getType()->allowsNull()) {
+                    $value = null;
+                } elseif (is_scalar($value)) {
+                    settype($value, $propType);
+                } elseif (is_object($value) && (get_class($value) != $propType) && isset($value->id)){
+                    $value = $value->id;
+                }
+
                 if(method_exists($obj, "set$upperKey")){
                     $obj->{"set$upperKey"}($value);
                 }else if(method_exists($obj, "is$upperKey")){
                     $obj->{"is$upperKey"}($value);
                 }else{
-                    $prop = new ReflectionProperty($obj, $key);
-                    $propType = Reflection::getPropertyType($prop);
-                    if (empty($value) && $prop->getType()->allowsNull()) {
-                        $value = null;
-                    } elseif (is_string($value) && ($propType == 'DateTimeImmutable' || $propType == 'DateTime')) {
-                        $value = new $propType($value);
-                    } elseif (is_scalar($value)) {
-                        settype($value, $propType);
-                    } elseif (is_object($value) && (get_class($value) != $propType) && isset($value->id)){
-                        $value = $value->id;
-                    }
                     $obj->$key = $value;
                 }
             }
         }
+
         return $obj;
     }
 
