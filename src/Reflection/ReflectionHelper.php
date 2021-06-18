@@ -143,7 +143,6 @@ class ReflectionHelper
      * @param mixed $object
      * @param string $returnType
      * @return mixed
-     * @throws ReflectionException
      */
     private static function toCustomMapper($object, string $returnType)
     {
@@ -152,18 +151,6 @@ class ReflectionHelper
         foreach ($objectFields as $key => $value) {
             if (property_exists($obj, $key)) {
                 $upperKey = Strings::firstUpper($key);
-
-                // value re-type
-                $prop = new ReflectionProperty($obj, $key);
-                $propType = Reflection::getPropertyType($prop);
-                if (empty($value) && $prop->getType()->allowsNull()) {
-                    $value = null;
-                } elseif (is_scalar($value)) {
-                    settype($value, $propType);
-                } elseif (is_object($value) && (get_class($value) != $propType) && isset($value->id)){
-                    $value = $value->id;
-                }
-
                 if(method_exists($obj, "set$upperKey")){
                     $obj->{"set$upperKey"}($value);
                 }else if(method_exists($obj, "is$upperKey")){
